@@ -214,6 +214,12 @@ tags:
 20. 链式法则		chain rule
 21. 乘法层		MulLayer
 22. 加法层		AddLayer
+23. 梯度确认		gradient check
+24. 最优化		optimization
+25. 非均向		anisotropic
+26. 权值衰减		weight decay
+27. 直方图		histogram
+28. 梯度消失		gradient vanishing
 
 ----------
 
