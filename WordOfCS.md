@@ -1,13 +1,15 @@
- ---
-title: 计算机英语词汇
-date: 2019/8/10
-author: Jungle
-categories:
-- 英语
-tags:
-- 词汇
 ---
+title: WordofCS
+categories:
+  - 英语
+tags:
+  - 词汇
+author:
+  - Jungle
+date: 2020-11-24 17:21:02
+top: 2
 
+---
 # 分布式数据库系统及原理 #
 
 - Transaction	事务
