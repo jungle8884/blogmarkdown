@@ -4,66 +4,19 @@ categories:
   - 英语
 tags:
   - 词汇
+  - 机器学习
+  - 深度学习
+  - 计算机专业英语
+  - 分布式数据库系统及原理
 author:
   - Jungle
 date: 2020-11-24 17:21:02
 top: 2
 
 ---
-# 分布式数据库系统及原理 #
-
-- Transaction	事务
-- Concurrent	并发
-- Parallel		并行
-- DDBS			分布式数据库系统
-	- Distributed Database System
-	- 地理上分散而逻辑上集中的数据库系统
-	- DDBS = DDB + DDBMS
-	- 分布式数据库系统 = 分布式数据库 + 分布式数据库管理系统
-- DB			数据库
-- DBMS			数据库管理系统
-- DB + DBMS = DBS	
-- 数据库 + 数据库管理系统 = 数据库系统
-- SQL			结构化查询语言
-- node			节点
-- site			场地
-- p				处理机
-- M				内存
-- D				磁盘
-- Shared-Memery Architecture	共享内存系统
-- Shared-Disk   Architecture	共享磁盘系统
-- Shared-Nothing Architecture	无共享系统
-- union			并				∪
-- intersect		交				∩
-- difference	差				-
-- product		乘				×
-- divide		除				÷
-- selcect		选择				σ
-- project		投影				π
-- join			连接				⋈
-- schema		模式
-- wrapper		包装器
-- mediator		协调器
-- MDBS			多数据库系统[multi-Database System]
-- LDBS   		局部数据库系统
-- FDBS			联邦数据库系统
-- P2PDBS		对等数据库系统
-- P2P			peer-to-Peer	对等计算模型
-- fragment		片段
-- fragmentation	分片
-- allocation	分配
-- partition		分割
-- replication	复制
-- GDB			Global DB		全局数据库
-- FDB			Fragment DB		片段数据库
-- PDB			Physical DB		物理数据库
-
-----------
-
 # Maching Learning 基本术语 #
 
 ## 第一章 ##
-
 - model 模型【learning algorithm 学习算法】
 - data set		数据集
 	- 记录的集合
@@ -145,8 +98,7 @@ top: 2
 	-  若有多个假设与观察一致, 则选择最简单的那个.
 - NFL	No Free Lunch Theorem "没有免费的午餐"定理
 
-
-
+----------
 ## 第二章 ##
 1. error rate 错误率
 2. accuracy 精度
@@ -222,6 +174,7 @@ top: 2
 26. 权值衰减		weight decay
 27. 直方图		histogram
 28. 梯度消失		gradient vanishing
+29. 正太分布		Normal Distribution
 
 ----------
 
@@ -324,5 +277,53 @@ top: 2
 - cloud computing											云计算
 - trigger													触发
 
+----------
+# 分布式数据库系统及原理 #
+
+- Transaction	事务
+- Concurrent	并发
+- Parallel		并行
+- DDBS			分布式数据库系统
+	- Distributed Database System
+	- 地理上分散而逻辑上集中的数据库系统
+	- DDBS = DDB + DDBMS
+	- 分布式数据库系统 = 分布式数据库 + 分布式数据库管理系统
+- DB			数据库
+- DBMS			数据库管理系统
+- DB + DBMS = DBS	
+- 数据库 + 数据库管理系统 = 数据库系统
+- SQL			结构化查询语言
+- node			节点
+- site			场地
+- p				处理机
+- M				内存
+- D				磁盘
+- Shared-Memery Architecture	共享内存系统
+- Shared-Disk   Architecture	共享磁盘系统
+- Shared-Nothing Architecture	无共享系统
+- union			并				∪
+- intersect		交				∩
+- difference	差				-
+- product		乘				×
+- divide		除				÷
+- selcect		选择				σ
+- project		投影				π
+- join			连接				⋈
+- schema		模式
+- wrapper		包装器
+- mediator		协调器
+- MDBS			多数据库系统[multi-Database System]
+- LDBS   		局部数据库系统
+- FDBS			联邦数据库系统
+- P2PDBS		对等数据库系统
+- P2P			peer-to-Peer	对等计算模型
+- fragment		片段
+- fragmentation	分片
+- allocation	分配
+- partition		分割
+- replication	复制
+- GDB			Global DB		全局数据库
+- FDB			Fragment DB		片段数据库
+- PDB			Physical DB		物理数据库
 
 ----------
