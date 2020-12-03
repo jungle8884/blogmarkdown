@@ -2,6 +2,7 @@
 title: WordofCS
 categories:
   - 英语
+  - 计算机
 tags:
   - 词汇
   - 机器学习
@@ -175,6 +176,14 @@ top: 2
 27. 直方图		histogram
 28. 梯度消失		gradient vanishing
 29. 正太分布		Normal Distribution
+30. 超参数		hyper-parameter
+31. 验证数据		validation data
+32. 卷积神经网络	CNN（Convolutional Neural Network	
+33. 卷积层		Convolution层
+34. 池化层		Pooling层
+35. 全连接		full-connected
+36. 特征图		feature map
+37. 填充			Padding
 
 ----------
 

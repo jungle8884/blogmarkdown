@@ -2,6 +2,7 @@
 title: WordofGameTheory
 categories:
   - 博弈论
+  - 英语
 tags:
   - 词汇
   - 博弈论
