@@ -267,3 +267,15 @@ top: 3
 88. realistic		现实主义的（representing what is real）
 89. **therapeutic**		治疗的
 90. **accomplice**		共犯，同谋		
+
+# 第三单元 #
+1. misalliance		**n. 不适当的结合(an improper alliance<结盟>)**
+2. ultimate			adj. 最后的
+3. plainspoken		**adj. 直言不讳的(plain<平的;纯色的>)**
+4. miserable		adj. 痛苦的，悲惨的
+5. undiscovered		adj. 未被发现的
+6. insightful		adj. 富有洞察力的
+7. corruption		n. 腐败，堕落(impairment of integrity, virtue or moral principle)
+8. **anecdotal**		adj. 趣闻的(of, or relating to, or consisting of anectdotes<趣闻>)
+9. commercialize	v. 使商业化
+10. **counteract		v. 消除，抵消**

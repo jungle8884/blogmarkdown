@@ -164,3 +164,37 @@ You should write at least 150 words but no more than 200 words.**
 **来源于：https://zhuanlan.zhihu.com/p/84485681**
 
 ----------
+
+# 2017年12月第一套 #
+
+**Respect others, and you will be respected.**
+**<敬人者人亦敬之>**
+
+- 第一段:
+	- 开门见山，指出**尊重是相互的**，
+	- 表明作者的观点：同意“敬人者人亦敬之”的说法。
+
+		- Treat others the way you want to be treated. 
+			- The same is true of respect. 
+			- I agree with the saying, **respect others and you will be respected**.
+
+- 第二段：
+
+	- 第一个观点：**互惠原则是人际交往的基础**
+		- **Reciprocity is undeniably<不可否认地> the basis of interpersonal relationship**, regardless of culture or race.
+			- Hunmans are grateful animals. 
+			- If we lend a helping hand to others, we are very likely to receive assistance when we need it. 
+			- **Likewise if we are respectful to others, we will be respected**. 
+
+	- 第二个观点：**尊重他人被视为一种美德**
+		- On the other hand, as we all know, 
+		- **showing respect for others has been regarded as a virtue since ancient times**.
+		- To be exact, treating people with the dignity they deserve 
+			- and allowing them to embrace without judging them 
+			- **is always considerd as one of great virtues**.
+		- And in cultures other than the barbarous<野蛮的> one, **a virtuous person will definitely gain respect from others**.
+
+- 第三段： 总结全文，再次点题并表明观点。
+	- In a summary, I am convinced that **those who respect others are certain to be respected**.
+
+
