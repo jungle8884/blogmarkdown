@@ -523,7 +523,7 @@ author: Jungle
 	}
 
 ----------
-## B1009-说反话 ##
+# B1009-说反话 #
 
 ## 描述 ##
 	给定一句英语，要求你编写程序，将句中所有单词的顺序颠倒输出。
@@ -600,3 +600,80 @@ author: Jungle
 	Press any key to continue . . .
 
 ----------
+# B1040-有几个PAT #
+
+## 描述 ##
+	字符串 APPAPT 中包含了两个单词 PAT，
+	其中第一个 PAT 是第 2 位(P)，第 4 位(A)，第 6 位(T)；
+	第二个 PAT 是第 3 位(P)，第 4 位(A)，第 6 位(T)。
+	
+	现给定字符串，问一共可以形成多少个 PAT？
+
+## 输入格式 ##
+	输入只有一行，包含一个字符串，长度不超过10的	​5次方​，只包含 P、A、T 三种字母。
+
+## 输出格式 ##
+	在一行中输出给定字符串中包含多少个 PAT。由于结果可能比较大，只输出对 1000000007 取余数的结果。
+
+## 输入样例 ##
+	APPAPT
+
+## 输出样例 ##
+	2
+
+## 实现代码 ##
+	#include <cstdio>
+	#include <cstring>
+	#include <algorithm>
+	
+	const int MAXN = 100010;
+	const int MOD = 1000000007;
+	char str[MAXN]; 
+	int leftNumP[MAXN] = {0}; //每一位左边（含）p的个数
+	
+	int main(){
+		//读入字符串：gets(str)的替代方法。
+	    int i=0;
+	    fgets(str, MAXN, stdin);
+	    while (str[i] != '\n')
+	        i++;
+	    str[i] = '\0';
+	
+	    int len = strlen(str); //长度
+	    //printf("%d", len);
+	
+	    for (int i = 0; i < len; i++) //从左至右遍历字符串
+	    {
+	        if (i > 0) //如果不是0号位
+	        {
+	            leftNumP[i] = leftNumP[i-1];
+	        }
+	        if (str[i] == 'P') //当前位是P
+	        {
+	            leftNumP[i]++;
+	        }     
+	    }
+	    //printf("%d\n", leftNumP[len-1]); //输出P的个数
+	    
+	
+	    int ans = 0, rightNumT = 0; //ans为答案，rightNumT记录右边T的个数
+	    for (int i = len-1; i >= 0; i--) //从右至左遍历字符串
+	    {
+	        if (str[i] == 'T')
+	        {
+	            rightNumT++;
+	        }else if (str[i] == 'A')
+	        {
+	            ans = (ans + leftNumP[i] * rightNumT) % MOD; //累计乘积
+	        }        
+	    }
+	    //printf("%d\n", rightNumT); //输出T的个数
+	    
+	    printf("%d\n", ans); //输出结果
+	
+	    return 0;
+	}
+
+----------
+
+
