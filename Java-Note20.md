@@ -279,31 +279,52 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 
 ----------
 # 字符流 #
-- ASCII 
-- GB2312
-- **GBK**
+## ASCII ## 
+	- ASCII(American Standard Code for Information Interchange，美国信息交换标准代码)：是基于拉丁字母的一套电脑编码系统，用于显示现代英语，主要包括控制字符(回车键、退格、换行键等)和可显示字符(英文大小写字符、阿拉伯数字和西文符号)
+	- 基本的ASCII字符集，使用7位表示一个字符，共128字符。ASCII的扩展字符集使用8位表示一个字符，共256字符，方便支持欧洲常用字符。是一个系统支持的所有字符的集合，包括各国家文字、标点符号、图形符号、数字等
 
-		最常用的中文码表。是在GB2312标准基础上的扩展规范，使用了双字节编码方案，共收录了
+## GBXXX字符集 ##
+- GB2312：简体中文码表。
+				
+		一个小于127的字符的意义与原来相同，但两个大于127的字符连在一起时，就表示一个汉字，
+		这样大约可以组合了包含7000多个简体汉字，此外数学符号、罗马希腊的字母、日文的假名等都编进去了，
+		连在ASCII里本来就有的数字、标点、字母都统统重新编了两个字节长的编码，
+		这就是常说的"全角"字符，而原来在127号以下的那些就叫"半角"字符了
+		
+- **GBK：最常用的中文码表。**
+		
+		是在GB2312标准基础上的扩展规范，使用了双字节编码方案，共收录了
 		21003个汉字，完全兼容GB2312标准，同时支持繁体汉字以及日韩汉字等
 
-- GB18030
-- Unicode： 统一码
-	- **UTF-8**
+- GB18030：最新的中文码表。
 
-		- UTF-8编码：
+		收录汉字70244个，采用多字节编码，每个字可以由1个、2个或4个字节组成。
+		支持中国国内少数民族的文字，同时支持繁体汉字以及日韩汉字等
+
+
+## Unicode： 统一码 ##
+
+	为表达任意语言的任意字符而设计，是业界的一种标准，也称为统一码、标准万国码。
+	它最多使用4个字节的数字来表达每个字母、符号，或者文字。
+	有三种编码方案，UTF-8、UTF-16和UTF32。
+	最为常用的UTF-8编码
+
+- **UTF-8编码：**
 		 
-				可以用来表示Unicode标准中任意字符，它是电子邮件、网页及其他存储或传送文字的应用中，优先采用的编码。
-				互联网工程工作小组（IETF）要求所有互联网协议都必须支持UTF-8编码。
-				它使用一至四个字节为每个字符编码。
-
-		- 编码规则：	
-			- 128个US-ASCII字符，只需一个字节编码
-			- 拉丁文等字符，需要二个字节编码
-			- 大部分常用字（含中文），使用三个字节编码
-			- 其他极少使用的Unicode辅助字符，使用四字节编码
-	- UTF-16
-	- UTF-32
-- 采用何种规则编码，就要采用对应规则解码，否则就会出现乱码。
+		可以用来表示Unicode标准中任意字符，它是电子邮件、网页及其他存储或传送文字的应用中，优先采用的编码。
+		互联网工程工作小组（IETF）要求所有互联网协议都必须支持UTF-8编码。
+		它使用一至四个字节为每个字符编码。
+	- 编码规则：	
+		- 128个US-ASCII字符，只需一个字节编码
+		- 拉丁文等字符，需要二个字节编码
+		- 大部分常用字（含中文），使用三个字节编码
+		- 其他极少使用的Unicode辅助字符，使用四字节编码
+## 小结： ##
+**采用何种规则编码，就要采用对应规则解码，否则就会出现乱码**
+	
+- 一个汉字存储： 
+	- GBK编码：占用两个字节
+	- UTF-8编码：占用三个字节	
 
 ## 编码 ##
 - byte[] getBytes()：使用平台的默认字符集将该String编码为一系列字节
@@ -338,94 +359,21 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 		}
 
 
-## InputStreamReader：是从字节流到字符流的桥梁 ##
-        它读取字节，并使用指定的编码将其解码为字符
-        它使用的字符集可以由名称指定，也可以被明确指定，或者可以接受平台的默认字符集
+----------
+# 字符流抽象基类 #
+- Reader：字符输入流的抽象类
+- Writer：字符输出流的抽象类
 
-## OutputStreamWriter：是从字符流到字节流的桥梁 ##
-        是从字符流到字节流的桥梁，使用指定的编码将写入的字符编码为字节
-        它使用的字符集可以由名称指定，也可以被明确指定，或者可以接受平台的默认字符集
+----------
+# 字符流中和编码解码问题相关的两个类 #
 
-## 示例代码 ##
-		public class ConversionStreamDemo {
-		    public static void main(String[] args) throws IOException {
-		//        OutputStreamWriter​(OutputStream out) 创建一个使用默认字符编码的OutputStreamWriter。
-		//        OutputStreamWriter​(OutputStream out, String charsetName) 创建一个使用命名字符集的OutputStreamWriter。
-		//        FileOutputStream fos = new FileOutputStream("myCharStream\\osw.txt");
-		//        OutputStreamWriter osw = new OutputStreamWriter(fos);
-		//        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream("myCharStream\\osw.txt"));
-		//        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream("myCharStream\\osw.txt"),"UTF-8");
-		        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream("myCharStream\\osw.txt"),"GBK");
-		        osw.write("中国");
-		        osw.close();
-		
-		//        InputStreamReader​(InputStream in) 创建一个使用默认字符集的InputStreamReader。
-		//        InputStreamReader​(InputStream in, String charsetName) 创建一个使用命名字符集的InputStreamReader。
-		//        InputStreamReader isr = new InputStreamReader(new FileInputStream("myCharStream\\osw.txt"));
-		        InputStreamReader isr = new InputStreamReader(new FileInputStream("myCharStream\\osw.txt"),"GBK");
-		        //一次读取一个字符数据
-		        int ch;
-		        while ((ch=isr.read())!=-1) {
-		            System.out.print((char)ch);
-		        }
-		
-		        isr.close();
-		
-		    }
-		}
+## InputStreamReader：字符输入流，是从字节流到字符流的桥梁 ##
+    它读取字节，并使用指定的编码将其解码为字符
+    它使用的字符集可以由名称指定，也可以被明确指定，或者可以接受平台的默认字符集
 
-## OutputStreamWriter---字符流写数据的5种方式 ##
-
-- 构造方法：	 
-	- OutputStreamWriter​(OutputStream out)：创建一个使用默认字符编码的OutputStreamWriter
-- 写数据的5种方式：
-	- void write​(int c)：写一个字符
-	- void write​(char[] cbuf)：写入一个字符数组
-	- void write​(char[] cbuf, int off, int len)：写入字符数组的一部分
-	- void write​(String str)：写一个字符串
-	- void write​(String str, int off, int len)：写一个字符串的一部分
-
-
-			public class OutputStreamWriterDemo {
-			    public static void main(String[] args) throws IOException {
-			        //OutputStreamWriter​(OutputStream out)：创建一个使用默认字符编码的OutputStreamWriter
-			        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream("myCharStream\\osw.txt"));
-			
-			        //void write​(int c)：写一个字符
-			//        osw.write(97);
-			//        //void flush()：刷新流
-			//        osw.flush();
-			//        osw.write(98);
-			//        osw.flush();
-			//        osw.write(99);
-			
-			        //void write​(char[] cbuf)：写入一个字符数组
-			        char[] chs = {'a', 'b', 'c', 'd', 'e'};
-			//        osw.write(chs);
-			
-			        //void write​(char[] cbuf, int off, int len)：写入字符数组的一部分
-			//        osw.write(chs, 0, chs.length);
-			//        osw.write(chs, 1, 3);
-			
-			        //void write​(String str)：写一个字符串
-			//        osw.write("abcde");
-			
-			        //void write​(String str, int off, int len)：写一个字符串的一部分
-			//        osw.write("abcde", 0, "abcde".length());
-			        osw.write("abcde", 1, 3);
-			
-			        //释放资源
-			        osw.close();
-			        //Exception in thread "main" java.io.IOException: Stream closed
-			//        osw.write(100);
-			    }
-			}
-
-
-## InputStreamReader---字符流读数据的2种方式 ##
 - 构造方法：
 	- InputStreamReader​(InputStream in)：创建一个使用默认字符集的InputStreamReader
-
+	- InputStreamReader​(InputStream in, String charsetName) 创建一个使用命名字符集的InputStreamReader。
 - 读数据的2种方式：
        - int read​()：一次读一个字符数据
        - int read​(char[] cbuf)：一次读一个字符数组数据
@@ -456,22 +404,70 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 			    }
 			}
 
+## OutputStreamWriter：字符输出流，是从字符流到字节流的桥梁 ##
+	是从字符流到字节流的桥梁，使用指定的编码将写入的字符编码为字节
+    它使用的字符集可以由名称指定，也可以被明确指定，或者可以接受平台的默认字符集
+
+- 构造方法：	 
+	- OutputStreamWriter​(OutputStream out)：创建一个使用默认字符编码的OutputStreamWriter
+	- OutputStreamWriter​(OutputStream out, String charsetName) 创建一个使用命名字符集的OutputStreamWriter。
+- 写数据的5种方式：
+	- void write​(int c)：写一个字符
+	- void write​(char[] cbuf)：写入一个字符数组
+	- void write​(char[] cbuf, int off, int len)：写入字符数组的一部分
+	- void write​(String str)：写一个字符串
+	- void write​(String str, int off, int len)：写一个字符串的一部分
+	
+	- flush()：刷新流，还可以继续写数据
+	- close()：关闭流，释放资源，但是在关闭之前会先刷新流。一旦关闭，就不能再写数据
+
+
+			public class OutputStreamWriterDemo {
+			    public static void main(String[] args) throws IOException {
+			        //OutputStreamWriter​(OutputStream out)：创建一个使用默认字符编码的OutputStreamWriter
+			        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream("myCharStream\\osw.txt"));
+			
+			        //void write​(int c)：写一个字符
+			//        osw.write(97);
+			//        //void flush()：刷新流
+			//        osw.flush();
+			//        osw.write(98);
+			//        osw.flush();
+			//        osw.write(99);
+			
+			        //void write​(char[] cbuf)：写入一个字符数组
+			 //       char[] chs = {'a', 'b', 'c', 'd', 'e'};
+			//        osw.write(chs);
+			
+			        //void write​(char[] cbuf, int off, int len)：写入字符数组的一部分
+			//        osw.write(chs, 0, chs.length);
+			//        osw.write(chs, 1, 3);
+			
+			        //void write​(String str)：写一个字符串
+			//        osw.write("abcde");
+			
+			        //void write​(String str, int off, int len)：写一个字符串的一部分
+			//        osw.write("abcde", 0, "abcde".length());
+			//        osw.write("abcde", 1, 3);
+			
+			        //释放资源
+			        osw.close();
+			    }
+			}
+
 ----------
-# 字符流与字符缓冲流 #
-**需求：把模块目录下的ConversionStreamDemo.java 复制到模块目录下的 Copy.java**
+# 字符流的便捷类 #
 
-    数据源和目的地的分析
-        数据源：myCharStream\\ConversionStreamDemo.java --- 读数据 --- Reader --- InputStreamReader --- FileReader
-        目的地： myCharStream\\ Copy.java --- 写数据 --- Writer --- OutputStreamWriter --- FileWriter
+- FileReader：用于读取字符文件的便捷类 
 
-    思路：
-        1:根据数据源创建字符输入流对象
-        2:根据目的地创建字符输出流对象
-        3:读写数据，复制文件
-        4:释放资源
+	FileReader​(String fileName)
 
-## 字符流：FileReader&&FileWriter ##
-**实现代码**
+- FileWriter：用于写入字符文件的便捷类
+
+	FileWriter​(String fileName)
+
+
+## 实现代码 ##
 
 	public class CopyJavaDemo02 {
 	    public static void main(String[] args) throws IOException {
@@ -498,46 +494,19 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 	    }
 	}
 
-## 字符缓冲流：BufferedWriter&&BufferedReader ##
-**实现代码**
-
-	public class CopyJavaDemo01 {
-	    public static void main(String[] args) throws IOException {
-	        //根据数据源创建字符缓冲输入流对象
-	        BufferedReader br = new BufferedReader(new FileReader("myCharStream\\ConversionStreamDemo.java"));
-	        //根据目的地创建字符缓冲输出流对象
-	        BufferedWriter bw = new BufferedWriter(new FileWriter("myCharStream\\Copy.java"));
-	
-	        //读写数据，复制文件
-	        //一次读写一个字符数据
-	//        int ch;
-	//        while ((ch=br.read())!=-1) {
-	//            bw.write(ch);
-	//        }
-	
-	        //一次读写一个字符数组数据
-	        char[] chs = new char[1024];
-	        int len;
-	        while ((len=br.read(chs))!=-1) {
-	            bw.write(chs,0,len);
-	        }
-	
-	        //释放资源
-	        bw.close();
-	        br.close();
-	    }
-	}
-
 ----------
 # 字符缓冲流 #
 
-- BufferedWriter：将文本写入字符输出流，缓冲字符，以提供单个字符，数组和字符串的高效写入，可以指定缓冲区大小，或者可以接受默认大小。默认值足够大，可用于大多数用途
-- BufferedReader：从字符输入流读取文本，缓冲字符，以提供字符，数组和行的高效读取，可以指定缓冲区大小，或者可以使用默认大小。 默认值足够大，可用于大多数用途
+## BufferedWriter ##
+	将文本写入字符输出流，缓冲字符，以提供单个字符，数组和字符串的高效写入，可以指定缓冲区大小，或者可以接受默认大小。默认值足够大，可用于大多数用途
+## BufferedReader ##
+	从字符输入流读取文本，缓冲字符，以提供字符，数组和行的高效读取，可以指定缓冲区大小，或者可以使用默认大小。 默认值足够大，可用于大多数用途
 
-- 构造方法：
-	- BufferedWriter(Writer out)
-	- BufferedReader(Reader in)
+## 构造方法： ##
+- BufferedWriter(Writer out)
+- BufferedReader(Reader in)
 
+## 实现代码 ##
 
 			public class BufferedStreamDemo01 {
 			    public static void main(String[] args) throws IOException {
@@ -570,8 +539,181 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 			    }
 			}
 
+## 字符缓冲流特有功能 ##
+- BufferedWriter：
+	- void newLine()：写一行行分隔符，行分隔符字符串由系统属性定义
+
+- BufferedReader：
+	- public String readLine()：读一行文字。
+    	- 结果包含行的内容的字符串，
+    	- 不包括任何行终止字符，如果流的结尾已经到达，则为null
+
+- 示例代码
+
+		public static void main(String[] args) throws IOException {
+		        /*
+		        //创建字符缓冲输出流
+		        BufferedWriter bw = new BufferedWriter(new FileWriter("myCharStream\\bw.txt"));
+		
+		        //写数据
+		        for (int i = 0; i < 10; i++) {
+		            bw.write("hello" + i);
+		//            bw.write("\r\n");
+		            bw.newLine(); //换行
+		            bw.flush();
+		        }
+		
+		        //释放资源
+		        bw.close();
+		        */
+		
+		        //创建字符缓冲输入流
+		        BufferedReader br = new BufferedReader(new FileReader("myCharStream\\bw.txt"));
+		
+		        //public String readLine()：读一行文字。
+		        /*
+		        //第一次读取数据
+		        String line = br.readLine();
+		        System.out.println(line);
+		
+		        //第二次读取数据
+		        line = br.readLine();
+		        System.out.println(line);
+		
+		        //在多读两次
+		        line = br.readLine();
+		        System.out.println(line);
+		
+		        line = br.readLine();
+		        System.out.println(line);
+		        */
+		
+		        String line;
+		        while ((line=br.readLine())!=null) {
+		            System.out.println(line);
+		        }
+		
+		        br.close();
+		    }
+
+- 样例对比
+
+	1. 字符缓冲流
+
+			import java.io.*;
+			
+			/*
+			    需求：
+			        把模块目录下的ConversionStreamDemo.java 复制到模块目录下的 Copy.java
+			
+			    思路：
+			        1:根据数据源创建字符缓冲输入流对象
+			        2:根据目的地创建字符缓冲输出流对象
+			        3:读写数据，复制文件
+			        4:释放资源
+			 */
+			public class CopyJavaDemo01 {
+			    public static void main(String[] args) throws IOException {
+			        //根据数据源创建字符缓冲输入流对象
+			        BufferedReader br = new BufferedReader(new FileReader("myCharStream\\ConversionStreamDemo.java"));
+			        //根据目的地创建字符缓冲输出流对象
+			        BufferedWriter bw = new BufferedWriter(new FileWriter("myCharStream\\Copy.java"));
+			
+			        //读写数据，复制文件
+			        //一次读写一个字符数据
+			//        int ch;
+			//        while ((ch=br.read())!=-1) {
+			//            bw.write(ch);
+			//        }
+			
+			        //一次读写一个字符数组数据
+			        char[] chs = new char[1024];
+			        int len;
+			        while ((len=br.read(chs))!=-1) {
+			            bw.write(chs,0,len);
+			        }
+			
+			        //释放资源
+			        bw.close();
+			        br.close();
+			    }
+			}
+
+	2. **字符缓冲流特有功能---建议采用**
+
+			import java.io.*;
+			
+			/*
+			    需求：
+			        把模块目录下的ConversionStreamDemo.java 复制到模块目录下的 Copy.java
+			
+			    思路：
+			        1:根据数据源创建字符缓冲输入流对象
+			        2:根据目的地创建字符缓冲输出流对象
+			        3:读写数据，复制文件
+			            使用字符缓冲流特有功能实现
+			        4:释放资源
+			 */
+			public class CopyJavaDemo02 {
+			    public static void main(String[] args) throws IOException {
+			        //根据数据源创建字符缓冲输入流对象
+			        BufferedReader br = new BufferedReader(new FileReader("myCharStream\\ConversionStreamDemo.java"));
+			        //根据目的地创建字符缓冲输出流对象
+			        BufferedWriter bw = new BufferedWriter(new FileWriter("myCharStream\\Copy.java"));
+			
+			        //读写数据，复制文件
+			        //使用字符缓冲流特有功能实现
+			        String line;
+			        while ((line=br.readLine())!=null) {
+			            bw.write(line);
+			            bw.newLine();
+			            bw.flush();
+			        }
+			
+			        //释放资源
+			        bw.close();
+			        br.close();
+			    }
+		}
 
 ----------
+# IO流小结 #
+
+- 字节流
+	- 字节输入流：InputStream（读数据）
+		- FileInputStream
+		- BufferedInputStream
+	- 字节输出流：OutputStream（写数据）
+		- FileOutputStream
+		- BufferedOutputStream
+	- 小结：字节流可以复制任意文件数据，有4种方式**一般采用字节缓冲流一次读写一个字节数组的方式**
+		- 基类---字节输入流：InputStream（读数据） && 字节输出流：OutputStream（写数据）
+			- int read()：一次读取一个字节
+			- int read(byte[] bys)：一次读取一个字节数组
+			- void write(int by)：一次写一个字节
+			- void write(byte[] bys,int index,int len)：一次写一个字节数组的一部分
+
+- 字符流
+	- 字符输入流：Reader（读数据）
+		- InputStreamReader（涉及编码）
+			- FileReader
+		- BufferedReader
+			- String readLine():一次读取一个字符串
+	- 字符输出流：Writer（写数据）
+		- OutputStreamWriter（涉及编码）
+			- FileWriter
+		- BufferedWriter
+			- void newLine():写一个换行符
+			- void write(String line):一次写一个字符串
+	- 小结：字符流只能复制文本数据，有5种方式，**一般采用字符缓冲流的特有功能**
+		- 基类---字符输入流：Reader（读数据） && 字符输出流：Writer（写数据）
+			- int read():一次读取一个字符
+			- int read(char[] chs):一次读取一个字符数组
+			- void write(int ch):一次写一个字符
+			- void write(char[] chs,int index,int len):一次写一个字符数组的一部分
+
+----------
+
 
 
 
