@@ -713,6 +713,239 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 			- void write(char[] chs,int index,int len):一次写一个字符数组的一部分
 
 ----------
+# 点名器案例 #
+
+    需求：
+        我有一个文件里面存储了班级同学的姓名，每一个姓名占一行，要求通过程序实现随点名器
+
+    思路：
+        1:创建字符缓冲输入流对象
+        2:创建ArrayList集合对象
+        3:调用字符缓冲输入流对象的方法读数据
+        4:把读取到的字符串数据存储到集合中
+        5:释放资源
+        6:使用Random产生一个随机数，随机数的范围在：[0,集合的长度)
+        7:把第6步产生的随机数作为索引到ArrayList集合中获取值
+        8:把第7步得到的数据输出在控制台
+
+## 实现代码 ##
+
+	public class CallNameDemo {
+	    public static void main(String[] args) throws IOException {
+	        //创建字符缓冲输入流对象
+	        BufferedReader br = new BufferedReader(new FileReader("myCharStream\\names.txt"));
+	
+	        //创建ArrayList集合对象
+	        ArrayList<String> array = new ArrayList<String>();
+	
+	        //调用字符缓冲输入流对象的方法读数据
+	        String line;
+	        while ((line=br.readLine())!=null) {
+	            //把读取到的字符串数据存储到集合中
+	            array.add(line);
+	        }
+	
+	        //释放资源
+	        br.close();
+	
+	        //使用Random产生一个随机数，随机数的范围在：[0,集合的长度)
+	        Random r = new Random();
+	        int index = r.nextInt(array.size());
+	
+	        //把第6步产生的随机数作为索引到ArrayList集合中获取值
+	        String name = array.get(index);
+	
+	        //把第7步得到的数据输出在控制台
+	        System.out.println("幸运者是：" + name);
+	    }
+	}
+
+## 运行结果 ##
+
+	幸运者是：林青霞
+	
+	Process finished with exit code 0
+
+
+# 学生类 #
+
+	package com.itheima_06;
+	
+	public class Student {
+	    private String sid;
+	    private String name;
+	    private int age;
+	    private String address;
+	
+	    public Student() {
+	    }
+	
+	    public Student(String sid, String name, int age, String address) {
+	        this.sid = sid;
+	        this.name = name;
+	        this.age = age;
+	        this.address = address;
+	    }
+	
+	    public String getSid() {
+	        return sid;
+	    }
+	
+	    public void setSid(String sid) {
+	        this.sid = sid;
+	    }
+	
+	    public String getName() {
+	        return name;
+	    }
+	
+	    public void setName(String name) {
+	        this.name = name;
+	    }
+	
+	    public int getAge() {
+	        return age;
+	    }
+	
+	    public void setAge(int age) {
+	        this.age = age;
+	    }
+	
+	    public String getAddress() {
+	        return address;
+	    }
+	
+	    public void setAddress(String address) {
+	        this.address = address;
+	    }
+	}
+
+
+# 拓展1 #
+
+	package com.itheima_06;
+	
+	import java.io.BufferedWriter;
+	import java.io.FileWriter;
+	import java.io.IOException;
+	import java.util.ArrayList;
+	
+	/*
+	    需求：
+	        把ArrayList集合中的学生数据写入到文本文件。要求：每一个学生对象的数据作为文件中的一行数据
+	        格式：学号,姓名,年龄,居住地	举例：itheima001,林青霞,30,西安
+	
+	    思路：
+	        1:定义学生类
+	        2:创建ArrayList集合
+	        3:创建学生对象
+	        4:把学生对象添加到集合中
+	        5:创建字符缓冲输出流对象
+	        6:遍历集合，得到每一个学生对象
+	        7:把学生对象的数据拼接成指定格式的字符串
+	        8:调用字符缓冲输出流对象的方法写数据
+	        9:释放资源
+	 */
+	public class ArrayListToFileDemo {
+	    public static void main(String[] args) throws IOException {
+	        //创建ArrayList集合
+	        ArrayList<Student> array = new ArrayList<Student>();
+	
+	        //创建学生对象
+	        Student s1 = new Student("itheima001", "林青霞", 30, "西安");
+	        Student s2 = new Student("itheima002", "张曼玉", 35, "武汉");
+	        Student s3 = new Student("itheima003", "王祖贤", 33, "郑州");
+	
+	        //把学生对象添加到集合中
+	        array.add(s1);
+	        array.add(s2);
+	        array.add(s3);
+	
+	        //创建字符缓冲输出流对象
+	        BufferedWriter bw = new BufferedWriter(new FileWriter("myCharStream\\students.txt"));
+	
+	        //遍历集合，得到每一个学生对象
+	        for (Student s : array) {
+	            //把学生对象的数据拼接成指定格式的字符串
+	            StringBuilder sb = new StringBuilder();
+	            sb.append(s.getSid()).append(",").append(s.getName()).append(",").append(s.getAge()).append(",").append(s.getAddress());
+	
+	            //调用字符缓冲输出流对象的方法写数据
+	            bw.write(sb.toString());
+	            bw.newLine();
+	            bw.flush();
+	        }
+	
+	        //释放资源
+	        bw.close();
+	    }
+	}
+
+
+## 拓展2 ##
+
+	package com.itheima_06;
+	
+	import java.io.BufferedReader;
+	import java.io.FileReader;
+	import java.io.IOException;
+	import java.util.ArrayList;
+	
+	/*
+	    需求：把文本文件中的数据读取到集合中，并遍历集合。要求：文件中每一行数据是一个学生对象的成员变量值
+	          举例：itheima001,林青霞,30,西安
+	
+	    思路：
+	        1:定义学生类
+	        2:创建字符缓冲输入流对象
+	        3:创建ArrayList集合对象
+	        4:调用字符缓冲输入流对象的方法读数据
+	        5:把读取到的字符串数据用split()进行分割，得到一个字符串数组
+	        6:创建学生对象
+	        7:把字符串数组中的每一个元素取出来对应的赋值给学生对象的成员变量值
+	        8:把学生对象添加到集合
+	        9:释放资源
+	        10:遍历集合
+	 */
+	public class FileToArrayListDemo {
+	    public static void main(String[] args) throws IOException {
+	        //创建字符缓冲输入流对象
+	        BufferedReader br = new BufferedReader(new FileReader("myCharStream\\students.txt"));
+	
+	        //创建ArrayList集合对象
+	        ArrayList<Student> array = new ArrayList<Student>();
+	
+	        //调用字符缓冲输入流对象的方法读数据
+	        String line;
+	        while ((line = br.readLine()) != null) {
+	            //把读取到的字符串数据用split()进行分割，得到一个字符串数组
+	            String[] strArray = line.split(",");
+	
+	            //创建学生对象
+	            Student s = new Student();
+	            //把字符串数组中的每一个元素取出来对应的赋值给学生对象的成员变量值
+	            //itheima001,林青霞,30,西安
+	            s.setSid(strArray[0]);
+	            s.setName(strArray[1]);
+	            s.setAge(Integer.parseInt(strArray[2]));
+	            s.setAddress(strArray[3]);
+	
+	            //把学生对象添加到集合
+	            array.add(s);
+	        }
+	
+	        //释放资源
+	        br.close();
+	
+	        //遍历集合
+	        for (Student s : array) {
+	            System.out.println(s.getSid() + "," + s.getName() + "," + s.getAge() + "," + s.getAddress());
+	        }
+	    }
+	}
+
+
+----------
 
 
 

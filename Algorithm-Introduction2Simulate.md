@@ -1,11 +1,12 @@
 ---
-title: 算法笔记-入门模拟
+title: 算法笔记-入门
 categories:
   - 算法笔记
 tags:
   - 算法
   - C++
   - 入门模拟
+  - 数学问题
 date: 2020-09-28 16:36:16
 author: Jungle
 
@@ -761,4 +762,385 @@ author: Jungle
 	}
 
 ----------
+# codeup-1818 #
 
+- 最大公约数
+- 最小公倍数
+- 分数的四则运算
+- 找100以内的素数
+
+
+		/*
+		题目描述：输入两个正整数，求其最大公约数。
+		输入：测试数据有多组，每组输入两个正整数。
+		输出：对于每组输入,请输出其最大公约数。
+		样例输入：49 14
+		样例输出：7
+		*/
+		#include <cstdio>
+		#include <algorithm>
+		#include <cmath>
+		
+		//求最大公约数的辗转相除法递归写法
+		int gcd(int a, int b) {
+		    if(b == 0){
+		        return a;
+		    }else{
+		        return gcd(b, a % b);
+		    }
+		}
+		
+		//在gcd的基础上求最小公倍数
+		int lcm(int a, int b) {
+		    int d = gcd(a, b);
+		
+		    //return (a * b) / d;
+		    return a / d * b; //为防止溢出
+		}
+		
+		/* 
+		分数的表示：
+		1. 使down为非负数。如果分数为负，那么令分子up为负即可。
+		2. 如果该分数恰好为0，那么规定其分子为0，分母为1。
+		3. 分子和分母没有除了1以外的公约数。
+		*/
+		struct Fraction { 
+		    long long up; //分子
+		    long long down; //分母
+		}; //结构体要有分号
+		
+		/*
+		分数的化简：
+		1. 如果分母down为负数，那么令分子up和down都变为相反数。
+		2. 如果分子up为0，那么令分母down为1。
+		3. 约分：求出分子绝对值与分母绝对值的最大公约数d，然后令分子分母同时除以d。
+		*/
+		Fraction reduction(Fraction result) {
+		    //如果分母down为负数，那么令分子up和down都变为相反数。
+		    if (result.down < 0) 
+		    {
+		        result.up = (-result.up);
+		        result.down = (-result.down);
+		    }
+		
+		    //如果分子up为0，那么令分母down为1。
+		    if (result.up == 0)
+		    {
+		        result.down = 1;
+		    } else //如果分子不为0，进行约分
+		    {
+		        //求出分子绝对值与分母绝对值的最大公约数d，然后令分子分母同时除以d。
+		        int d = gcd(abs(result.up), abs(result.down));
+		        result.up /= d;
+		        result.down /= d;
+		    }    
+		
+		    return result;
+		}
+		
+		//分数的加法
+		Fraction add(Fraction f1, Fraction f2) {
+		    Fraction result;
+		    result.up = f1.up * f2.down + f2.up * f1.down;
+		    result.down = f1.down * f2.down;
+		
+		    return reduction(result);
+		}
+		
+		//分数的减法
+		Fraction minu(Fraction f1, Fraction f2) {
+		    Fraction result;
+		    result.up = f1.up * f2.down - f2.up * f1.down;
+		    result.down = f1.down * f2.down;
+		
+		    return reduction(result);
+		}
+		
+		//分数的乘法
+		Fraction multi(Fraction f1, Fraction f2) {
+		    Fraction result;
+		    result.up = f1.up * f2.up;
+		    result.down = f1.down * f2.down;
+		
+		    return reduction(result);
+		}
+		
+		//分数的除法
+		Fraction devide(Fraction f1, Fraction f2) {
+		    Fraction result;
+		    result.up = f1.up * f2.down;
+		    result.down = f1.down * f2.up;
+		
+		    return reduction(result);
+		}
+		
+		//分数的输出
+		void showResult(Fraction r) {
+		    r = reduction(r);
+		
+		    if(r.down == 1) {
+		        printf("%lld", r.up); //整数
+		    }else if (abs(r.up) > r.down) { //假分数
+		        printf("%d %d/%d", r.up/r.down, abs(r.up)%r.down, r.down);
+		    }else //真分数
+		    {
+		        printf("%d/%d", r.up, r.down);
+		    }
+		    
+		}
+		
+		//素数的判断：除了1和本身之外，不能被其他整数整除的一类数。
+		bool isPrime(int n) {
+		    //1既不是素数也不是合数
+		    if (n <= 1) return false;
+		    int sqr = sqrt(1.0 * n);
+		    for (int i = 2; i <= sqr; i++)
+		    {
+		        if (n % i == 0) return false;
+		    }
+		    
+		    return true;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+		}
+		
+		const int maxn = 101; //表长
+		int prime[maxn], pNum = 0; //prime数组存放所有素数，pNum为素数个数
+		bool p[maxn] = {0}; //如果i为素数，则p[i]为false；否则，p[i]为true。
+		//求解100以内的所有素数，maxn <= 10的5次方。
+		void Find_Prime() {
+		    for (int i = 2; i < maxn; i++)
+		    {
+		        if (p[i] == false) //如果i为素数
+		        {
+		            prime[pNum++] = i; //是素数则把i存入prime数组
+		            for (int j = i + i; j < maxn; j += i)
+		            {
+		                //筛去所有i的倍数
+		                p[j] = true;
+		            }
+		            
+		        }        
+		    }    
+		}
+		
+		
+		
+		int main() {
+		    /* int m, n;
+		    while (scanf("%d%d", &m, &n) != EOF) //最普遍地说，它是ASCII码中的替换字符（Control-Z，代码26）
+		    {
+		        printf("%d\n", gcd(m, n));
+		        printf("%d\n", lcm(m, n));
+		    } */
+		
+		    /* Fraction f1, f2;
+		    f1.up = 8, f1.down = 9;
+		    f2.up = 9, f2.down = 8;
+		    Fraction f3 = multi(f1, f2); 
+		    showResult(f3); */
+		    
+		    Find_Prime();
+		    for (int i = 0; i < pNum; i++)
+		    {
+		        printf("%d ", prime[i]);
+		    }
+		    printf("\n");   
+		
+		    return 0;
+		}
+
+----------
+# B1013-数素数 #
+
+## 描述 ##
+	令 P[​i] 表示第 i 个素数。
+	现任给两个正整数 M≤N≤10的​4次方​，请输出 P[M​​] 到 P[​N​​]  的所有素数。
+
+## 输入格式 ##
+	输入在一行中给出 M 和 N，其间以空格分隔。
+
+## 输出格式 ##
+	输出从 P[​M​​] 到 P[​N]​​ 的所有素数，
+	每 10 个数字占 1 行，其间以空格分隔，但行末不得有多余空格。
+## 输入样例 ##
+	5 27
+## 输出样例 ##
+	11 13 17 19 23 29 31 37 41 43
+	47 53 59 61 67 71 73 79 83 89
+	97 101 103
+## 示例代码 ##
+	#include <cstdio>
+	
+	const int maxn = 1000001; //表长
+	int prime[maxn], num = 0; //prime数组存放所有素数，pNum为素数个数
+	bool p[maxn] = {0}; //如果i为素数，则p[i]为false；否则，p[i]为true。
+	//找n个素数
+	void Find_Prime(int n) {
+	    for (int i = 2; i < maxn; i++)
+	    {
+	        if (p[i] == false) //如果i为素数
+	        {
+	            prime[num++] = i; //是素数则把i存入prime数组
+	            if (num >= n) break; //只需要n个素数
+	            for (int j = i + i; j < maxn; j += i)
+	            {
+	                //筛去所有i的倍数
+	                p[j] = true;
+	            }
+	            
+	        }        
+	    }    
+	}
+	
+	//输出第M~N个素数（M <= N <= 10的4次方）
+	int main() {
+	    int m, n, count = 0;
+	    scanf("%d%d", &m, &n);
+	    Find_Prime(n);
+	    for (int i = m; i <= n; i++)
+	    {
+	        //输出第m个素数至第n个素数
+	        printf("%d", prime[i-1]); //下标从0开始
+	        count++;
+	        //每 10 个数字占 1 行，其间以空格分隔，但行末不得有多余空格。
+	        if (count % 10 != 0 && i < n) 
+	            printf(" ");
+	        else
+	            printf("\n");
+	    }    
+	
+	    return 0;
+	}
+
+----------
+# A1059 Prime Factors #
+
+## 描述 ##
+	Given any positive integer N, you are supposed to find all of its prime factors,
+	and write them in the format N = p​1Lk1] * p2[k2] * ⋯ * pm * k[m].
+
+## Input Specification: ##
+	Each input file contains one test case 
+	which gives a positive integer N in the range of long int.
+
+## Output Specification: ##
+	Factor N in the format N = p1^k1 * p2^k2 * … * pm^km, 
+	where p​i's are prime factors of N in increasing order,
+	and the exponent k​i is the number of p​i​​
+	-- hence when there is only one p​i​​,
+	k​i is 1 and must NOT be printed out.
+
+## Sample Input: ##
+	97532468
+
+## Sample Output: ##
+	97532468=2^2*11*17*101*1291
+
+## 示例代码 ##
+
+	#include <cstdio>
+	#include <cmath>
+	
+	const int maxn = 100010;
+	
+	//判断n是否是素数
+	bool is_Prime(int n) {
+	    //1既不是素数也不是合数
+	    if (n <= 1) return false;
+	    int sqr = sqrt(1.0 * n);
+	    for (int i = 2; i <= sqr; i++)
+	    {
+	        if (n % i == 0) return false;
+	    }
+	    
+	    return true;                                                                                          
+	}
+	
+	int prime[maxn], pNum = 0; 
+	bool p[maxn] = {0}; //如果i为素数，则p[i]为false；否则，p[i]为true。
+	//求素数表
+	void Find_Prime() {
+	    /* for (int i = 1; i < maxn; i++)
+	    {
+	        if (is_Prime(i) == true)
+	        {
+	            prime[pNum++] = i;
+	        }
+	        
+	    }     */
+		
+		//改进代码
+	    for (int i = 2; i < maxn; i++)
+	    {
+	        if (p[i] == false) //如果i为素数
+	        {
+	            prime[pNum++] = i; //是素数则把i存入prime数组
+	            for (int j = i + i; j < maxn; j += i)
+	            {
+	                //筛去所有i的倍数
+	                p[j] = true;
+	            }
+	            
+	        }        
+	    }    
+	}
+	
+	//存放质因子
+	struct fractor {
+	    int x, cnt; //x为质因子，cnt为其个数
+	}fac[10];
+	
+	//给出一个int范围的整数，按照从小到大的顺序输出其分解为质因数的乘法算式
+	int main() {
+	    Find_Prime();
+	    int n, num = 0; //num为n的不同质因子的个数
+	    scanf("%d", &n);
+	    if(n == 1) printf("1 == 1"); //特判1的情况
+	    else
+	    {
+	        printf("%d=", n);
+	        int sqr = (int)sqrt(1.0 * n); //根号n
+	        //枚举根号n以内的质因子
+	        for (int i = 0; i < pNum && prime[i] <= sqr; i++)
+	        {
+	            //如果prime[i]是n的因子
+	            if (n % prime[i] == 0)
+	            {
+	                fac[num].x = prime[i]; //记录该因子
+	                fac[num].cnt = 0;
+	
+	                //计算出质因子prime[i]的个数
+	                while (n % prime[i] == 0) 
+	                {
+	                    fac[num].cnt++;
+	                    n /= prime[i];
+	                }
+	
+	                num++; //不同质因子个数加1
+	            }
+	
+	            if (n == 1) break; //及时退出循环，节省点时间
+	        }
+	
+	        //如果在上面的操作结束后n仍然大于1，说明有且仅有一个大于sqrt(n)的质因子（有可能是n本身）
+	        if (n != 1)
+	        {
+	            fac[num].x = n;
+	            fac[num++].cnt = 1;
+	        }
+	
+	        //按格式输出结果
+	        for (int i = 0; i < num; i++)
+	        {
+	            if (i > 0) printf("*");
+	            printf("%d", fac[i].x);
+	            if (fac[i].cnt > 1)
+	            {
+	                printf("^%d", fac[i].cnt);
+	            }            
+	        }        
+	    }    
+	
+	    return 0;
+	}
+
+----------
