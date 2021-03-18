@@ -45,12 +45,16 @@ author: Jungle
 # 引用数据类型 #
 
 ## 字符串 ##
+- string 
 
 ## 数组 ##
+- type[] name = new type[size];
 
 ## 类 ##
+- class 
 
 ## Lambda ##
+- (...) -> {do sth...}
 
 ----------
 
