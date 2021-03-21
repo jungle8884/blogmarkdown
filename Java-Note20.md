@@ -5,6 +5,12 @@ categories:
 tags:
   - File
   - BufferStream
+  - InputStreamReader
+  - OutputStreamWriter
+  - FileReader
+  - FileWriter
+  - BufferReader
+  - BufferWriter
 author:
   - Jungle
 date: 2020-12-14 15:19:37
@@ -31,11 +37,11 @@ date: 2020-12-14 15:19:37
         public boolean createNewFile()：当具有该名称的文件不存在时，创建一个由该抽象路径名命名的新空文件
             如果文件不存在，就创建文件，并返回true
             如果文件存在，就不创建文件，并返回false
-
+    
         public boolean mkdir()：创建由此抽象路径名命名的目录
             如果目录不存在，就创建目录，并返回true
             如果目录存在，就不创建目录，并返回false
-
+    
         public boolean mkdirs()：创建由此抽象路径名命名的目录，包括任何必需但不存在的父目录
             如果目录不存在，就创建目录，并返回true
             如果目录存在，就不创建目录，并返回false
@@ -44,11 +50,11 @@ date: 2020-12-14 15:19:37
         public boolean isDirectory()：测试此抽象路径名表示的File是否为目录
         public boolean isFile()：测试此抽象路径名表示的File是否为文件
         public boolean exists()：测试此抽象路径名表示的File是否存在
-
+    
         public String getAbsolutePath()：返回此抽象路径名的绝对路径名字符串
         public String getPath()：将此抽象路径名转换为路径名字符串
         public String getName()：返回由此抽象路径名表示的文件或目录的名称
-
+    
         public String[] list()：返回此抽象路径名表示的目录中的文件和目录的名称字符串数组
         public File[] listFiles()：返回此抽象路径名表示的目录中的文件和目录的File对象数组
 
@@ -100,7 +106,7 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 		- 是：递归调用
 		- 不是：获取绝对路径输出在控制台
 	6. 调用方法
-	    
+	   
 
 				public static void main(String[] args) {
 			        //根据给定的路径创建一个File对象
@@ -144,19 +150,19 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 		        //字节缓冲输出流：BufferedOutputStream​(OutputStream out)
 		//        FileOutputStream fos = new FileOutputStream("myByteStream\\bos.txt");
 		//        BufferedOutputStream bos = new BufferedOutputStream(fos);
-
-        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream("myByteStream\\bos.txt"));
-        //写数据
-        bos.write("hello\r\n".getBytes());
-        bos.write("world\r\n".getBytes());
-        //释放资源
-        bos.close();
+	
+	    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream("myByteStream\\bos.txt"));
+	    //写数据
+	    bos.write("hello\r\n".getBytes());
+	    bos.write("world\r\n".getBytes());
+	    //释放资源
+	    bos.close();
 
 
 
         //字节缓冲输入流：BufferedInputStream​(InputStream in)
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream("myByteStream\\bos.txt"));
-
+    
         //一次读取一个字节数据
         int by;
         while ((by=bis.read())!=-1) {
@@ -170,10 +176,11 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
             System.out.print(new String(bys,0,len));
         }
 
-    
-        //释放资源
-        bis.close();
-    }
+
+​    
+​        //释放资源
+​        bis.close();
+​    }
 }
 
 ## 复制视频文件 ##
@@ -241,15 +248,16 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 		        bos.close();
 		        bis.close();
 		    }
-		
-		
-		    //基本字节流一次读写一个字节数组
-		    public static void method2() throws IOException {
-		        //E:\\itcast\\字节流复制图片.avi
-		        //模块目录下的 字节流复制图片.avi
-		        FileInputStream fis = new FileInputStream("E:\\itcast\\字节流复制图片.avi");
-		        FileOutputStream fos = new FileOutputStream("myByteStream\\字节流复制图片.avi");
-		
+	
+	
+	​	
+	​	    //基本字节流一次读写一个字节数组
+	​	    public static void method2() throws IOException {
+	​	        //E:\\itcast\\字节流复制图片.avi
+	​	        //模块目录下的 字节流复制图片.avi
+	​	        FileInputStream fis = new FileInputStream("E:\\itcast\\字节流复制图片.avi");
+	​	        FileOutputStream fos = new FileOutputStream("myByteStream\\字节流复制图片.avi");
+	​	
 		        byte[] bys = new byte[1024];
 		        int len;
 		        while ((len=fis.read(bys))!=-1) {
@@ -290,7 +298,7 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 		这样大约可以组合了包含7000多个简体汉字，此外数学符号、罗马希腊的字母、日文的假名等都编进去了，
 		连在ASCII里本来就有的数字、标点、字母都统统重新编了两个字节长的编码，
 		这就是常说的"全角"字符，而原来在127号以下的那些就叫"半角"字符了
-		
+	
 - **GBK：最常用的中文码表。**
 		
 		是在GB2312标准基础上的扩展规范，使用了双字节编码方案，共收录了
@@ -337,26 +345,26 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 
 ## 演示代码 ##
 
-		public class StringDemo {
-		    public static void main(String[] args) throws UnsupportedEncodingException {
-		        //定义一个字符串
-		        String s = "中国";
-		
-		        //byte[] getBytes()：使用平台的默认字符集将该 String编码为一系列字节，将结果存储到新的字节数组中
-		        //byte[] bys = s.getBytes(); //[-28, -72, -83, -27, -101, -67]
-		        //byte[] getBytes(String charsetName)：使用指定的字符集将该 String编码为一系列字节，将结果存储到新的字节数组中
-		//        byte[] bys = s.getBytes("UTF-8"); //[-28, -72, -83, -27, -101, -67]
-		        byte[] bys = s.getBytes("GBK"); //[-42, -48, -71, -6]
-		        System.out.println(Arrays.toString(bys));
-		
-		        //String(byte[] bytes)：通过使用平台的默认字符集解码指定的字节数组来构造新的 String
-		//        String ss = new String(bys);
-		        //String(byte[] bytes, String charsetName)：通过指定的字符集解码指定的字节数组来构造新的 String
-		//        String ss = new String(bys,"UTF-8");
-		        String ss = new String(bys,"GBK");
-		        System.out.println(ss);
-		    }
-		}
+	public class StringDemo {
+	    public static void main(String[] args) throws UnsupportedEncodingException {
+	        //定义一个字符串
+	        String s = "中国";
+	
+	        //byte[] getBytes()：使用平台的默认字符集将该 String编码为一系列字节，将结果存储到新的字节数组中
+	        //byte[] bys = s.getBytes(); //[-28, -72, -83, -27, -101, -67]
+	        //byte[] getBytes(String charsetName)：使用指定的字符集将该 String编码为一系列字节，将结果存储到新的字节数组中
+	//        byte[] bys = s.getBytes("UTF-8"); //[-28, -72, -83, -27, -101, -67]
+	        byte[] bys = s.getBytes("GBK"); //[-42, -48, -71, -6]
+	        System.out.println(Arrays.toString(bys));
+	
+	        //String(byte[] bytes)：通过使用平台的默认字符集解码指定的字节数组来构造新的 String
+	//        String ss = new String(bys);
+	        //String(byte[] bytes, String charsetName)：通过指定的字符集解码指定的字节数组来构造新的 String
+	//        String ss = new String(bys,"UTF-8");
+	        String ss = new String(bys,"GBK");
+	        System.out.println(ss);
+	    }
+	}
 
 
 ----------
@@ -368,6 +376,7 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 # 字符流中和编码解码问题相关的两个类 #
 
 ## InputStreamReader：字符输入流，是从字节流到字符流的桥梁 ##
+
     它读取字节，并使用指定的编码将其解码为字符
     它使用的字符集可以由名称指定，也可以被明确指定，或者可以接受平台的默认字符集
 
@@ -397,16 +406,17 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 			        while ((len = isr.read(chs)) != -1) {
 			            System.out.print(new String(chs, 0, len)); //将字符数组转换为字符串
 			        }
-			
-			
-			        //释放资源
-			        isr.close();
-			    }
-			}
+
+
+​			
+​			        //释放资源
+​			        isr.close();
+​			    }
+​			}
 
 ## OutputStreamWriter：字符输出流，是从字符流到字节流的桥梁 ##
 	是从字符流到字节流的桥梁，使用指定的编码将写入的字符编码为字节
-    它使用的字符集可以由名称指定，也可以被明确指定，或者可以接受平台的默认字符集
+	它使用的字符集可以由名称指定，也可以被明确指定，或者可以接受平台的默认字符集
 
 - 构造方法：	 
 	- OutputStreamWriter​(OutputStream out)：创建一个使用默认字符编码的OutputStreamWriter
@@ -458,13 +468,21 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 ----------
 # 字符流的便捷类 #
 
-- FileReader：用于读取字符文件的便捷类 
+## FileReader：用于读取字符文件的便捷类
 
-	FileReader​(String fileName)
+```
+FileReader​(String fileName)
+```
 
-- FileWriter：用于写入字符文件的便捷类
 
-	FileWriter​(String fileName)
+
+## FileWriter：用于写入字符文件的便捷类
+
+```
+FileWriter​(String fileName)
+```
+
+
 
 
 ## 实现代码 ##
@@ -498,6 +516,7 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 # 字符缓冲流 #
 
 ## BufferedWriter ##
+
 	将文本写入字符输出流，缓冲字符，以提供单个字符，数组和字符串的高效写入，可以指定缓冲区大小，或者可以接受默认大小。默认值足够大，可用于大多数用途
 ## BufferedReader ##
 	从字符输入流读取文本，缓冲字符，以提供字符，数组和行的高效读取，可以指定缓冲区大小，或者可以使用默认大小。 默认值足够大，可用于大多数用途
@@ -541,8 +560,9 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 
 ## 字符缓冲流特有功能 ##
 - BufferedWriter：
-	- void newLine()：写一行行分隔符，行分隔符字符串由系统属性定义
-
+	
+- void newLine()：写一行行分隔符，行分隔符字符串由系统属性定义
+	
 - BufferedReader：
 	- public String readLine()：读一行文字。
     	- 结果包含行的内容的字符串，
@@ -717,7 +737,7 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 
     需求：
         我有一个文件里面存储了班级同学的姓名，每一个姓名占一行，要求通过程序实现随点名器
-
+    
     思路：
         1:创建字符缓冲输入流对象
         2:创建ArrayList集合对象
@@ -766,8 +786,7 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 	
 	Process finished with exit code 0
 
-
-# 学生类 #
+# 学生类的拓展 #
 
 	package com.itheima_06;
 	
@@ -820,8 +839,7 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 	    }
 	}
 
-
-# 拓展1 #
+## 拓展1 ##
 
 	package com.itheima_06;
 	
@@ -880,7 +898,6 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 	        bw.close();
 	    }
 	}
-
 
 ## 拓展2 ##
 

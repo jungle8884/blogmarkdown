@@ -3,7 +3,11 @@ title: Java_Note1
 categories:
   - Java
 tags:
+  - JVM
   - JDK
+  - JRE
+  - 存储单位
+  - 命令提示符
 date: 2020-06-14 15:39:51
 author: Jungle
 
@@ -46,6 +50,7 @@ author: Jungle
 	开发一个全新的Java程序, 必须安装JDK
 	JDK(包含)-->JRE(包含)-->JVM
 ## JVM ##
+
 - Java Virtual Machine: Java虚拟机
 ## JRE ##
 - Java Runtime Environment: Java程序的运行环境
@@ -84,3 +89,4 @@ author: Jungle
 
 
 
+  

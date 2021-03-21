@@ -12,11 +12,13 @@ author: Jungle
 # java.util.List extends Collection #
 
 ## List接口的特点 ##
+
 1. 有序的集合, 存储元素和取出元素的顺序是一致的
 2. 有索引, 包含了一些带索引的方法
 3. 允许存储重复的元素
 
 ## List接口中带有索引的方法 ##
+
 - public void add(int index, E element) :  在列表的指定位置插入指定元素
 - public  E get(int index) :  返回列表中指定位置的元素。 
 - public E remove(int index) :  移除列表中指定位置的元素, 返回的是被移除的元素.
@@ -81,8 +83,9 @@ author: Jungle
 	- 换句话说，将该元素插入此列表的开头。 
 	- 此方法等效于 addFirst(E)。 
 - public void addLast(E e): 将指定元素添加到此列表的结尾。
-	- 等效于 add() 方法
-
+	
+- 等效于 add() 方法
+	
 - public E getFirst(): 返回此列表的第一个元素。
 - public E getLast(): 返回此列表的最后一个元素。
 - public void clear(): 从此列表中移除所有元素。
@@ -92,7 +95,7 @@ author: Jungle
 	- 换句话说，移除并返回此列表的第一个元素。
 	-  此方法等效于 removeFirst()。
 - public E removeLast(): 移除并返回此列表的最后一个元素。
- 
+
 - public boolean isEmpty(): 如果此 列表 不包含元素，则返回 true。 
 
 		package demo;
@@ -324,9 +327,24 @@ author: Jungle
 
 ----------
 ## java.util.LinkedHashSet 集合 extends HashSet 集合 ##
+
 **LinkedHashSet 集合特点:**
 
 - 底层是一个哈希表 (数组+链表/红黑树) + **链表**: 多了一条链表 (记录元素的存储顺序), 保证元素有序.
 - 也不允许重复
+
+## java.util.TreeSet
+
+**TreeSet集合概述**
+
+- 元素有序，可以按照一定的规则进行排序，具体排序方式取决于构造方法
+
+  - TreeSet()：根据其元素的自然排序进行排序
+
+  - TreeSet(Comparator comparator) ：根据指定的比较器进行排序
+
+- 没有带索引的方法，所以不能使用普通for循环遍历
+
+- 由于是Set集合，所以不包含重复元素的集合
 
 

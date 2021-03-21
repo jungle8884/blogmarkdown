@@ -3,14 +3,18 @@ title: Java-Note8
 categories:
   - Java
 tags:
+  - Scanner
   - 匿名对象
   - ArrayList
   - String
+  - == 
+  - equals
 date: 2020-09-13 19:31:32
 author: Jungle
 
 ---
 # Scanner #
+
 可以实现键盘输入数据，到程序当中。
 
 使用步骤：
@@ -28,16 +32,19 @@ author: Jungle
 ----------
 # 匿名对象 #
 
-*类名称 对象名 = new 类名称();*
+```
+类名称 对象名 = new 类名称();
 
 只有右边的对象，没有左边的名字和赋值运算符。
 
-**new 类名称();**
+new 类名称();
+```
 
 **匿名对象只能使用唯一的一次，下次再用不得不再创建一个新对象。**
 
 ----------
 # Random #
+
 1. 导包：import java.util.Random;
 2. 创建：Random r = new Random();
 3. 使用：
@@ -53,21 +60,22 @@ author: Jungle
 	- 若要获取 [1, n]，整体加 1 即可。
 			
 		    int n = 10;
-			int num = r.nextInt(n) + 1;	
-				
+		    int num = r.nextInt(n) + 1;	
+		
 
 ----------
 # ArrayList #
+
+```
 数组的长度不可以发生改变，但是ArryList集合的长度是可以随意变化的。
 
 对于ArrayList来说，有一个尖括号<E>代表泛型。
+```
 
 **注意：泛型只能是引用类型，不能是基本类型。**
 
-如果内容为空，得到的是空的括号。
-
-
 ## 常用方法 ##
+
 1. add
 	
 		public boolean add(E e)
@@ -111,6 +119,7 @@ author: Jungle
 
 ----------
 # String #
+
 java.lang.String类代表字符串，
 Java程序中的所有**字符串字面值**都作为此类的实例实现，其实就是说：程序当中所有的**双引号字符串**，**都是String类的对象**。（就算没有new，照样也是。 如： "abs"）
 
@@ -138,16 +147,15 @@ Java程序中的所有**字符串字面值**都作为此类的实例实现，其
 - 对于基本类型来说，== 是进行数值的比较。
 - 对于引用类型来说，== 是进行【地址值】的比较。
 
+## == 是进行对象的【地址值】比较，如果确实需要字符串的内容比较，可以使用以下两个方法：
 
-*== 是进行对象的【地址值】比较，如果确实需要字符串的内容比较，可以使用以下两个方法：*
-
-- public boolean equals(Object obj): 参数可以是任何对象，但是，只有参数是一个字符串并且内容相同的才会给true；否则返回false。
+- public boolean **equals**(Object obj): 参数可以是任何对象，但是，只有参数是一个字符串并且内容相同的才会给true；否则返回false。
 	- 注意事项：
 		1. 任何对象都能用Object进行接收。
 		2. equals方法具有对称性，也就是a.equals(b)和b.equals(a)效果一样。
 		3. 如果比较双方一个常量一个变量，推荐把常量字符串写在前面。 如："abc".equals(str);
 
-- public boolean equalsIgnoreCase(String str): 忽略大小写，进行内容比较。
+- public boolean **equalsIgnoreCase**(String str): 忽略大小写，进行内容比较。
 
 
 

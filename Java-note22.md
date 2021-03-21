@@ -3,7 +3,10 @@ title: Java-note22
 categories:
   - Java
 tags:
-  - 计算机网络
+  - 网络编程
+  - IP
+  - UDP
+  - TCP
 author:
   - Jungle
 date: 2021-02-06 12:25:30
@@ -59,8 +62,8 @@ date: 2021-02-06 12:25:30
 - public String getHostAddress​()：返回文本显示中的IP地址字符串
 
 		InetAddress address = InetAddress.getByName("192.168.31.170");
-        String name = address.getHostName();
-        String ip = address.getHostAddress();
+  	  String name = address.getHostName();
+  	  String ip = address.getHostAddress();
 
 ## UDP通信程序 ##
 	UDP协议是一种不可靠的网络协议，它在通信的两端各建立一个Socket对象，但是这两个Socket只是发
@@ -261,29 +264,30 @@ date: 2021-02-06 12:25:30
 	4. 释放资源 --> void close​()
 
 - 构造方法：
-	- ServletSocket(int port) 创建绑定到指定端口的服务器套接字
-
+	
+- ServletSocket(int port) 创建绑定到指定端口的服务器套接字
+	
 - 相关方法：
 	- Socket accept() 监听要连接到此的套接字并接受它
 	- InputStream getInputStream()： 返回此套接字的输入流
 
 			//创建服务器端的Socket对象(ServerSocket)
-	        //ServerSocket​(int port) 创建绑定到指定端口的服务器套接字
-	        ServerSocket ss = new ServerSocket(10000);
-	
-	        //Socket accept​() 侦听要连接到此套接字并接受它
-	        Socket s = ss.accept();
-	
-	        //获取输入流，读数据，并把数据显示在控制台
-	        InputStream is = s.getInputStream();
-	        byte[] bys = new byte[1024];
-	        int len = is.read(bys); //数据不多，读一次就好了
-	        String data = new String(bys,0,len);
-	        System.out.println("数据是：" + data);
-	
-	        //释放资源
-	        s.close();
-	        ss.close();
+	  	  //ServerSocket​(int port) 创建绑定到指定端口的服务器套接字
+	  	  ServerSocket ss = new ServerSocket(10000);
+		
+	  	  //Socket accept​() 侦听要连接到此套接字并接受它
+	  	  Socket s = ss.accept();
+		
+	  	  //获取输入流，读数据，并把数据显示在控制台
+	  	  InputStream is = s.getInputStream();
+	  	  byte[] bys = new byte[1024];
+	  	  int len = is.read(bys); //数据不多，读一次就好了
+	  	  String data = new String(bys,0,len);
+	  	  System.out.println("数据是：" + data);
+		
+	  	  //释放资源
+	  	  s.close();
+	  	  ss.close();
 
 ## TCP小程序练习 ##
 

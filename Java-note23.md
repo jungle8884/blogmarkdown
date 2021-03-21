@@ -1,36 +1,52 @@
+---
+title: Java-note23
+categories:
+  - Java
+tags:
+  - 基础加强笔记
+  - 测试
+  - 反射
+  - 注解
+author:
+  - Jungle
+date: 2021-3-18
+
+---
+
 # 今日内容
+
 	1. Junit单元测试
 	2. 反射
 	3. 注解
 
-
 ## Junit单元测试：
+
 	* 测试分类：
 		1. 黑盒测试：不需要写代码，给输入值，看程序是否能够输出期望的值。
 		2. 白盒测试：需要写代码的。关注程序具体的执行流程。
-
+	
 	* Junit使用：白盒测试
 		* 步骤：
 			1. 定义一个测试类(测试用例)
 				* 建议：
 					* 测试类名：被测试的类名Test		CalculatorTest
 					* 包名：xxx.xxx.xx.test		cn.itcast.test
-
+	
 			2. 定义测试方法：可以独立运行
 				* 建议：
 					* 方法名：test测试的方法名		testAdd()  
 					* 返回值：void
 					* 参数列表：空参
-
+	
 			3. 给方法加@Test
 			4. 导入junit依赖环境
-
+	
 		* 判定结果：
 			* 红色：失败
 			* 绿色：成功
 			* 一般我们会使用断言操作来处理结果
 				* Assert.assertEquals(期望的结果,运算的结果);
-
+	
 		* 补充：
 			* @Before:
 				* 修饰的方法会在测试方法之前被自动执行
@@ -53,7 +69,7 @@
 			* 多用于参数的传递
 		3. 对象.getClass()：getClass()方法在Object类中定义着。
 			* 多用于对象的获取字节码的方式
-
+	
 		* 结论：
 			同一个字节码文件(*.class)在一次程序运行过程中，只会被加载一次，不论通过哪一种方式获取的Class对象都是同一个。
 
@@ -63,22 +79,22 @@
 			1. 获取成员变量们
 				* Field[] getFields() ：获取所有public修饰的成员变量
 				* Field getField(String name)   获取指定名称的 public修饰的成员变量
-
+	
 				* Field[] getDeclaredFields()  获取所有的成员变量，不考虑修饰符
 				* Field getDeclaredField(String name)  
 			2. 获取构造方法们
 				* Constructor<?>[] getConstructors()  
-				* Constructor<T> getConstructor(类<?>... parameterTypes)  
-
-				* Constructor<T> getDeclaredConstructor(类<?>... parameterTypes)  
+				* Constructor<T> getConstructor(Class<?>... parameterTypes)  
+	
+				* Constructor<T> getDeclaredConstructor(Class<?>... parameterTypes)  
 				* Constructor<?>[] getDeclaredConstructors()  
 			3. 获取成员方法们：
 				* Method[] getMethods()  
-				* Method getMethod(String name, 类<?>... parameterTypes)  
-
+				* Method getMethod(String name, Class<?>... parameterTypes)  
+	
 				* Method[] getDeclaredMethods()  
-				* Method getDeclaredMethod(String name, 类<?>... parameterTypes)  
-
+				* Method getDeclaredMethod(String name, Class<?>... parameterTypes)  
+	
 			4. 获取全类名	
 				* String getName()  
 
@@ -89,7 +105,7 @@
 				* void set(Object obj, Object value)  
 			2. 获取值
 				* get(Object obj) 
-
+	
 			3. 忽略访问权限修饰符的安全检查
 				* setAccessible(true):暴力反射
 
@@ -98,42 +114,30 @@
 	* Constructor:构造方法
 		* 创建对象：
 			* T newInstance(Object... initargs)  
-
+	
 			* 如果使用空参数构造方法创建对象，操作可以简化：Class对象的newInstance方法
 
 
 	* Method：方法对象
 		* 执行方法：
 			* Object invoke(Object obj, Object... args)  
-
+	
 		* 获取方法名称：
 			* String getName:获取方法名
-
-
-	* 案例：
-		* 需求：写一个"框架"，不能改变该类的任何代码的前提下，可以帮我们创建任意类的对象，并且执行其中任意方法
-			* 实现：
-				1. 配置文件
-				2. 反射
-			* 步骤：
-				1. 将需要创建的对象的全类名和需要执行的方法定义在配置文件中
-				2. 在程序中加载读取配置文件
-				3. 使用反射技术来加载类文件进内存
-				4. 创建对象
-				5. 执行方法
 
 
 ## 注解：
 	* 概念：说明程序的。给计算机看的
 	* 注释：用文字描述程序的。给程序员看的
-
+	
 	* 定义：注解（Annotation），也叫元数据。一种代码级别的说明。它是JDK1.5及以后版本引入的一个特性，与类、接口、枚举是在同一个层次。它可以声明在包、类、字段、方法、局部变量、方法参数等的前面，用来对这些元素进行说明，注释。
 	* 概念描述：
 		* JDK1.5之后的新特性
 		* 说明程序的
 		* 使用注解：@注解名称
-		
-	
+
+
+​	
 	* 作用分类：
 		①编写文档：通过代码里标识的注解生成文档【生成文档doc文档】
 		②代码分析：通过代码里标识的注解对代码进行分析【使用反射】
@@ -145,17 +149,17 @@
 		* @Deprecated：该注解标注的内容，表示已过时
 		* @SuppressWarnings：压制警告
 			* 一般传递参数all  @SuppressWarnings("all")
-
+	
 	* 自定义注解
 		* 格式：
 			元注解
 			public @interface 注解名称{
 				属性列表;
 			}
-
+	
 		* 本质：注解本质上就是一个接口，该接口默认继承Annotation接口
 			* public interface MyAnno extends java.lang.annotation.Annotation {}
-
+	
 		* 属性：接口中的抽象方法
 			* 要求：
 				1. 属性的返回值类型有下列取值
@@ -164,7 +168,7 @@
 					* 枚举
 					* 注解
 					* 以上类型的数组
-
+	
 				2. 定义了属性，在使用时需要给属性赋值
 					1. 如果定义属性时，使用default关键字给属性默认初始化值，则使用注解时，可以不进行属性的赋值。
 					2. 如果只有一个属性需要赋值，并且属性的名称是value，则value可以省略，直接定义值即可。
@@ -187,7 +191,7 @@
 		2. 获取指定的注解
 			* getAnnotation(Class)
 			//其实就是在内存中生成了一个该注解接口的子类实现对象
-
+	
 		            public class ProImpl implements Pro{
 		                public String className(){
 		                    return "cn.itcast.annotation.Demo1";
@@ -197,12 +201,159 @@
 		                }
 		            }
 		3. 调用注解中的抽象方法获取配置的属性值
-	
 
-	* 案例：简单的测试框架
-	* 小结：
-		1. 以后大多数时候，我们会使用注解，而不是自定义注解
-		2. 注解给谁用？
-			1. 编译器
-			2. 给解析程序用
-		3. 注解不是程序的一部分，可以理解为注解就是一个标签
+
+## 工程中可能会用到的思想 ##
+- 从数据库中取出一条记录
+- 创建一个对应的类（属性顺序与数据库中一一对应）
+- 赋值到对应的实例对象中
+
+		package Reflect;/*
+		  @author: Jungle
+		  @DESCRIPTION: 通过反射创造对象
+		  @creteTime: 2021/3/15  
+		*/
+		
+		import demo.Person;
+		
+		import java.io.FileNotFoundException;
+		import java.io.FileReader;
+		import java.io.IOException;
+		import java.lang.reflect.Constructor;
+		import java.lang.reflect.Field;
+		import java.lang.reflect.InvocationTargetException;
+		import java.lang.reflect.Method;
+		import java.util.Properties;
+		
+		/*
+		* 对数据对象反射赋值
+		* Person prepared_for_person = new Person("Jungle", 26); 是模拟数据库里的一条记录, 并保存在一个对象中
+		* */
+		public class ReflectDemo {
+		    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchFieldException, IOException {
+		        System.out.println("----------------------------");
+		        //已经准备好的本地数据
+		        Person prepared_for_person = new Person("Jungle", 26);
+		
+		        //反射赋值
+		//        Class<?> Class_Person = Class.forName("demo.Person"); //将字节码文件加载进内存，返回Class类对象
+		//        Constructor<?> con = Class_Person.getConstructor(); //获得构造函数
+		//        Object obj = con.newInstance(); //构造实例
+		//        Person person = null; //声明一个引用
+		//        if (obj instanceof Person) { //向下转型一定要判断
+		//            person = (Person)obj; //obj本来就是Person类型才可以这样向下转型
+		//            //对该实例赋值
+		//            Field[] fields = Class_Person.getDeclaredFields(); //获得所有的字段数组
+		//            for (Field field : fields) {
+		//                field.setAccessible(true); //设置私有访问权限
+		//                //字段自动化赋值
+		//                String sMethodName = "get" + field.getName().substring(0,1).toUpperCase() + field.getName().substring(1);
+		//                field.set(person, Class_Person.getMethod(sMethodName).invoke(prepared_for_person));
+		//            }
+		//            System.out.print(person);
+		//        }
+		//        System.out.println("----------------------------");
+		        //通过配置文件实现上面的功能
+		
+		        Properties props = new Properties(); //加载配置文件
+		        FileReader fr = new FileReader("config.txt");
+		        props.load(fr);
+		        fr.close();
+		        String className = props.getProperty("className"); //通过配置文件来获取类名称
+		        //通过反射来使用
+		        Class<?> c = Class.forName(className); //获取Class类对象
+		        //Class<?> c = Person.class;
+		        //Class<?> c = new Person().getClass();
+		        //System.out.println(c);
+		        Constructor<?> cs = c.getConstructor();
+		        Object o = cs.newInstance();
+		        //Object o = c.newInstance(); //空参构造对象可以使用类对象直接调用newInstance方法
+		        Person p = null;
+		        if (o instanceof Person) {
+		            p = (Person)o;
+		            Field[] fs = c.getDeclaredFields();
+		            for (Field f : fs) {
+		                f.setAccessible(true);
+		                String sMName = "get" +
+		                        f.getName().substring(0, 1).toUpperCase() +
+		                        f.getName().substring(1); //字符串拼凑获取getXXX方法名称
+		                //System.out.println(c.getMethod(sMName).invoke(prepared_for_person));
+		                //c.getMethod(sMName).invoke(prepared_for_person) 调用方法获取的属性值---对应本地数据对象
+		                f.set(o, c.getMethod(sMName).invoke(prepared_for_person));
+		            }
+		        }
+		        System.out.println(p); //打印反射赋值后的对象
+		        System.out.println("----------------------------");
+		
+		    }
+		}
+- Person类
+
+		package demo;
+		
+		import java.util.Objects;
+		
+		public class Person {
+		    private String name;
+		    private int age;
+		
+		    public Person() {}
+		
+		    public Person(String name, int age) {
+		        this.name = name;
+		        this.age = age;
+		    }
+		
+		    private Person(String name) {
+		        this.name = name;
+		    }
+		
+		    private Person(int age) {
+		        this.age = age;
+		    }
+		
+		    @Override
+		    public String toString() {
+		        return "Person{" +
+		                "name='" + name + '\'' +
+		                ", age=" + age +
+		                '}' + '\n';
+		    }
+		
+		    @Override
+		    public boolean equals(Object o) {
+		        if (this == o) return true;
+		        if (o == null || getClass() != o.getClass()) return false;
+		        Person person = (Person) o;
+		        return age == person.age &&
+		                Objects.equals(name, person.name);
+		    }
+		
+		    @Override
+		    public int hashCode() {
+		        return Objects.hash(name, age);
+		    }
+	
+	
+	​	
+		    public String getName() {
+		        return name;
+		    }
+		
+		    public void setName(String name) {
+		        this.name = name;
+		    }
+		
+		    public int getAge() {
+		        return age;
+		    }
+		
+		    public void setAge(int age) {
+		        this.age = age;
+		    }
+		}
+- 配置文件
+
+		className=demo.Person
+
+----------

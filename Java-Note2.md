@@ -3,7 +3,9 @@ title: Java-Note2
 categories:
   - Java
 tags:
-  - 基本数据类型
+  - 数据类型
+  - 常量
+  - 变量
 date: 2020-07-01 14:38:15
 author: Jungle
 
