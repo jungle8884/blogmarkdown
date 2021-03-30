@@ -3,16 +3,16 @@ title: MySQL学习笔记
 categories:
   - MySQL
 tags:
-  - MySQL
-  - DDL
-  - DML
-  - DQL
-author:
-  - Jungle
+  - SQL
+  - 约束
+  - 数据库的设计
+  - 数据库的备份和还原
+  - 多表查询
+  - 事务
 date: 2021-03-23
+author: Jungle
+
 ---
-
-
 
 # 数据库的基本概念
 
@@ -1422,6 +1422,71 @@ id	name	age	gender	address	math	english
 3. limit 是一个MySQL"方言"，MySQL特有！
 ```
 
+## DCL
+
+```sql
+* SQL分类：
+	1. DDL：操作数据库和表
+	2. DML：增删改表中数据
+	3. DQL：查询表中数据
+	4. DCL：管理用户，授权
+
+* DBA：数据库管理员
+
+* DCL：管理用户，授权
+	1. 管理用户
+		1. 添加用户：
+			* 语法：CREATE USER '用户名'@'主机名' IDENTIFIED BY '密码';
+		2. 删除用户：
+			* 语法：DROP USER '用户名'@'主机名';
+		3. 修改用户密码：
+			
+			UPDATE USER SET PASSWORD = PASSWORD('新密码') WHERE USER = '用户名';
+			UPDATE USER SET PASSWORD = PASSWORD('abc') WHERE USER = 'lisi';
+			
+			SET PASSWORD FOR '用户名'@'主机名' = PASSWORD('新密码');
+			SET PASSWORD FOR 'root'@'localhost' = PASSWORD('123');
+
+			* mysql中忘记了root用户的密码？
+				1. cmd -- > net stop mysql 停止mysql服务
+					* 需要管理员运行该cmd
+
+				2. 使用无验证方式启动mysql服务： mysqld --skip-grant-tables
+				3. 打开新的cmd窗口,直接输入mysql命令，敲回车。就可以登录成功
+				4. use mysql;
+				5. update user set password = password('你的新密码') where user = 'root';
+				6. 关闭两个窗口
+				7. 打开任务管理器，手动结束mysqld.exe 的进程
+				8. 启动mysql服务
+				9. 使用新密码登录。
+		4. 查询用户：
+			-- 1. 切换到mysql数据库
+			USE myql;
+			-- 2. 查询user表
+			SELECT * FROM USER;
+			
+			* 通配符： % 表示可以在任意主机使用用户登录数据库
+
+	2. 权限管理：
+		1. 查询权限：
+			-- 查询权限
+			SHOW GRANTS FOR '用户名'@'主机名';
+			SHOW GRANTS FOR 'lisi'@'%';
+
+		2. 授予权限：
+			-- 授予权限
+			grant 权限列表 on 数据库名.表名 to '用户名'@'主机名';
+			-- 给张三用户授予所有权限，在任意数据库任意表上
+			
+			GRANT ALL ON *.* TO 'zhangsan'@'localhost';
+		3. 撤销权限：
+			-- 撤销权限：
+			revoke 权限列表 on 数据库名.表名 from '用户名'@'主机名';
+			REVOKE UPDATE ON db3.`account` FROM 'lisi'@'%';
+```
+
+
+
 # 约束
 
 > 概念： 对表中的数据进行限定，保证数据的正确性、有效性和完整性。
@@ -1525,7 +1590,7 @@ id	name	age	gender	address	math	english
             dep_id int, -- 外键列：外键对应主表的主键
             -- 创建外键约束
             constraint emp_depid_fk foreign key (dep_id) references
-             department(id) on update cascade on delete cascade --同时实现级联操作
+            department(id) on update cascade on delete cascade --同时实现级联操作
         );
 
 2. 删除外键
@@ -1982,3 +2047,797 @@ alter table employee add constraint emp_depid_fk foreign key (dep_id) references
 ```
 
 > 图形化工具 ：提示操作即可。
+
+
+
+# 多表查询
+
+> 数据准备
+
+```sql
+-- 创建部门表
+CREATE TABLE dept(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    NAME VARCHAR(20)
+);
+INSERT INTO dept (NAME) VALUES ('开发部'),('市场部'),('财务部');
+-- 创建员工表
+CREATE TABLE emp (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    NAME VARCHAR(10),
+    gender CHAR(1), -- 性别
+    salary DOUBLE, -- 工资
+    join_date DATE, -- 入职日期
+    dept_id INT,
+    FOREIGN KEY (dept_id) REFERENCES dept(id) -- 外键，关联部门表(部门表的主键)
+);
+INSERT INTO emp(NAME,gender,salary,join_date,dept_id) VALUES('孙悟空','男',7200,'2013-02-24',1);
+INSERT INTO emp(NAME,gender,salary,join_date,dept_id) VALUES('猪八戒','男',3600,'2010-12-02',2);
+INSERT INTO emp(NAME,gender,salary,join_date,dept_id) VALUES('唐僧','男',9000,'2008-08-08',2);
+INSERT INTO emp(NAME,gender,salary,join_date,dept_id) VALUES('白骨精','女',5000,'2015-10-07',3);
+INSERT INTO emp(NAME,gender,salary,join_date,dept_id) VALUES('蜘蛛精','女',4500,'2011-03-14',1);
+```
+
+## 笛卡尔积
+
+> 有两个集合A,B，取这两个集合的所有组成情况。
+> 要完成多表查询，需要消除无用的数据
+
+```sql
+SELECT * FROM emp;
+
+SELECT * FROM dept;
+
+SELECT * FROM emp, dept;
+
+-- emp 5条数据
+id	NAME	gender	salary	join_date	dept_id
+1	孙悟空	男	7200	2013-02-24	1
+2	猪八戒	男	3600	2010-12-02	2
+3	唐僧	男	9000	2008-08-08	2
+4	白骨精	女	5000	2015-10-07	3
+5	蜘蛛精	女	4500	2011-03-14	1
+
+-- dept 3条数据
+id	NAME
+1	开发部
+2	市场部
+3	财务部
+
+-- 笛卡尔积 3*5=15条数据
+id	NAME	gender	salary	join_date	dept_id	id	NAME
+1	孙悟空	男	7200	2013-02-24	1	1	开发部
+1	孙悟空	男	7200	2013-02-24	1	2	市场部
+1	孙悟空	男	7200	2013-02-24	1	3	财务部
+2	猪八戒	男	3600	2010-12-02	2	1	开发部
+2	猪八戒	男	3600	2010-12-02	2	2	市场部
+2	猪八戒	男	3600	2010-12-02	2	3	财务部
+3	唐僧	男	9000	2008-08-08	2	1	开发部
+3	唐僧	男	9000	2008-08-08	2	2	市场部
+3	唐僧	男	9000	2008-08-08	2	3	财务部
+4	白骨精	女	5000	2015-10-07	3	1	开发部
+4	白骨精	女	5000	2015-10-07	3	2	市场部
+4	白骨精	女	5000	2015-10-07	3	3	财务部
+5	蜘蛛精	女	4500	2011-03-14	1	1	开发部
+5	蜘蛛精	女	4500	2011-03-14	1	2	市场部
+5	蜘蛛精	女	4500	2011-03-14	1	3	财务部
+```
+
+
+
+## 内连接查询
+
+> 1. 隐式内连接：使用where条件消除无用数据
+
+```sql
+-- 查询所有员工信息和对应的部门信息
+SELECT * FROM emp,dept WHERE emp.`dept_id` = dept.`id`;
+id	NAME	gender	salary	join_date	dept_id	id	NAME
+1	孙悟空	男	7200	2013-02-24	1	1	开发部
+2	猪八戒	男	3600	2010-12-02	2	2	市场部
+3	唐僧	男	9000	2008-08-08	2	2	市场部
+4	白骨精	女	5000	2015-10-07	3	3	财务部
+5	蜘蛛精	女	4500	2011-03-14	1	1	开发部
+
+-- 查询员工表的名称，性别。部门表的名称
+SELECT emp.name,emp.gender,dept.name FROM emp,dept WHERE emp.`dept_id` = dept.`id`;
+-- 规范写法：
+SELECT 
+	t1.`name`, -- 员工表的姓名
+    t1.`gender`, -- 员工表的性别
+    t2.`name` -- 部门表的名称
+FROM
+	emp t1, -- 员工表
+	dept t2 -- 部门表
+WHERE 
+	t1.`dept_id`=t2.`id`;
+	
+name	gender	name
+孙悟空	男	开发部
+猪八戒	男	市场部
+唐僧	男	市场部
+白骨精	女	财务部
+蜘蛛精	女	开发部
+```
+
+> 2. 显式内连接：select 字段列表 from 表名1 [inner] join 表名2 on 条件
+>
+>    - 与隐式内连接结果一致
+>
+>    - inner 可省略
+>    - 查询交集部分
+
+```sql
+SELECT 
+	t1.`NAME`,
+	t1.`gender`,
+	t2.`NAME`
+FROM 
+	emp t1
+INNER JOIN 
+	dept t2
+ON 
+	t1.`dept_id`=t2.`id`	
+	
+NAME	gender	NAME
+孙悟空	男	开发部
+猪八戒	男	市场部
+唐僧	男	市场部
+白骨精	女	财务部
+蜘蛛精	女	开发部
+```
+
+> 小结：
+>
+> - 从哪些表中查询数据
+> - 条件是什么
+> - 查询哪些字段
+
+## 外链接查询
+
+> 1. 左外连接：select 字段列表 from 表1 left [outer] join 表2 on 条件；
+>
+> 查询的是左表所有数据以及其交集部分。
+
+```sql
+-- 查询所有员工信息，如果员工有部门，则查询部门名称，没有部门，则不显示部门名称
+	-- emp
+    id	NAME	gender	salary	join_date	dept_id
+    1	孙悟空	男	7200	2013-02-24	1
+    2	猪八戒	男	3600	2010-12-02	2
+    3	唐僧	男	9000	2008-08-08	2
+    4	白骨精	女	5000	2015-10-07	3
+    5	蜘蛛精	女	4500	2011-03-14	1
+    6	小白龙	女	4500	2021-03-29	\N
+    -- dept
+    id	NAME
+    1	开发部
+    2	市场部
+    3	财务部
+    
+    -- 隐式查询（求交集）
+    SELECT t1.*, t2.`NAME`
+    FROM 
+        emp t1, dept t2
+    WHERE 
+        t1.`dept_id`=t2.`id`
+        
+    -- 同 inner join（求交集）
+    select t1.*, t2.`NAME`
+    From
+        emp t1
+    inner join
+        dept t2
+    on t1.`dept_id`=t2.`id`   
+    
+    -- 小白龙 dept_id 为 null，不显示！
+    id	NAME	gender	salary	join_date	dept_id	NAME
+    1	孙悟空	男	7200	2013-02-24	1	开发部
+    2	猪八戒	男	3600	2010-12-02	2	市场部
+    3	唐僧	男	9000	2008-08-08	2	市场部
+    4	白骨精	女	5000	2015-10-07	3	财务部
+    5	蜘蛛精	女	4500	2011-03-14	1	开发部
+    
+-- 查询所有员工信息，如果员工有部门，则查询部门名称，没有部门，则不显示部门名称
+select t1.*, t2.`NAME`
+From
+	emp t1
+left join
+	dept t2
+on t1.`dept_id`=t2.`id`
+-- 左外连接实现目的：（以左表为基准求交集）
+id	NAME	gender	salary	join_date	dept_id	NAME
+1	孙悟空	男	7200	2013-02-24	1	开发部
+2	猪八戒	男	3600	2010-12-02	2	市场部
+3	唐僧	男	9000	2008-08-08	2	市场部
+4	白骨精	女	5000	2015-10-07	3	财务部
+5	蜘蛛精	女	4500	2011-03-14	1	开发部
+6	小白龙	女	4500	2021-03-29	\N	\N
+```
+
+> 2. 右外连接：select 字段列表 from 表1 right [outer] join 表2 on 条件；
+>
+> 查询的是右表所有数据以及其交集部分。
+
+```sql
+-- 查询所有员工信息，如果员工有部门，则查询部门名称，没有部门，则不显示部门名称
+select t1.*, t2.`NAME`
+From
+	emp t1
+right join
+	dept t2
+on t1.`dept_id`=t2.`id`
+-- 右连接实现目的：（以右表为基准求交集）
+id	NAME	gender	salary	join_date	dept_id	NAME
+1	孙悟空	男	7200	2013-02-24	1	开发部
+5	蜘蛛精	女	4500	2011-03-14	1	开发部
+2	猪八戒	男	3600	2010-12-02	2	市场部
+3	唐僧	男	9000	2008-08-08	2	市场部
+4	白骨精	女	5000	2015-10-07	3	财务部
+```
+
+## 子查询
+
+> 查询中嵌套查询，称嵌套查询为子查询
+
+```sql
+-- 查询工资最高的员工信息
+    -- 1 查询最高的工资是多少 9000
+    SELECT MAX(salary) FROM emp;
+
+    -- 2 查询员工信息，并且工资等于9000的
+    SELECT * FROM emp WHERE emp.`salary` = 9000;
+
+    -- 一条sql就完成这个操作，子查询
+    SELECT * FROM emp WHERE emp.`salary` = (SELECT MAX(salary) FROM emp);
+```
+
+> 子查询不同情况
+
+### 子查询的结果是单行单列的
+
+> * 子查询可以作为条件，使用运算符去判断。
+> *  运算符： > >= < <= =
+
+```sql
+-- 查询员工工资小于平均工资的人
+SELECT 
+	*
+FROM 
+	emp
+WHERE
+	emp.`salary` < (SELECT AVG(emp.`salary`) FROM emp)
+	
+id	NAME	gender	salary	join_date	dept_id
+2	猪八戒	男	3600	2010-12-02	2
+4	白骨精	女	5000	2015-10-07	3
+5	蜘蛛精	女	4500	2011-03-14	1
+6	小白龙	女	4500	2021-03-29	\N
+```
+
+
+
+### 子查询的结果是多行单列的
+
+> - 子查询可以作为条件，使用运算符in来判断
+
+```sql
+-- 查询'财务部'和'市场部'所有的员工信息
+SELECT id FROM dept WHERE NAME = '财务部' OR NAME = '市场部';
+SELECT * FROM emp WHERE dept_id = 3 OR dept_id = 2;
+-- 子查询
+SELECT 
+	*
+FROM 
+	emp
+WHERE
+	emp.`dept_id`
+IN
+	(SELECT dept.`id` FROM dept WHERE dept.`NAME` IN ('财务部', '市场部'))
+-- 查询结果
+id	NAME	gender	salary	join_date	dept_id
+2	猪八戒	男	3600	2010-12-02	2
+3	唐僧	男	9000	2008-08-08	2
+4	白骨精	女	5000	2015-10-07	3
+```
+
+
+
+### 子查询的结果是多行多列的
+
+> - 子查询可以作为一张虚拟表参与查询
+
+```sql
+-- 查询员工入职日期是2011-11-11日之后的员工信息和部门信息
+-- 子查询
+SELECT *
+FROM
+	dept t1,
+	(SELECT * FROM emp WHERE emp.`join_date` > '2011-11-11') t2
+WHERE 
+	t1.id = t2.dept_id
+-- 查询结果
+id	NAME	id	NAME	gender	salary	join_date	dept_id
+1	开发部	1	孙悟空	男	7200	2013-02-24	1
+3	财务部	4	白骨精	女	5000	2015-10-07	3
+
+-- 普通内连接
+    -- 隐式内连接查询
+    select 
+        *
+    from
+        dept t1,
+        emp t2
+    where 
+        t1.`id` = t2.dept_id
+    and	t2.`join_date` > '2011-11-11';
+    -- 显示内连接查询 
+    SELECT 
+	*
+    FROM 
+        dept t1
+    INNER JOIN
+        emp t2
+    ON 
+        t1.`id` = t2.dept_id
+    WHERE
+        t2.join_date > '2011-11-11';
+-- 查询结果
+id	NAME	id	NAME	gender	salary	join_date	dept_id
+1	开发部	1	孙悟空	男	7200	2013-02-24	1
+3	财务部	4	白骨精	女	5000	2015-10-07	3
+```
+
+## 多表查询练习：
+
+### 数据准备
+
+```sql
+-- 部门表
+CREATE TABLE dept (
+  id INT PRIMARY KEY, -- 部门id
+  dname VARCHAR(50), -- 部门名称
+  loc VARCHAR(50) -- 部门所在地
+);
+
+-- 添加4个部门
+INSERT INTO dept(id,dname,loc) VALUES 
+(10,'教研部','北京'),
+(20,'学工部','上海'),
+(30,'销售部','广州'),
+(40,'财务部','深圳');
+
+-- 职务表，职务名称，职务描述
+CREATE TABLE job (
+  id INT PRIMARY KEY,
+  jname VARCHAR(20),
+  description VARCHAR(50)
+);
+
+-- 添加4个职务
+INSERT INTO job (id, jname, description) VALUES
+(1, '董事长', '管理整个公司，接单'),
+(2, '经理', '管理部门员工'),
+(3, '销售员', '向客人推销产品'),
+(4, '文员', '使用办公软件');
+
+-- 员工表
+CREATE TABLE emp (
+  id INT PRIMARY KEY, -- 员工id
+  ename VARCHAR(50), -- 员工姓名
+  job_id INT, -- 职务id
+  mgr INT , -- 上级领导
+  joindate DATE, -- 入职日期
+  salary DECIMAL(7,2), -- 工资
+  bonus DECIMAL(7,2), -- 奖金
+  dept_id INT, -- 所在部门编号
+  CONSTRAINT emp_jobid_ref_job_id_fk FOREIGN KEY (job_id) REFERENCES job (id),
+  CONSTRAINT emp_deptid_ref_dept_id_fk FOREIGN KEY (dept_id) REFERENCES dept (id)
+);
+
+-- 添加员工
+INSERT INTO emp(id,ename,job_id,mgr,joindate,salary,bonus,dept_id) VALUES 
+(1001,'孙悟空',4,1004,'2000-12-17','8000.00',NULL,20),
+(1002,'卢俊义',3,1006,'2001-02-20','16000.00','3000.00',30),
+(1003,'林冲',3,1006,'2001-02-22','12500.00','5000.00',30),
+(1004,'唐僧',2,1009,'2001-04-02','29750.00',NULL,20),
+(1005,'李逵',4,1006,'2001-09-28','12500.00','14000.00',30),
+(1006,'宋江',2,1009,'2001-05-01','28500.00',NULL,30),
+(1007,'刘备',2,1009,'2001-09-01','24500.00',NULL,10),
+(1008,'猪八戒',4,1004,'2007-04-19','30000.00',NULL,20),
+(1009,'罗贯中',1,NULL,'2001-11-17','50000.00',NULL,10),
+(1010,'吴用',3,1006,'2001-09-08','15000.00','0.00',30),
+(1011,'沙僧',4,1004,'2007-05-23','11000.00',NULL,20),
+(1012,'李逵',4,1006,'2001-12-03','9500.00',NULL,30),
+(1013,'小白龙',4,1004,'2001-12-03','30000.00',NULL,20),
+(1014,'关羽',4,1007,'2002-01-23','13000.00',NULL,10);
+
+-- 工资等级表
+CREATE TABLE salarygrade (
+  grade INT PRIMARY KEY,   -- 级别
+  losalary INT,  -- 最低工资
+  hisalary INT -- 最高工资
+);
+
+-- 添加5个工资等级
+INSERT INTO salarygrade(grade,losalary,hisalary) VALUES 
+(1,7000,12000),
+(2,12010,14000),
+(3,14010,20000),
+(4,20010,30000),
+(5,30010,99990);
+```
+
+### 查询所有员工信息。
+
+> 查询员工编号，员工姓名，工资，职务名称，职务描述
+
+```sql
+/*
+    分析：
+        1.员工编号，员工姓名，工资，需要查询emp表  职务名称，职务描述 需要查询job表
+        2.查询条件 emp.job_id = job.id
+*/
+
+-- 方法一：
+SELECT 
+    t1.`id`, -- 员工编号
+    t1.`ename`, -- 员工姓名
+    t1.`salary`,-- 工资
+    t2.`jname`, -- 职务名称
+    t2.`description` -- 职务描述
+FROM 
+    emp t1, job t2
+WHERE 
+    t1.`job_id` = t2.`id`;
+    
+-- 方法二：
+SELECT 
+	t1.`id`, 	-- 员工编号
+	t1.`ename`,  	-- 员工姓名
+	t1.`salary`, 	-- 工资
+	t2.`jname`, 	-- 职务名称
+	t2.`description` -- 职务描述
+FROM 
+	emp t1 		-- 员工表
+INNER JOIN 
+	job t2		-- 职务表
+ON 
+	t1.`job_id` = t2.`id`;
+	
+-- 查询结果
+id	ename	salary	jname	description
+1009	罗贯中	50000.00	董事长	管理整个公司，接单
+1004	唐僧	29750.00	经理	管理部门员工
+1006	宋江	28500.00	经理	管理部门员工
+1007	刘备	24500.00	经理	管理部门员工
+1002	卢俊义	16000.00	销售员	向客人推销产品
+1003	林冲	12500.00	销售员	向客人推销产品
+1010	吴用	15000.00	销售员	向客人推销产品
+1001	孙悟空	8000.00	文员	使用办公软件
+1005	李逵	12500.00	文员	使用办公软件
+1008	猪八戒	30000.00	文员	使用办公软件
+1011	沙僧	11000.00	文员	使用办公软件
+1012	李逵	9500.00	文员	使用办公软件
+1013	小白龙	30000.00	文员	使用办公软件
+1014	关羽	13000.00	文员	使用办公软件
+```
+
+### 查询员工编号，员工姓名，工资，职务名称，职务描述，部门名称，部门位置
+
+```sql
+/*
+    分析：
+        1. 员工编号，员工姓名，工资 emp  职务名称，职务描述 job  部门名称，部门位置 dept
+        2. 条件： emp.job_id = job.id and emp.dept_id = dept.id
+*/
+
+SELECT 
+    t1.`id`, -- 员工编号
+    t1.`ename`, -- 员工姓名
+    t1.`salary`,-- 工资
+    t2.`jname`, -- 职务名称
+    t2.`description`, -- 职务描述
+    t3.`dname`, -- 部门名称
+    t3.`loc` -- 部门位置
+FROM 
+    emp t1, job t2, dept t3
+WHERE 
+    t1.`job_id` = t2.`id` AND t1.`dept_id`=t3.`id`;
+    
+-- 查询结果
+id	ename	salary	jname	description	dname	loc
+1008	猪八戒	30000.00	文员	使用办公软件	学工部	上海
+1004	唐僧	29750.00	经理	管理部门员工	学工部	上海
+1001	孙悟空	8000.00	文员	使用办公软件	学工部	上海
+1013	小白龙	30000.00	文员	使用办公软件	学工部	上海
+1011	沙僧	11000.00	文员	使用办公软件	学工部	上海
+1014	关羽	13000.00	文员	使用办公软件	教研部	北京
+1007	刘备	24500.00	经理	管理部门员工	教研部	北京
+1009	罗贯中	50000.00	董事长	管理整个公司，接单	教研部	北京
+1003	林冲	12500.00	销售员	向客人推销产品	销售部	广州
+1010	吴用	15000.00	销售员	向客人推销产品	销售部	广州
+1005	李逵	12500.00	文员	使用办公软件	销售部	广州
+1012	李逵	9500.00	文员	使用办公软件	销售部	广州
+1006	宋江	28500.00	经理	管理部门员工	销售部	广州
+1002	卢俊义	16000.00	销售员	向客人推销产品	销售部	广州
+```
+
+### 查询员工姓名，工资，工资等级 
+
+```sql
+/*
+    分析：
+        1.员工姓名，工资 emp  工资等级 salarygrade
+        2.条件：emp.salary BETWEEN salarygrade.losalary and salarygrade.hisalary
+*/
+
+SELECT 
+	t1.`ename`,
+	t1.`salary`,
+	t2.`grade`
+FROM
+	emp t1, salarygrade t2
+WHERE 
+	t1.`salary` BETWEEN t2.`losalary` AND t2.`hisalary`;
+-- 查询的结果
+ename	salary	grade
+孙悟空	8000.00	1
+卢俊义	16000.00	3
+林冲	12500.00	2
+唐僧	29750.00	4
+李逵	12500.00	2
+宋江	28500.00	4
+刘备	24500.00	4
+猪八戒	30000.00	4
+罗贯中	50000.00	5
+吴用	15000.00	3
+沙僧	11000.00	1
+李逵	9500.00	1
+小白龙	30000.00	4
+关羽	13000.00	2
+```
+
+### 查询员工姓名，工资，职务名称，职务描述，部门名称，部门位置，工资等级
+
+```sql
+/*
+    分析：
+        1. 员工姓名，工资 emp ， 职务名称，职务描述 job 部门名称，部门位置，dept  工资等级 salarygrade
+        2. 条件： 	  emp.job_id = job.id 
+        		and 
+        			emp.dept_id = dept.id 
+        		and 
+        			emp.salary BETWEEN salarygrade.losalary and salarygrade.hisalary
+*/
+
+SELECT 
+	t1.`ename`, -- 员工姓名
+	t1.`salary`, -- 工资
+	t2.`jname`, -- 职务名称
+	t2.`description`, -- 职务描述 
+	t3.`dname`, -- 部门名称
+	t3.`loc`, -- 部门位置
+	t4.`grade` -- 工资等级
+FROM
+	emp t1, job t2, dept t3, salarygrade t4
+WHERE 
+	t1.`dept_id` = t3.`id`
+	AND	t1.`job_id` = t2.`id`
+	AND	t1.`salary` BETWEEN t4.`losalary` AND t4.`hisalary`;
+	
+-- 查询结果
+ename	salary	jname	description	dname	loc	grade
+孙悟空	8000.00	文员	使用办公软件	学工部	上海	1
+沙僧	11000.00	文员	使用办公软件	学工部	上海	1
+李逵	9500.00	文员	使用办公软件	销售部	广州	1
+林冲	12500.00	销售员	向客人推销产品	销售部	广州	2
+李逵	12500.00	文员	使用办公软件	销售部	广州	2
+关羽	13000.00	文员	使用办公软件	教研部	北京	2
+卢俊义	16000.00	销售员	向客人推销产品	销售部	广州	3
+吴用	15000.00	销售员	向客人推销产品	销售部	广州	3
+唐僧	29750.00	经理	管理部门员工	学工部	上海	4
+宋江	28500.00	经理	管理部门员工	销售部	广州	4
+刘备	24500.00	经理	管理部门员工	教研部	北京	4
+猪八戒	30000.00	文员	使用办公软件	学工部	上海	4
+小白龙	30000.00	文员	使用办公软件	学工部	上海	4
+罗贯中	50000.00	董事长	管理整个公司，接单	教研部	北京	5
+```
+
+### 查询出部门编号、部门名称、部门位置、部门人数
+
+```sql
+/*
+    分析：
+        1.部门编号、部门名称、部门位置 dept 表。 部门人数 emp表
+        2.使用分组查询：按照emp.dept_id完成分组，查询count(id)
+        3.使用子查询将第2步的查询结果和dept表进行关联查询
+
+*/
+
+SELECT
+	t1.id,
+	t1.`dname`,
+	t1.`loc`,
+	t2.total
+FROM 
+	dept t1,	
+	(SELECT 
+		dept_id,
+		COUNT(id) total
+	FROM
+		emp
+	GROUP BY
+		emp.`dept_id`) t2
+WHERE 
+	t1.`id` = t2.dept_id;
+	
+-- 查询结果
+id	dname	loc	total
+10	教研部	北京	3
+20	学工部	上海	5
+30	销售部	广州	6
+```
+
+### 查询所有员工的姓名及其直接上级的姓名
+
+> 没有领导的员工也需要查询
+
+```sql
+/*
+    分析：
+        1.姓名 emp， 直接上级的姓名 emp
+            * emp表的id 和 mgr 是自关联
+        2.条件 emp.id = emp.mgr
+        3.查询左表的所有数据，和 交集数据
+            * 使用左外连接查询
+
+*/
+SELECT 
+	t1.`ename` '员工',
+	t2.`ename` '直接上级'
+FROM
+	emp t1
+LEFT JOIN
+        emp t2
+ON 
+	t1.`mgr` = t2.`id`;
+
+-- 查询结果
+员工	直接上级
+孙悟空	唐僧
+卢俊义	宋江
+林冲	宋江
+唐僧	罗贯中
+李逵	宋江
+宋江	罗贯中
+刘备	罗贯中
+猪八戒	唐僧
+罗贯中	
+吴用	宋江
+沙僧	唐僧
+李逵	宋江
+小白龙	唐僧
+关羽	刘备
+```
+
+# 事务
+
+## 事务的基本介绍
+
+> 概念：如果一个包含多个步骤的业务操作，被事务管理，那么这些操作要么同时成功，要么同时失败。
+
+1. 操作：
+
+   1. 开启事务： start transaction;
+   2. 回滚：rollback;
+   3. 提交：commit;
+
+2.  例子：
+
+   ```sql
+   CREATE TABLE account (
+       id INT PRIMARY KEY AUTO_INCREMENT,
+       NAME VARCHAR(10),
+       balance DOUBLE
+   );
+   -- 添加数据
+   INSERT INTO account (NAME, balance) VALUES ('zhangsan', 1000), ('lisi', 1000);
+   
+   SELECT * FROM account;
+   --还原数据
+   UPDATE account SET balance = 1000; 
+   
+   -- 张三给李四转账 500 元:
+       -- 0. 开启事务
+       START TRANSACTION;
+       -- 1. 张三账户 -500		
+       UPDATE account SET balance = balance - 500 WHERE NAME = 'zhangsan';
+       -- 2. 李四账户 +500
+       -- 出错了...
+       UPDATE account SET balance = balance + 500 WHERE NAME = 'lisi';
+   
+       -- 发现执行没有问题，提交事务
+       	-- 在提交之前是临时数据，查询数据只能看到临时更改的数据状态！
+       	-- 关闭mysql执行窗体之后，发现数据并未保存，原因是：自动回滚！
+       COMMIT; -- 提交后数据保存！
+   
+       -- 发现出问题了，回滚事务
+       ROLLBACK;
+   ```
+   
+3. MySQL数据库中事务默认自动提交
+
+   - 事务提交的两种方式：
+     - 自动提交：
+       - 一条DML(增删改)语句会自动提交一次事务。
+       - MySQL 数据库默认是自动提交事务
+     - 手动提交：
+        - 需要先开启事务，再提交
+        - Oracle 数据库默认是手动提交事务
+   - 修改事务的默认提交方式：
+     - 查看事务的默认提交方式：SELECT @@autocommit; 
+       - 1 代表自动提交  
+       - 0 代表手动提交
+     - 修改默认提交方式： set @@autocommit = 0;
+
+## 事务的四大特征（重点掌握！）
+
+> 重点掌握！
+
+1. 原子性：是不可分割的最小操作单位，要么同时成功，要么同时失败。
+2. 持久性：当事务提交或回滚后，数据库会持久化的保存数据。
+3. 隔离性：多个事务之间，相互独立。
+4. 一致性：事务操作前后，数据总量不变。
+
+
+
+## 事务的隔离级别（了解！）
+
+> 概念：多个事务之间是隔离的，相互独立的。
+>
+> 但是如果多个事务操作同一批数据，则会引发一些问题，设置不同的隔离级别就可以解决这些问题。
+
+- 存在问题：
+  1. 脏读：一个事务，读取到另一个事务中没有提交的数据
+  2. 不可重复读(虚读)：在同一个事务中，两次读取到的数据不一样。
+  3. 幻读：一个事务操作(DML)数据表中所有记录，另一个事务添加了一条数据，则第一个事务查询不到
+
+- 隔离级别：
+
+  1. read uncommitted：读未提交
+      - 产生的问题：脏读、不可重复读、幻读
+
+  2. read committed：读已提交 （Oracle）
+
+    * 产生的问题：不可重复读、幻读
+  3. repeatable read：可重复读 （MySQL默认）
+
+    * 产生的问题：幻读
+
+  4. serializable：串行化
+
+    * 可以解决所有的问题
+
+    ```sql
+    * 注意：隔离级别从小到大安全性越来越高，但是效率越来越低
+    * 数据库查询隔离级别：
+    	* select @@tx_isolation;
+    * 数据库设置隔离级别：
+    	* set global transaction isolation level  级别字符串;
+    ```
+
+- 演示：
+
+  ```sql
+  set global transaction isolation level read uncommitted;
+  -- set global transaction isolation level read committed;
+  -- set global transaction isolation level repeatable read;
+  start transaction;
+  -- 转账操作
+  update account set balance = balance - 500 where id = 1;
+update account set balance = balance + 500 where id = 2;
+  ```
+  
+  
+
