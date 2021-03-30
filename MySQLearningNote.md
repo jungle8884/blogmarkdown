@@ -25,6 +25,8 @@ author: Jungle
 		2. 方便存储和管理数据
 		3. 使用了统一的方式操作数据库 -- SQL
 
+------
+
 
 
 
@@ -75,6 +77,10 @@ author: Jungle
 **结构图：**![mysql](C:\Users\LeBro\Pictures\mysql.png)
 
 
+
+
+
+------
 
 
 
@@ -1422,68 +1428,108 @@ id	name	age	gender	address	math	english
 3. limit 是一个MySQL"方言"，MySQL特有！
 ```
 
-## DCL
+------
+
+
+
+## DCL：管理用户，授权
 
 ```sql
-* SQL分类：
-	1. DDL：操作数据库和表
-	2. DML：增删改表中数据
-	3. DQL：查询表中数据
-	4. DCL：管理用户，授权
+1. 管理用户
+    1. 添加用户：
+        * 语法：CREATE USER '用户名'@'主机名' IDENTIFIED BY '密码';
+        
+        -- 演示：
+        create user 'zhangsan'@'localhost' identified by '1234';
+        select host, user, password from user;
+        -- 查询结果：
+        host		user	password
+        localhost	root	*81F5E21E35407D884A6CD4A731AEBFB6AF209E1B
+        localhost	zhangsan	*A4B6157319038724E3560894F7F932C8886EBFCF
+        %			root	*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19
+        -- 登录成功！
+        C:\Users\LeBro>mysql -uzhangsan -p1234
+        Welcome to the MySQL monitor.  Commands end with ; or \g.
+        Your MySQL connection id is 35
+        Server version: 5.5.40 MySQL Community Server (GPL)
 
-* DBA：数据库管理员
+        Copyright (c) 2000, 2014, Oracle and/or its affiliates. All rights reserved.
 
-* DCL：管理用户，授权
-	1. 管理用户
-		1. 添加用户：
-			* 语法：CREATE USER '用户名'@'主机名' IDENTIFIED BY '密码';
-		2. 删除用户：
-			* 语法：DROP USER '用户名'@'主机名';
-		3. 修改用户密码：
-			
-			UPDATE USER SET PASSWORD = PASSWORD('新密码') WHERE USER = '用户名';
-			UPDATE USER SET PASSWORD = PASSWORD('abc') WHERE USER = 'lisi';
-			
-			SET PASSWORD FOR '用户名'@'主机名' = PASSWORD('新密码');
-			SET PASSWORD FOR 'root'@'localhost' = PASSWORD('123');
+        Oracle is a registered trademark of Oracle Corporation and/or its
+        affiliates. Other names may be trademarks of their respective
+        owners.
 
-			* mysql中忘记了root用户的密码？
-				1. cmd -- > net stop mysql 停止mysql服务
-					* 需要管理员运行该cmd
+        Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
-				2. 使用无验证方式启动mysql服务： mysqld --skip-grant-tables
-				3. 打开新的cmd窗口,直接输入mysql命令，敲回车。就可以登录成功
-				4. use mysql;
-				5. update user set password = password('你的新密码') where user = 'root';
-				6. 关闭两个窗口
-				7. 打开任务管理器，手动结束mysqld.exe 的进程
-				8. 启动mysql服务
-				9. 使用新密码登录。
-		4. 查询用户：
-			-- 1. 切换到mysql数据库
-			USE myql;
-			-- 2. 查询user表
-			SELECT * FROM USER;
-			
-			* 通配符： % 表示可以在任意主机使用用户登录数据库
+        mysql>
 
-	2. 权限管理：
-		1. 查询权限：
-			-- 查询权限
-			SHOW GRANTS FOR '用户名'@'主机名';
-			SHOW GRANTS FOR 'lisi'@'%';
+    2. 删除用户：
+        * 语法：DROP USER '用户名'@'主机名';
+        -- 演示：
+        drop user 'zhangsan'@'localhost';        
+        SELECT HOST, USER, PASSWORD FROM USER;
+        -- 查询用户：
+        host		user	password
+        localhost	root	*81F5E21E35407D884A6CD4A731AEBFB6AF209E1B
+        %			root	*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19
+    3. 修改用户密码：
+    	* 语法：
+    	-- 方式一：
+        UPDATE USER SET PASSWORD = PASSWORD('新密码') WHERE USER = '用户名';
+        -- 演示：
+        UPDATE USER SET PASSWORD = PASSWORD('abc') WHERE USER = 'lisi';
+        
+		-- 方式二：
+        SET PASSWORD FOR '用户名'@'主机名' = PASSWORD('新密码');
+        -- 演示：
+        SET PASSWORD FOR 'root'@'localhost' = PASSWORD('123');
 
-		2. 授予权限：
-			-- 授予权限
-			grant 权限列表 on 数据库名.表名 to '用户名'@'主机名';
-			-- 给张三用户授予所有权限，在任意数据库任意表上
-			
-			GRANT ALL ON *.* TO 'zhangsan'@'localhost';
-		3. 撤销权限：
-			-- 撤销权限：
-			revoke 权限列表 on 数据库名.表名 from '用户名'@'主机名';
-			REVOKE UPDATE ON db3.`account` FROM 'lisi'@'%';
+        * mysql中忘记了root用户的密码？
+            1. cmd -- > net stop mysql 停止mysql服务
+                * 需要管理员运行该cmd
+            2. 使用无验证方式启动mysql服务： mysqld --skip-grant-tables
+            3. 打开新的cmd窗口,直接输入mysql命令，敲回车。就可以登录成功
+            4. use mysql;
+            5. update user set password = password('你的新密码') where user = 'root';
+            6. 关闭两个窗口
+            7. 打开任务管理器，手动结束mysqld.exe 的进程
+            8. 启动mysql服务
+            9. 使用新密码登录。
+    4. 查询用户：
+        -- 1. 切换到mysql数据库
+        USE myql;
+        -- 2. 查询user表
+        SELECT * FROM USER;
+		-- 查询结果示例：
+        Host		User	Password		
+        %			root	*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19		
+        localhost	root	*81F5E21E35407D884A6CD4A731AEBFB6AF209E1B	
+        
+        * 通配符： % 表示可以在任意主机使用用户登录数据库
+
+2. 权限管理：
+    1. 查询权限：
+        -- 查询权限
+        SHOW GRANTS FOR '用户名'@'主机名';
+        -- 演示：
+        SHOW GRANTS FOR 'lisi'@'%';
+		-- 查询结果：
+		Grants for lisi@localhost -- 列名
+        GRANT USAGE ON *.* TO 'lisi'@'localhost' -- USAGE “无权限”，只可以登录。
+        IDENTIFIED BY PASSWORD '*A4B6157319038724E3560894F7F932C8886EBFCF'
+        -- USAGE：让你这个用户可以像个用户似的登录，但是除了能看到有那写数据库外，什么权限也没有
+    2. 授予权限：
+        -- 授予权限
+        grant 权限列表 on 数据库名.表名 to '用户名'@'主机名';
+        -- 给张三用户授予所有权限，在任意数据库任意表上
+        GRANT ALL ON *.* TO 'lisi'@'localhost';
+    3. 撤销权限：
+        -- 撤销权限：
+        revoke 权限列表 on 数据库名.表名 from '用户名'@'主机名';
+        REVOKE UPDATE ON db_Test.`account` FROM 'lisi'@'%';
 ```
+
+------
 
 
 
@@ -1608,7 +1654,7 @@ id	name	age	gender	address	math	english
         2. 级联删除：ON DELETE CASCADE 
 ```
 
-### 数据冗余
+> 数据冗余
 
 ```sql
 CREATE TABLE emp (
@@ -1681,7 +1727,7 @@ id	name	age	dep_id
 6	小王	18	2
 ```
 
-### 实现外键约束
+>  实现外键约束
 
 ```sql
 -- 1) 删除副表/从表 employee
@@ -1717,13 +1763,13 @@ alter table employee drop foreign key emp_depid_fk;
 alter table employee add constraint emp_depid_fk foreign key (dep_id) references department(id);
 ```
 
-### 级联
-
+> 级联
+>
 > 在修改和删除主表的主键时，同时更新或删除副表的外键值，称为级联操作
 >
-> ALTER TABLE 表名 ADD CONSTRAINT 外键名称 
+> ALTER TABLE 表名 ADD CONSTRAINT 外键名称 FOREIGN KEY (外键字段名称) REFERENCES 主表名称(主表列名称) 
 >
-> ​	FOREIGN KEY (外键字段名称) REFERENCES 主表名称(主表列名称) ON UPDATE CASCADE ON DELETE CASCADE;
+> ON UPDATE CASCADE ON DELETE CASCADE;
 
 |   级联操作语法    | 描述                                                         |
 | :---------------: | ------------------------------------------------------------ |
@@ -1778,9 +1824,7 @@ alter table employee add constraint emp_depid_fk foreign key (dep_id) references
     6	小王	18	5
 ```
 
-### 小结
-
-> 级联操作要谨慎设置！
+> 小结：级联操作要谨慎设置！
 
 | 约束名 | 关键字      | 说明                                       |
 | ------ | ----------- | ------------------------------------------ |
@@ -1789,6 +1833,10 @@ alter table employee add constraint emp_depid_fk foreign key (dep_id) references
 | 非空   | not null    | 这一列必须有值                             |
 | 唯一   | unique      | 这一列不能有重复值                         |
 | 外键   | foreign key | 主表中主键列（id），在从表中外键列(dep_id) |
+
+------
+
+
 
 # 数据库的设计
 
@@ -1978,6 +2026,10 @@ alter table employee add constraint emp_depid_fk foreign key (dep_id) references
 
 ![image-20210328172818747](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210328172818747.png)
 
+------
+
+
+
 # 数据库的备份和还原
 
 > 命令行
@@ -2047,6 +2099,8 @@ alter table employee add constraint emp_depid_fk foreign key (dep_id) references
 ```
 
 > 图形化工具 ：提示操作即可。
+
+------
 
 
 
@@ -2390,7 +2444,7 @@ id	NAME	id	NAME	gender	salary	join_date	dept_id
 
 ## 多表查询练习：
 
-### 数据准备
+> 数据准备
 
 ```sql
 -- 部门表
@@ -2468,9 +2522,7 @@ INSERT INTO salarygrade(grade,losalary,hisalary) VALUES
 (5,30010,99990);
 ```
 
-### 查询所有员工信息。
-
-> 查询员工编号，员工姓名，工资，职务名称，职务描述
+> 查询所有员工信息：查询员工编号，员工姓名，工资，职务名称，职务描述
 
 ```sql
 /*
@@ -2523,7 +2575,7 @@ id	ename	salary	jname	description
 1014	关羽	13000.00	文员	使用办公软件
 ```
 
-### 查询员工编号，员工姓名，工资，职务名称，职务描述，部门名称，部门位置
+> 查询员工编号，员工姓名，工资，职务名称，职务描述，部门名称，部门位置
 
 ```sql
 /*
@@ -2563,7 +2615,7 @@ id	ename	salary	jname	description	dname	loc
 1002	卢俊义	16000.00	销售员	向客人推销产品	销售部	广州
 ```
 
-### 查询员工姓名，工资，工资等级 
+> 查询员工姓名，工资，工资等级
 
 ```sql
 /*
@@ -2598,7 +2650,7 @@ ename	salary	grade
 关羽	13000.00	2
 ```
 
-### 查询员工姓名，工资，职务名称，职务描述，部门名称，部门位置，工资等级
+> 查询员工姓名，工资，职务名称，职务描述，部门名称，部门位置，工资等级
 
 ```sql
 /*
@@ -2644,7 +2696,7 @@ ename	salary	jname	description	dname	loc	grade
 罗贯中	50000.00	董事长	管理整个公司，接单	教研部	北京	5
 ```
 
-### 查询出部门编号、部门名称、部门位置、部门人数
+> 查询出部门编号、部门名称、部门位置、部门人数
 
 ```sql
 /*
@@ -2679,9 +2731,7 @@ id	dname	loc	total
 30	销售部	广州	6
 ```
 
-### 查询所有员工的姓名及其直接上级的姓名
-
-> 没有领导的员工也需要查询
+> 查询所有员工的姓名及其直接上级的姓名，没有领导的员工也需要查询
 
 ```sql
 /*
@@ -2720,6 +2770,8 @@ ON
 小白龙	唐僧
 关羽	刘备
 ```
+
+------
 
 # 事务
 
@@ -2807,25 +2859,18 @@ ON
 
   1. read uncommitted：读未提交
       - 产生的问题：脏读、不可重复读、幻读
-
   2. read committed：读已提交 （Oracle）
-
     * 产生的问题：不可重复读、幻读
   3. repeatable read：可重复读 （MySQL默认）
-
     * 产生的问题：幻读
-
   4. serializable：串行化
-
     * 可以解决所有的问题
 
-    ```sql
-    * 注意：隔离级别从小到大安全性越来越高，但是效率越来越低
-    * 数据库查询隔离级别：
-    	* select @@tx_isolation;
-    * 数据库设置隔离级别：
-    	* set global transaction isolation level  级别字符串;
-    ```
+- 注意：隔离级别从小到大安全性越来越高，但是效率越来越低
+
+- 数据库查询隔离级别：select @@tx_isolation;
+
+- 数据库设置隔离级别：set global transaction isolation level  级别字符串;
 
 - 演示：
 
@@ -2838,6 +2883,265 @@ ON
   update account set balance = balance - 500 where id = 1;
 update account set balance = balance + 500 where id = 2;
   ```
-  
-  
+
+> set global transaction isolation level read uncommitted;
+>
+> 发生脏读！
+
+```sql
+-- cmd 窗口一：
+mysql> use db_test;
+Database changed
+
+-- 转账操作：
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> update account set balance = balance - 500 where id = 1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update account set balance = balance + 500 where id = 2;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+-- 未提交！
+```
+
+```sql
+-- cmd 窗口二：
+mysql> use db_test;
+Database changed
+
+mysql> select @@tx_isolation;
++------------------+
+| @@tx_isolation   |
++------------------+
+| READ-UNCOMMITTED |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+-- 发送脏读：一个事务，读取到另一个事务中没有提交的数据！
+mysql> select * from account;
++----+----------+---------+
+| id | NAME     | balance |
++----+----------+---------+
+|  1 | zhangsan |     500 |
+|  2 | lisi     |    1500 |
++----+----------+---------+
+2 rows in set (0.00 sec)
+```
+
+**此时，lisi查询余额发现余额增加了500，若cmd窗口一 发生回滚，当lisi去取钱时，发现钱并未到账！**
+
+> set global transaction isolation level read committed;
+>
+> 解决脏读！但是也引发了不可重复读！
+>
+> 测试之前先还原数据：update account set balance = 1000;
+
+```sql
+-- cmd窗口一：
+mysql> set global transaction isolation level read committed;
+Query OK, 0 rows affected (0.00 sec)
+
+-- 转账操作：
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> update account set balance = balance - 500 where id = 1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update account set balance = balance + 500 where id = 2;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+-- 提交数据：
+mysql> commit;
+Query OK, 0 rows affected (0.00 sec)
+```
+
+```sql
+-- cmd窗口三：
+mysql> select @@tx_isolation;
++----------------+
+| @@tx_isolation |
++----------------+
+| READ-COMMITTED |
++----------------+
+1 row in set (0.00 sec)
+
+-- 提交前的查询：
+mysql> select * from account;
++----+----------+---------+
+| id | NAME     | balance |
++----+----------+---------+
+|  1 | zhangsan |    1000 |
+|  2 | lisi     |    1000 |
++----+----------+---------+
+2 rows in set (0.00 sec)
+
+-- 提交后的查询：
+mysql> select * from account;
++----+----------+---------+
+| id | NAME     | balance |
++----+----------+---------+
+|  1 | zhangsan |     500 |
+|  2 | lisi     |    1500 |
++----+----------+---------+
+2 rows in set (0.00 sec)
+
+-- 也引发了不可重复读：在同一个事务中，两次读取到的数据不一样！
+-- 在一些需求中，要求同一个事务（财务报表）中，每次读取到的数据要一致，只有当该事务结束的时候，才能看到其他事务对数据的修改。
+```
+
+**此时，lisi 发现 zhangsan 真正完成转账后（提交事务后）才能查询到自己的余额增加了500！**
+
+> set global transaction isolation level repeatable read;  
+>
+> -- 解决了不可重复读！但是也引发了幻读。
+>
+> 测试之前先还原数据：update account set balance = 1000;
+
+```sql
+-- cmd 窗口一：
+mysql> set global transaction isolation level repeatable read;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> update account set balance = balance - 500 where id = 1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update account set balance = balance + 500 where id = 2;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> commit;
+Query OK, 0 rows affected (0.01 sec)
+```
+
+```sql
+-- cmd 窗口四：
+mysql> use db_test;
+Database changed
+mysql> select @@tx_isolation;
++-----------------+
+| @@tx_isolation  |
++-----------------+
+| REPEATABLE-READ |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+-- 提交前查询：
+mysql> select * from account;
++----+----------+---------+
+| id | NAME     | balance |
++----+----------+---------+
+|  1 | zhangsan |    1000 |
+|  2 | lisi     |    1000 |
++----+----------+---------+
+2 rows in set (0.00 sec)
+
+-- 提交后查询：
+mysql> select * from account;
++----+----------+---------+
+| id | NAME     | balance |
++----+----------+---------+
+|  1 | zhangsan |    1000 |
+|  2 | lisi     |    1000 |
++----+----------+---------+
+2 rows in set (0.00 sec)
+
+-- 说明解决了不可重复读！
+mysql> commit;
+Query OK, 0 rows affected (0.00 sec)
+
+-- 结束当前事务后，才可以看到其他事务对数据的修改。
+mysql> select * from account;
++----+----------+---------+
+| id | NAME     | balance |
++----+----------+---------+
+|  1 | zhangsan |     500 |
+|  2 | lisi     |    1500 |
++----+----------+---------+
+2 rows in set (0.00 sec)
+-- 同时也引发了幻读：一个事务操作(DML)数据表中所有记录，另一个事务添加了一条数据，则第一个事务查询不到。
+```
+
+> serializable：串行化
+>
+> 相当于多线程中的锁
+
+```sql
+-- cmd 窗口一：
+mysql> set global transaction isolation level serializable;
+Query OK, 0 rows affected (0.00 sec)
+
+-- 执行转账操作：
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> update account set balance = balance - 500 where id = 1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update account set balance = balance + 500 where id = 2;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> commit;
+Query OK, 0 rows affected (0.01 sec)
+```
+
+```sql
+-- cmd 窗口二：
+mysql> use db_test;
+Database changed
+mysql> select @@tx_isolation;
++----------------+
+| @@tx_isolation |
++----------------+
+| SERIALIZABLE   |
++----------------+
+1 row in set (0.00 sec)
+
+-- 转账前查询：
+mysql> select * from account;
++----+----------+---------+
+| id | NAME     | balance |
++----+----------+---------+
+|  1 | zhangsan |     500 |
+|  2 | lisi     |    1500 |
++----+----------+---------+
+2 rows in set (0.00 sec)
+
+-- 开事务后查询，一直等待窗口一中的事务结束
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from account;
+-- 光标一致停留此处
+
+-- 窗口一提交事务后查询
+mysql> select * from account;
++----+----------+---------+
+| id | NAME     | balance |
++----+----------+---------+
+|  1 | zhangsan |       0 |
+|  2 | lisi     |    2000 |
++----+----------+---------+
+2 rows in set (0.00 sec)
+```
+
+------
 
