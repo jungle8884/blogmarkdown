@@ -1,12 +1,11 @@
 ---
-title: OOP_Principle
+title: 设计模式之六大原则
 categories:
   - 设计模式
 tags:
-  - OOP设计的原则
+  - 设计模式之六大原则
 date: 2020-02-29 20:16:36
 author: Jungle
-
 ---
 1. 开闭原则[Open Closed Principle，OCP]: 对扩展开放, 对修改关闭.
 	- 当应用的需求改变时, 在不修改源代码的前提下, 可以扩展模块的功能, 使其满足新的需求.

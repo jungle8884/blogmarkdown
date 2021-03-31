@@ -3,7 +3,7 @@ title: PythonNote
 date:  2019-08-31 14:28:16
 author: Jungle
 categories:
-- 笔记
+- 其他笔记
 tags:
 - python
 ---
@@ -38,7 +38,7 @@ tags:
 		- abs(x)	计算摸
 		- x.real	实部
 		- x.imag	虚部
- 	- 连接字符串
+	- 连接字符串
 	 	- x = 'good' + 'morning'
 	 	- x = 'good' 'morning'		#仅适用于字符串常量
 	 	- y = 'good' 
@@ -72,10 +72,10 @@ tags:
 	- repr()							返回包含一个对象的可打印表示形式的字符串
 	- 下面是定义一个函数的例子:
 		- `def myMap(iterable, op, value):
-     	   	   if op not in '+-*/':
-             	  return 'Error operator'
-     	   	   func = lambda i : eval(repr(i) + op + repr(value))
-     	       return map(func, iterable)`
+	 	   	   if op not in '+-*/':
+	         	  return 'Error operator'
+	 	   	   func = lambda i : eval(repr(i) + op + repr(value))
+	 	       return map(func, iterable)`
 	- int()								Return an integer object constructed from a number or string x, or return 0 if no arguments are given
 	- str()								返回 object 的 字符串 版本
 	- reduce()							先引入 [from functools import reduce]
@@ -184,7 +184,7 @@ tags:
 		- 等价于
 		- for value in range(1, 11):
 		-     squares.append(value**2)
-    8. 切片 [列表的一部分]
+	8. 切片 [列表的一部分]
 	    - [起始索引: 结束索引]					不包含第二个结束索引
 	    - [起始索引:]							从起始索引到末尾
 	    - [:结束索引]							从列表头开始
@@ -283,13 +283,14 @@ tags:
 				- r				读取模式
 				- a				附加模式 [注: 以便将内容附加到文件末尾，而不是覆盖文件原来的内容]
 				- r+			读取和写入文件的模式
-	
-	
+
+
+​	
 
 	19. 异常
 		- try-except
 		- else					依赖于 try 代码块成功执行的代码都放在 else 代码块中
-
+	
 	20. 分析文本
 		- split() 				以空格为分隔符将字符串分拆成多个部分，并将这些部分都存储到一个列表中
 	

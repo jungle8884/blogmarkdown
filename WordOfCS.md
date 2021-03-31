@@ -2,7 +2,6 @@
 title: WordofCS
 categories:
   - 英语
-  - 计算机
 tags:
   - 词汇
   - 机器学习

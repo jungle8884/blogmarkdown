@@ -1,7 +1,7 @@
 ---
 title: 学会在github上搜索项目
 categories:
-  - GitHub
+  - 其他笔记
 tags:
   - github搜索
 date: 2020-10-12 13:55:57

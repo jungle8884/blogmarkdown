@@ -3,11 +3,11 @@ title: 搭建hexo博客
 date: 2019/8/10
 author: Jungle
 categories:
-- 笔记
+- 其他笔记
 tags:
 - 博客搭建
 ---
-	
+
 	1.	自己安装 Git 和 Node.js 以及注册 github 账号，然后创建Repository:yourname.github.io
 	2.	生成SSH Key: ssh-keygen -t rsa -C "邮件地址@youremail.com"
 	3.	一路默认，直接按Enter，然后找到.ssh文件夹里的id_rsa.pub，复制到你的github主页的Settings->SSH，
@@ -26,7 +26,7 @@ tags:
 			# Hexo Configuration
 			## Docs: http://zespia.tw/hexo/docs/configure.html
 			## Source: https://github.com/tommy351/hexo/
-
+	
 			# Site 这里的配置，哪项配置反映在哪里，可以参考我的博客
 			title: My Blog #博客名
 			subtitle: to be continued... #副标题

@@ -3,7 +3,7 @@ title: git 学习记录
 date: 2019-6-13 
 author: Jungle
 categories:
-- 笔记
+- 其他笔记
 tags:
 - git
 ---

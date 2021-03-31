@@ -122,8 +122,6 @@ author: Jungle
 
 ### 操作数据库 CRUD
 
-#### Retrieve 查询
-
 > R(Retrieve)：查询
 > 	* 查询所有数据库的名称:
 > 		* show databases;
@@ -152,8 +150,6 @@ mysql> show create database mysql;
 +----------+----------------------------------------------------------------+
 1 row in set (0.00 sec)
 ```
-
-#### Create 创建
 
 > 	C(Create):创建
 > 		* 创建数据库：
@@ -234,8 +230,6 @@ mysql> show create database db3;
 1 row in set (0.00 sec)
 ```
 
-#### Update 修改
-
 > U(Update):修改
 > 		* 修改数据库的字符集
 > 			* alter database 数据库名称 character set 字符集名称;
@@ -252,8 +246,6 @@ mysql> show create database db3;
 +----------+--------------------------------------------------------------+
 1 row in set (0.00 sec)
 ```
-
-#### Delete 删除
 
 > D(Delete):删除
 > 		* 删除数据库
@@ -296,10 +288,6 @@ mysql> show databases;
 5 rows in set (0.00 sec)
 ```
 
-
-
-#### 使用数据库
-
 > 使用数据库
 > 		* 查询当前正在使用的数据库名称
 > 			* select database();
@@ -329,13 +317,7 @@ mysql> select database();
 1 row in set (0.00 sec)
 ```
 
-
-
-
-
 ### 操作表 CRUD
-
-#### Retrieve 查询表
 
 > R(Retrieve)：查询
 > 		* 查询某个数据库中所有的表名称
@@ -408,32 +390,7 @@ mysql> desc host;
 20 rows in set (0.01 sec)
 ```
 
-
-
-#### Create 创建表
-
-> - 语法：
->   		create table 表名(
->     			列名1 数据类型1,
->     			列名2 数据类型2,
->     			....
->     			列名n 数据类型n
->     		);
->
->   * 注意：最后一列，不需要加逗号（,）
->  * 创建表
->       create table student(
->         id int,
->         name varchar(32),
->         age int ,
->         score double(4,1),
->         birthday date,
->         insert_time timestamp
->        );
-> * 复制表：
-> 	* create table 表名 like 被复制的表名;	
-
-##### 常用数据类型
+**常用数据类型**
 
 > 整数
 >
@@ -498,7 +455,7 @@ mysql> desc host;
 | mediumtext | 可变长度，最多2的24次方-1个字符 |
 |  longtext  | 可变长度，最多2的32次方-1个字符 |
 
-##### 数据类型的属性
+**数据类型的属性**
 
 |       关键字       | 含义                     |
 | :----------------: | ------------------------ |
@@ -510,7 +467,27 @@ mysql> desc host;
 |      UNSIGNED      | 无符号                   |
 | CHARACTER SET name | 指定一个字符集           |
 
-##### Create 创建表
+> - Create 创建表
+> - 语法：
+>   	create table 表名(
+>    			列名1 数据类型1,
+>    			列名2 数据类型2,
+>    			....
+>    			列名n 数据类型n
+>    		);
+>   * 注意：最后一列，不需要加逗号（,）
+>
+>  * 创建表
+>    create table student(
+>      id int,
+>      name varchar(32),
+>      age int ,
+>      score double(4,1),
+>      birthday date,
+>      insert_time timestamp
+>     );
+> * 复制表：
+>   * create table 表名 like 被复制的表名;	
 
 **学生表结构图：**
 
@@ -583,10 +560,6 @@ mysql> show tables;
 2 rows in set (0.00 sec)
 ```
 
-
-
-#### Delete 删除表
-
 > D(Delete):删除
 > 		* drop table 表名;
 > 		* drop table  if exists 表名 ;
@@ -622,10 +595,10 @@ mysql> drop table if exists stu;
 Query OK, 0 rows affected, 1 warning (0.00 sec)
 ```
 
-#### Update 修改表
+> Update 修改表
 
-##### 修改表名
-
+> 修改表名
+>
 > alter table 表名 rename to 新的表名;
 
 ```sql
@@ -641,8 +614,8 @@ mysql> show tables;
 1 row in set (0.00 sec)
 ```
 
-##### 修改表的字符集
-
+> 修改表的字符集
+>
 > alter table 表名 character set 字符集名称;
 
 ```sql
@@ -683,8 +656,8 @@ mysql> show create table stu;
 1 row in set (0.00 sec)
 ```
 
-##### 添加一列
-
+> 添加一列
+>
 > alter table 表名 add 列名 数据类型;
 
 ```sql
@@ -707,10 +680,8 @@ mysql> desc stu;
 7 rows in set (0.01 sec)
 ```
 
-
-
-##### 修改列名称 类型
-
+> 修改列名称 类型
+>
 > alter table 表名 change 列名 新列名 新数据类型;
 > alter table 表名 modify 列名 新数据类型;
 
@@ -754,10 +725,8 @@ mysql> desc stu;
 7 rows in set (0.01 sec)
 ```
 
-
-
-##### 删除列
-
+> 删除列
+>
 > alter table 表名 drop 列名;
 
 ```sql
@@ -909,10 +878,6 @@ id	name	age	score	birthday	insert_time
 3	Lebro	37	100.0	1984-12-30	2021-03-23 16:45:29
 ```
 
-
-
-
-
 ## DQL：查询表中的记录
 
 > 语法：
@@ -938,43 +903,45 @@ id	name	age	score	birthday	insert_time
 
 ### 基础查询
 
-> - 进行查询之前的数据准备：
->
->   CREATE TABLE student (
->     id int,
->     name varchar(20),
->     age int,
->     gender varchar(5),
->     address varchar(100),
->     math int,
->     english int
->   );
->
->   INSERT INTO student(id,NAME,age,gender,address,math,english)
->   VALUES(1,'马云',55,'男','杭州',66,78),
->   	(2,'马化腾',45,'女','深圳',98,87),
->   	(3,'马景涛',55,'男','香港',56,77),
->   	(4,'柳岩',20,'女','湖南',76,65),
->   	(5,'柳青',20,'男','湖南',86,NULL),
->   	(6,'刘德华',57,'男','香港',99,99),
->   	(7,'马德',22,'女','香港',99,99),
->   	(8,'德玛西亚',18,'男','南京',56,65);
->   	
->
-> - select * from student;
->
->   id	name	age	gender	address	math	english
->   1	马云	55	男	杭州	66	78
->   2	马化腾	45	女	深圳	98	87
->   3	马景涛	55	男	香港	56	77
->   4	柳岩	20	女	湖南	76	65
->   5	柳青	20	男	湖南	86	\N
->   6	刘德华	57	男	香港	99	99
->   7	马德	22	女	香港	99	99
->   8	德玛西亚	18	男	南京	56	65
+```sql
+-- 进行查询之前的数据准备：
 
-#### 多个字段的查询
+  CREATE TABLE student (
+    id int,
+    name varchar(20),
+    age int,
+    gender varchar(5),
+    address varchar(100),
+    math int,
+    english int
+  );
 
+  INSERT INTO student(id,NAME,age,gender,address,math,english)
+  VALUES(1,'马云',55,'男','杭州',66,78),
+  	(2,'马化腾',45,'女','深圳',98,87),
+  	(3,'马景涛',55,'男','香港',56,77),
+  	(4,'柳岩',20,'女','湖南',76,65),
+  	(5,'柳青',20,'男','湖南',86,NULL),
+  	(6,'刘德华',57,'男','香港',99,99),
+  	(7,'马德',22,'女','香港',99,99),
+  	(8,'德玛西亚',18,'男','南京',56,65);
+
+
+select * from student;
+
+  id	name	age	gender	address	math	english
+  1	马云	55	男	杭州	66	78
+  2	马化腾	45	女	深圳	98	87
+  3	马景涛	55	男	香港	56	77
+  4	柳岩	20	女	湖南	76	65
+  5	柳青	20	男	湖南	86	\N
+  6	刘德华	57	男	香港	99	99
+  7	马德	22	女	香港	99	99
+  8	德玛西亚	18	男	南京	56	65
+```
+
+> 多个字段的查询
+>
 > select 字段名1，字段名2... from 表名；
 >
 > - 注意：如果查询所有字段，则可以使用*来替代字段列表。
@@ -1004,10 +971,8 @@ name	age
 德玛西亚	18
 ```
 
-
-
-#### 去除重复
-
+> 去除重复
+>
 > distinct
 >
 > - 注意：去重要保证记录之间完全一样！
@@ -1060,14 +1025,11 @@ name	address
 德玛西亚	南京
 ```
 
-
-
-#### 计算列
-
-> - 一般可以使用四则运算计算一些列的值。（一般只会进行数值型的计算）
-> - ifnull(表达式1,表达式2)：
->     * 表达式1：判断位于表达式1的字段是否为null；
->     * 表达式2：如果表达式1的字段为null，就用位于表达式2的字段值替换。	
+> - 计算列
+>     - 一般可以使用四则运算计算一些列的值。（一般只会进行数值型的计算）
+>     - ifnull(表达式1,表达式2)：
+>         - 表达式1：判断位于表达式1的字段是否为null；
+>         - 表达式2：如果表达式1的字段为null，就用位于表达式2的字段值替换。	
 
 ```sql
 -- 计算 math 和 english 分数之和：
@@ -1109,12 +1071,8 @@ name	math	english	math + ifnull(english, 0)
 德玛西亚	56	65	121
 ```
 
-
-
-
-
-#### 起别名
-
+> 起别名
+>
 > * as：as也可以省略
 
 ```sql
@@ -1175,7 +1133,7 @@ name	数学	英语	总分
 >   - or  或 || 
 >   - not  或 !
 
-#### < 、<= 、>= 、>,  = 、<>  或 !=
+> < 、<= 、>= 、>,  = 、<>  或 !=
 
 ```sql
 -- 查询年龄大于20岁
@@ -1235,9 +1193,7 @@ id	name	age	gender	address	math	english
 8	德玛西亚	18	男	南京	56	65
 ```
 
-
-
-#### BETWEEN...AND 
+> BETWEEN...AND
 
 ```sql
 -- 查询年龄大于等于20 小于等于30
@@ -1257,9 +1213,7 @@ id	name	age	gender	address	math	english
 7	马德	22	女	香港	99	99
 ```
 
-
-
-#### IN( 集合)
+> IN( 集合)
 
 ```sql
 -- 查询年龄22岁，18岁，25岁的信息
@@ -1277,9 +1231,7 @@ id	name	age	gender	address	math	english
 8	德玛西亚	18	男	南京	56	65
 ```
 
-
-
-#### IS NULL
+> IS NULL
 
 ```sql
 -- 查询英语成绩为null，也就是查询缺考的。
@@ -1297,7 +1249,7 @@ id	name	age	gender	address	math	english
 5	柳青	20	男	湖南	86	\N
 ```
 
-#### IS NOT NULL
+> IS NOT NULL
 
 ```sql
 -- 查询英语成绩不为null，也就是参加考试了的。
@@ -1313,13 +1265,10 @@ id	name	age	gender	address	math	english
 8	德玛西亚	18	男	南京	56	65
 ```
 
-
-
-#### LIKE：模糊查询
-
-> - 占位符：
->   - _ :   单个任意字符
->   - %：多个任意字符
+> - LIKE：模糊查询
+>   - 占位符：
+>     - _ :   单个任意字符
+>     - %：多个任意字符
 
 ```sql
 -- 查询姓马的有哪些：
@@ -1842,7 +1791,7 @@ alter table employee add constraint emp_depid_fk foreign key (dep_id) references
 
 ## 多表之间的关系
 
-### 分类
+> 分类
 
 ```sql
 1. 一对一(了解)：
@@ -1856,8 +1805,8 @@ alter table employee add constraint emp_depid_fk foreign key (dep_id) references
     * 分析：一个学生可以选择很多门课程，一个课程也可以被很多学生选择    
 ```
 
-### 实现关系
-
+> 实现关系
+>
 > 一对多结构图
 >
 > 如：部门和员工
@@ -1880,11 +1829,9 @@ alter table employee add constraint emp_depid_fk foreign key (dep_id) references
 
 ![image-20210328155650922](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210328155650922.png)
 
-**注：一般会直接合并成一张表！**
+**注：一般会直接合并成一张表！** 
 
-### 案例
-
-> 结构图分析
+> 案例：结构图分析
 
 ![image-20210328161247977](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210328161247977.png)
 
@@ -1959,11 +1906,11 @@ alter table employee add constraint emp_depid_fk foreign key (dep_id) references
 
 ## 数据库设计的范式
 
-#### 概念
-
-> 设计数据库时，需要遵循的一些规范。
+> 概念：
 >
-> 要遵循后边的范式要求，必须先遵循前边的所有范式要求
+> - 设计数据库时，需要遵循的一些规范。
+>
+> - 要遵循后边的范式要求，必须先遵循前边的所有范式要求
 
 ```sql
 设计关系数据库时，遵从不同的规范要求，设计出合理的关系型数据库，这些不同的规范要求被称为不同的范式，各种范式呈递次规范，越高的范式数据库冗余越小。
@@ -1972,7 +1919,7 @@ alter table employee add constraint emp_depid_fk foreign key (dep_id) references
 	- 巴斯-科德范式（BCNF）、第四范式(4NF）和第五范式（5NF，又称完美范式）。
 ```
 
-#### 分类
+> 分类
 
 1. 第一范式（1NF）：每一列都是不可分割的原子数据项
 
@@ -2346,12 +2293,11 @@ id	NAME	gender	salary	join_date	dept_id	NAME
     SELECT * FROM emp WHERE emp.`salary` = (SELECT MAX(salary) FROM emp);
 ```
 
-> 子查询不同情况
+**子查询不同情况** 
 
-### 子查询的结果是单行单列的
-
-> * 子查询可以作为条件，使用运算符去判断。
-> *  运算符： > >= < <= =
+> * 子查询的结果是单行单列的
+>   * 子查询可以作为条件，使用运算符去判断。
+>   *  运算符： > >= < <= =
 
 ```sql
 -- 查询员工工资小于平均工资的人
@@ -2369,11 +2315,8 @@ id	NAME	gender	salary	join_date	dept_id
 6	小白龙	女	4500	2021-03-29	\N
 ```
 
-
-
-### 子查询的结果是多行单列的
-
-> - 子查询可以作为条件，使用运算符in来判断
+> - 子查询的结果是多行单列的
+>   - 子查询可以作为条件，使用运算符in来判断
 
 ```sql
 -- 查询'财务部'和'市场部'所有的员工信息
@@ -2395,11 +2338,8 @@ id	NAME	gender	salary	join_date	dept_id
 4	白骨精	女	5000	2015-10-07	3
 ```
 
-
-
-### 子查询的结果是多行多列的
-
-> - 子查询可以作为一张虚拟表参与查询
+> - 子查询的结果是多行多列的
+>   - 子查询可以作为一张虚拟表参与查询
 
 ```sql
 -- 查询员工入职日期是2011-11-11日之后的员工信息和部门信息

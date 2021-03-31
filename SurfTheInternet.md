@@ -3,7 +3,7 @@ title: 科学上网
 date: 2019-6-13 
 author: Jungle
 categories:
-- 日志
+- 其他笔记
 tags:
 - ss
 ---
@@ -56,4 +56,4 @@ tags:
 				systemctl restart firewalld
 
 
-	
+​	
