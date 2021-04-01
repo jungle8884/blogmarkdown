@@ -298,3 +298,369 @@ public class Test {
 
 
 # 抽象工厂模式
+
+> 回顾工厂方法模式
+
+![image-20210401192456234](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210401192456234.png)
+
+> User : （数据库访问类）用户类
+
+```java
+package FactoryPattern.AbstractFactory;
+
+public class User {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    private int id;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private String name;
+    
+}
+```
+
+> IUser 接口：用于客户端访问，解除与具体数据库访问的耦合。
+
+```java
+package FactoryPattern.AbstractFactory;
+
+interface IUser {
+    void Inser(User user);
+    User GetUser(int id);
+}
+```
+
+> MySqlUser：用于访问MySql的User （替换了结构图中的AccessUser）
+
+```java
+package FactoryPattern.AbstractFactory;
+
+public class MySqlUser implements IUser {
+
+    @Override
+    public void Inser(User user) {
+        System.out.println("在Mysql中给User表增加一条记录");
+    }
+
+    @Override
+    public User GetUser(int id) {
+        System.out.println("在Mysql中根据ID得到User表一条记录");
+        return null;
+    }
+    
+}
+```
+
+> SqlServerUser：用于访问SqlServer的User
+
+```java
+package FactoryPattern.AbstractFactory;
+
+public class SqlServerUser implements IUser {
+    @Override
+    public void Inser(User user) {
+        System.out.println("在SqlServer中给USer表增加一条记录");
+    }
+
+    @Override
+    public User GetUser(int id) {
+        System.out.println("在SqlServer中根据ID得到一条记录");
+        return null;
+    }
+}
+```
+
+> IFactory接口：定义一个创建 访问User表对象 的 抽象工厂 的 接口
+
+```java
+package FactoryPattern.AbstractFactory;
+
+public interface IFactory {
+    IUser createUser();
+}
+```
+
+> MySqlFactory类：实现IFactory接口，实例化MySqlUser（替换了结构图中的AccessFactory）
+
+```java
+package FactoryPattern.AbstractFactory;
+
+public class MySqlFactory implements IFactory {
+
+    @Override
+    public IUser createUser() {
+        return new MySqlUser();
+    }
+    
+}
+```
+
+> SqlServerFactory类：实现IFactory接口，实例化SqlServerUser
+
+```java
+package FactoryPattern.AbstractFactory;
+
+public class SqlServerFactory implements IFactory {
+
+    @Override
+    public IUser createUser() {
+        return new SqlServerUser();
+    }
+    
+}
+```
+
+> Test：客户端代码
+
+```java
+package FactoryPattern.AbstractFactory;
+
+public class Test {
+    public static void main(String[] args) {
+        User user = new User();
+
+        // 若需要对SqlServer数据库操作，只需要将本局改成：IFactory factory = new SqlServerFactory();
+        IFactory factory = new MySqlFactory();
+        IUser usr = factory.createUser();
+
+        usr.Inser(user);
+        usr.GetUser(1);
+    }
+}
+```
+
+> **问题来了**：只有一个User类和User操作类的时候，只需要工厂方法模式即可；
+
+> 只增加一张部门表如下：
+>
+> ![image-20210401195912460](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210401195912460.png)
+
+> Department : 数据库对应的表
+
+```java
+package FactoryPattern.AbstractFactory;
+
+public class Department {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    private int id;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private String name;
+}
+```
+
+> IDepartment ：定义操作
+
+```java
+package FactoryPattern.AbstractFactory;
+
+public interface IDepartment {
+    void Inser(Department dept);
+    User GetDepartment(int id);
+}
+```
+
+> MySqlDepartment：实现对MySql的操作
+
+```java
+package FactoryPattern.AbstractFactory;
+
+public class MySqlDepartment implements IDepartment {
+
+    @Override
+    public void Inser(Department dept) {
+        // Department
+        System.out.println("在Mysql中给Department表增加一条记录");
+    }
+
+    @Override
+    public User GetDepartment(int id) {
+        // Department
+        System.out.println("在Mysql中根据ID得到Department表一条记录");
+        return null;
+    }
+    
+}
+```
+
+> SqlServerDepartment：实习对SqlServer的操作
+
+```java
+package FactoryPattern.AbstractFactory;
+
+public class SqlServerDepartment implements IDepartment {
+
+    @Override
+    public void Inser(Department dept) {
+        // Department
+        System.out.println("在SqlServer中给Department表增加一条记录");
+    }
+
+    @Override
+    public User GetDepartment(int id) {
+        // Department
+        System.out.println("在SqlServer中根据ID得到Department表一条记录");
+        return null;
+    }
+    
+}
+```
+
+> 对IFactory的扩展
+
+```java
+package FactoryPattern.AbstractFactory;
+
+public interface IFactory {
+    IUser createUser();
+    IDepartment createDepartment();
+}
+```
+
+> 对 MySqlFactory 的扩展
+
+```java
+package FactoryPattern.AbstractFactory;
+
+public class MySqlFactory implements IFactory {
+
+    @Override
+    public IUser createUser() {
+        return new MySqlUser();
+    }
+
+    @Override
+    public IDepartment createDepartment() {
+        // Department
+        return new MySqlDepartment();
+    }
+    
+}
+```
+
+> 对 SqlServerFactory 的扩展
+
+```java
+package FactoryPattern.AbstractFactory;
+
+public class SqlServerFactory implements IFactory {
+
+    @Override
+    public IUser createUser() {
+        return new SqlServerUser();
+    }
+
+    @Override
+    public IDepartment createDepartment() {
+        // Department
+        return new SqlServerDepartment();
+    }
+    
+}
+```
+
+> 客户端代码 ：Test类
+
+```java
+package FactoryPattern.AbstractFactory;
+
+public class Test {
+    public static void main(String[] args) {
+        User user = new User();
+        Department dept = new Department();
+
+        // 若需要对SqlServer数据库操作，只需要将本局改成：IFactory factory = new SqlServerFactory();
+        IFactory factory = new MySqlFactory();
+        
+        IUser usr = factory.createUser();       
+        usr.Inser(user);
+        usr.GetUser(1);
+        
+		IDepartment dpt = factory.createDepartment();
+        dpt.Inser(dept);
+        dpt.GetDepartment(1);
+    }
+}
+```
+
+> 运行结果：
+>
+> 在Mysql中给User表增加一条记录
+> 在Mysql中根据ID得到User表一条记录      
+> 在Mysql中给Department表增加一条记录    
+> 在Mysql中根据ID得到Department表一条记录
+
+
+
+**以上是两张表的操作**。
+
+
+
+> 将上面的内容抽象出来，就是抽象工厂模式。
+>
+> - AbstractProductA 对应 IUser
+>   - ProductA 1 对应  SqlServerUser
+>   - ProductA 2 对应 MySqlUser
+> - AbstractProductB 对应 IDepartment
+>   - ProductA 1 对应  SqlServerDepartment
+>   - ProductA B 对应  MySqlDepartment
+> - AbstractFactory 对应 IFactory
+>   - ConcreateFactory 1 对应 SqlServerFactory
+>   - ConcreateFactory 2 对应 MySqlFactory
+>
+> 通常是在运行时刻再创建一个ConcreteFactory类的实例（比如 ：IFactory factory = new MySqlFactory() ），这个具体的工厂再创建具有特定实现的产品对象（比如 IUser usr = factory.createUser() ），
+>
+> 也就是说，为创建不同的产品对象，客户端应使用不同的具体工厂。
+
+
+
+> 抽象工厂模式：提供一个创建一系列相关或相互依赖对象的接口，而无需指定它们具体的类。
+>
+> - 优点：
+>   - 易于交换产品系列，由于具体工厂类，在一个应用中只需要在初始化的时候出现一次（比如：IFactory factory = new MySqlFactory() ），这就使得改变一个应用的具体工厂变得非常容易，只需要改变具体工厂即可使用不同的产品配置；
+>   - 让具体的创建实例过程与客户端分离（比如：IUser usr = factory.createUser() ），客户端是通过它们的抽象接口操纵实例（ 比如：usr.Inser(user) ），产品的具体类名也被具体工厂（比如：MySqlFactory）的实现分离，不会出现在客户代码中。
+> - 缺点:
+>   - 每增加一张项目表（比如Project表），就需要增加三个类：IProject，SqlServerProject，MySqlProject 以及扩展（修改） IFactory，SqlServerFactory，MySqlFactory。
+>   - 很明显，扩展的时候会对IFactory，SqlServerFactory，MySqlFactory进行修改，违反了 **开发-封闭** 原则
+
+![image-20210401193738506](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210401193738506.png)
+
+> 为创建不同的产品对象，客户端应使用不同的具体工厂。
+
+> 用反射+抽象工厂的数据访问程序...
+
+> 任务：用Java实现MySql等多种数据库的增删查改...
+
+
+
+
+
+
+

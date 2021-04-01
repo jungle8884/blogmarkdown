@@ -10,7 +10,6 @@ tags:
 author:
   - Jungle
 date: 2021-3-18
-
 ---
 
 # 今日内容
@@ -138,10 +137,10 @@ date: 2021-3-18
 
 
 ​	
-	* 作用分类：
-		①编写文档：通过代码里标识的注解生成文档【生成文档doc文档】
-		②代码分析：通过代码里标识的注解对代码进行分析【使用反射】
-		③编译检查：通过代码里标识的注解让编译器能够实现基本的编译检查【Override】
+​	* 作用分类：
+​		①编写文档：通过代码里标识的注解生成文档【生成文档doc文档】
+​		②代码分析：通过代码里标识的注解对代码进行分析【使用反射】
+​		③编译检查：通过代码里标识的注解让编译器能够实现基本的编译检查【Override】
 
 
 	* JDK中预定义的一些注解
@@ -336,10 +335,10 @@ date: 2021-3-18
 	
 	
 	​	
-		    public String getName() {
-		        return name;
-		    }
-		
+	​	    public String getName() {
+	​	        return name;
+	​	    }
+	​	
 		    public void setName(String name) {
 		        this.name = name;
 		    }
