@@ -10,7 +10,7 @@ tags:
   - 注解
 author:
   - Jungle
-date: 2021-3-18
+date: 2021-04-02
 ---
 
 # 今日内容
@@ -335,7 +335,6 @@ date: 2021-3-18
 		    }
 	
 	
-	​	
 	​	    public String getName() {
 	​	        return name;
 	​	    }
@@ -348,10 +347,10 @@ date: 2021-3-18
 	​	        return age;
 	​	    }
 	​	
-		    public void setAge(int age) {
-		        this.age = age;
-		    }
-		}
+	​	    public void setAge(int age) {
+	​	        this.age = age;
+	​	    }
+	​	}
 - 配置文件
 
 		className=demo.Person

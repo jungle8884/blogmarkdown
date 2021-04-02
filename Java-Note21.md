@@ -8,7 +8,7 @@ tags:
   - 线程
 author:
   - Jungle
-date: 2021-01-09 11:38:15
+date: 2021-04-02 
 
 ---
 # 进程 #
@@ -45,7 +45,7 @@ date: 2021-01-09 11:38:15
 				
 		//run()：封装线程执行的代码，直接调用，相当于普通方法的调用
 		//start()：启动线程；然后由JVM调用此线程的run()方法
-	
+		
 		public class MyThreadDemo {
 		    public static void main(String[] args) {
 		        MyThread my1 = new MyThread();
@@ -78,7 +78,7 @@ date: 2021-01-09 11:38:15
 		        }
 		    }
 		}
-	
+		
 		public class MyRunnableDemo {
 		    public static void main(String[] args) {
 		        //创建MyRunnable类的对象
@@ -139,7 +139,7 @@ date: 2021-01-09 11:38:15
 		        }
 		    }
 		}
-	
+		
 		public class ThreadSleepDemo {
 		    public static void main(String[] args) {
 		        ThreadSleep ts1 = new ThreadSleep();
@@ -201,7 +201,7 @@ date: 2021-01-09 11:38:15
 		        }
 		    }
 		}
-	
+		
 		public class ThreadJoinDemo {
 		    public static void main(String[] args) {
 		        ThreadJoin tj1 = new ThreadJoin();
@@ -300,7 +300,7 @@ date: 2021-01-09 11:38:15
 			        }
 			    }
 			}
-	
+		
 			public class SellTicketDemo {
 			    public static void main(String[] args) {
 			        SellTicket st = new SellTicket();
