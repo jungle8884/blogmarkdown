@@ -1,10 +1,11 @@
 ---
 title: 设计模式之六大原则
 categories:
+  - 后端
   - 设计模式
 tags:
-  - 设计模式之六大原则
-date: 2020-02-29 20:16:36
+  - 设计模式
+date: 2020-02-29 
 author: Jungle
 ---
 1. 开闭原则[Open Closed Principle，OCP]: 对扩展开放, 对修改关闭.

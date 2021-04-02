@@ -2,9 +2,11 @@
 title: k_means
 categories:
   - 机器学习
+  - 分类算法
 tags:
+  - Python
   - 划分聚类
-date: 2020-02-27 22:51:47
+date: 2020-02-27 
 author: jungle
 
 ---
@@ -33,38 +35,42 @@ author: jungle
 		"""
 		import numpy as np
 		import matplotlib.pyplot as plt
-		
-		
-		# 加载数据
-		def loadData(filename):
-		    data = np.loadtxt(filename, delimiter='\t', encoding="UTF-8-sig")
-		    return data
-		
-		
-		# 计算欧式距离
-		def euclideanDistances(X, Y):
-		    # X 代表坐标(x1, x2)   Y 代表坐标(y1, y2)
-		    return np.sqrt(np.sum((X - Y) ** 2))
-		
-		
-		# 构建k个随机质心 k=2
-		def randCent(data, k):
-		    m, n = data.shape  # (8, 2) 数组的形式，对于矩阵，m 行 n 列,  列数表示维数
-		    centroids = np.zeros((k, n), dtype=np.int)  # (k=2, n=2) k 行 n 列, 列数与样本的列数一致
-		    for i in range(k):
-		        index = int(np.random.uniform(0, m))    # 随机生成序号 0~7  uniform---[low, high)
-		        centroids[i, :] = data[index, :]  # [index, :]表示第index行所有元素
-		    return centroids
-		
-		
-		def kMeans(data, k):
-		    m = np.shape(data)[0]  # shape=(8,2) 表示8行2列, [0]此处获取行数
-		    clusterChange = True   # 若簇发生了改变为True
-		    # 第一列存样本属于哪一簇
-		    # 第二列存样本的到簇的中心点的误差
-		    # mat 代表 matrix 矩阵 [m 行 2 列], 行号0~7代表样本序号
-		    clusterAssment = np.mat(np.zeros((m, 2)))
-		
+
+
+​		
+​		# 加载数据
+​		def loadData(filename):
+​		    data = np.loadtxt(filename, delimiter='\t', encoding="UTF-8-sig")
+​		    return data
+
+
+​		
+​		# 计算欧式距离
+​		def euclideanDistances(X, Y):
+​		    # X 代表坐标(x1, x2)   Y 代表坐标(y1, y2)
+​		    return np.sqrt(np.sum((X - Y) ** 2))
+
+
+​		
+​		# 构建k个随机质心 k=2
+​		def randCent(data, k):
+​		    m, n = data.shape  # (8, 2) 数组的形式，对于矩阵，m 行 n 列,  列数表示维数
+​		    centroids = np.zeros((k, n), dtype=np.int)  # (k=2, n=2) k 行 n 列, 列数与样本的列数一致
+​		    for i in range(k):
+​		        index = int(np.random.uniform(0, m))    # 随机生成序号 0~7  uniform---[low, high)
+​		        centroids[i, :] = data[index, :]  # [index, :]表示第index行所有元素
+​		    return centroids
+
+
+​		
+​		def kMeans(data, k):
+​		    m = np.shape(data)[0]  # shape=(8,2) 表示8行2列, [0]此处获取行数
+​		    clusterChange = True   # 若簇发生了改变为True
+​		    # 第一列存样本属于哪一簇
+​		    # 第二列存样本的到簇的中心点的误差
+​		    # mat 代表 matrix 矩阵 [m 行 2 列], 行号0~7代表样本序号
+​		    clusterAssment = np.mat(np.zeros((m, 2)))
+​		
 		    # 第1步 初始化centroids质心
 		    centroids = randCent(data, k)   # 随机生成k=2个质心
 		    while clusterChange:  # 若质心发生了改变就继续执行
@@ -106,15 +112,16 @@ author: jungle
 		        # showCluster(data, k, centroids, clusterAssment)
 		    # 完成后返回质心, 簇[所属质心, 误差]
 		    return centroids, clusterAssment
-		
-		
-		# 数据可视化
-		def showCluster(data, k, centroids, clusterAssment):
-		    m, n = data.shape   # (8, 2) 数组的形式，对于矩阵，m 行 n 列,  列数表示维数
-		    if n != 2:
-		        print("数据不是二维的")
-		        return 1
-		
+
+
+​		
+​		# 数据可视化
+​		def showCluster(data, k, centroids, clusterAssment):
+​		    m, n = data.shape   # (8, 2) 数组的形式，对于矩阵，m 行 n 列,  列数表示维数
+​		    if n != 2:
+​		        print("数据不是二维的")
+​		        return 1
+​		
 		    # 红圆圈 蓝色正方形 黑色正三角-质心颜色
 		    mark = ['or', 'sb', '*k', '*k']
 		    if k > len(mark):
@@ -136,15 +143,16 @@ author: jungle
 		        plt.plot(centroids[i, 0], centroids[i, 1], mark[i+2])  # 质心颜色为: mark[2~3]
 		
 		    plt.show()
-		
-		
-		''' if __name__ == "__main__":
-		__name__ 是当前模块名，当模块被直接运行时模块名为 __main__ 
-		这句话的意思就是，当模块被直接运行时，以下代码块将被运行，
-		当模块是被导入时，代码块不被运行。'''
-		if __name__ == "__main__":
-		    data = loadData('test.txt')
-		    k = 2
-		    centroids, clusterAssment = kMeans(data, k)
-		    showCluster(data, k, centroids, clusterAssment)  # 最终图像
+
+
+​		
+​		''' if __name__ == "__main__":
+​		__name__ 是当前模块名，当模块被直接运行时模块名为 __main__ 
+​		这句话的意思就是，当模块被直接运行时，以下代码块将被运行，
+​		当模块是被导入时，代码块不被运行。'''
+​		if __name__ == "__main__":
+​		    data = loadData('test.txt')
+​		    k = 2
+​		    centroids, clusterAssment = kMeans(data, k)
+​		    showCluster(data, k, centroids, clusterAssment)  # 最终图像
 

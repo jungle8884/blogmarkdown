@@ -1,6 +1,7 @@
 ---
 title: MySQL学习笔记
 categories:
+  - 数据库
   - MySQL
 tags:
   - SQL

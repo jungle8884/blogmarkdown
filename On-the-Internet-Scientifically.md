@@ -3,9 +3,9 @@ title: 科学上网
 date: 2019-6-13 
 author: Jungle
 categories:
-- 其他笔记
+- 工具
 tags:
-- ss
+- shadowsocks
 ---
 #1 搭建ss:
 	使用如下命令：

@@ -1,6 +1,7 @@
 ---
 title: Java-Note19
 categories:
+  - 后端
   - Java
 tags:
   - 异常
@@ -22,7 +23,7 @@ date: 2020-12-08 19:11:19
 
 
 ## 怎么处理异常 ##
-	
+
 - **throw**: 可以使用throw关键字在指定的方法中抛出指定的异常
 	- 使用格式：throw new xxxException("异常产生的原因");
 	- 必须写在方法的内部

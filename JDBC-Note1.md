@@ -1,11 +1,10 @@
 ---
-title: JDBC
+title: JDBC-Note1
 categories:
-  - Java
+  - 后端
+  - JDBC
 tags:
   - JDBC
-  - JDBCUtils
-  - JDBC控制事务
 date: 2020-3-31
 author: Jungle
 ---
@@ -149,7 +148,8 @@ author: Jungle
 			        }
 				
 		4. ResultSet：结果集对象,封装查询结果
-			* boolean next(): 游标向下移动一行，判断当前行是否是最后一行末尾(是否有数据)，如果是，则返回false，如果不是则返回true
+			* boolean next(): 游标向下移动一行，判断当前行是否是最后一行末尾(是否有数据)，
+								如果是，则返回false，如果不是则返回true
 			* getXxx(参数):获取数据
 				* Xxx：代表数据类型   如： int getInt() ,	String getString()
 				* 参数：
@@ -284,14 +284,14 @@ author: Jungle
 ​	            }
 ​	        }
 ​	
-	        if( conn != null){
-	            try {
-	                conn.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }
+​	        if( conn != null){
+​	            try {
+​	                conn.close();
+​	            } catch (SQLException e) {
+​	                e.printStackTrace();
+​	            }
+​	        }
+​	    }
 
 
 ​	
@@ -326,22 +326,22 @@ author: Jungle
 ​	        }
 ​	    }
 ​	
-	}
-	
-	* 练习：
-		* 需求：
-			1. 通过键盘录入用户名和密码
-			2. 判断用户是否登录成功
-				* select * from user where username = "" and password = "";
-				* 如果这个sql有查询结果，则成功，反之，则失败
-	
-		* 步骤：
-			1. 创建数据库表 user
-				CREATE TABLE USER(
-					id INT PRIMARY KEY AUTO_INCREMENT,
-					username VARCHAR(32),
-					PASSWORD VARCHAR(32)
-				
+​	}
+​	
+​	* 练习：
+​		* 需求：
+​			1. 通过键盘录入用户名和密码
+​			2. 判断用户是否登录成功
+​				* select * from user where username = "" and password = "";
+​				* 如果这个sql有查询结果，则成功，反之，则失败
+​	
+​		* 步骤：
+​			1. 创建数据库表 user
+​				CREATE TABLE USER(
+​					id INT PRIMARY KEY AUTO_INCREMENT,
+​					username VARCHAR(32),
+​					PASSWORD VARCHAR(32)
+​				
 				);
 	
 				INSERT INTO USER VALUES(NULL,'zhangsan','123');
@@ -479,12 +479,15 @@ author: Jungle
 		            JDBCUtils.close(pstmt1,conn);
 		            JDBCUtils.close(pstmt2,null);
 		        }
+		}	
+	}
 
-
-​		
-​		    }
-​		
-​		}
+> ​	思考：
+>
+> - 将sql语句放在文件中，以;结尾，每行一条语句
+>   - 增删改是一类
+>   - 查询是一类
+> - 通过赋值sql，执行sql语句
 
 
 ​			

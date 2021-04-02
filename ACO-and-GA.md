@@ -25,7 +25,7 @@ author: Jungle
 
 # ACO代码 #
 **代码来源: https://blog.csdn.net/fanxin_i/article/details/80380733**
- 
+
 		import random
 		import copy
 		import time
@@ -58,8 +58,9 @@ author: Jungle
 		# 城市距离和信息素
 		distance_graph = [[0.0 for col in range(city_num)] for raw in range(city_num)]
 		pheromone_graph = [[1.0 for col in range(city_num)] for raw in range(city_num)]
-		
-		
+
+
+​		
 		# ----------- 蚂蚁 -----------
 		class Ant(object):
 		
@@ -169,8 +170,9 @@ author: Jungle
 		
 		        # 计算路径总长度
 		        self.__cal_total_distance()
-		
-		
+
+
+​		
 		# ----------- TSP问题 -----------
 		
 		class TSP(object):
@@ -346,8 +348,9 @@ author: Jungle
 		    # 主循环
 		    def mainloop(self):
 		        self.root.mainloop()
-		
-		
+
+
+​		
 		# ----------- 程序的入口处 -----------
 		
 		if __name__ == '__main__':

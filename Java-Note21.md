@@ -1,6 +1,7 @@
 ---
 title: Java-Note21
 categories:
+  - 后端
   - Java
 tags:
   - 进程
@@ -44,7 +45,7 @@ date: 2021-01-09 11:38:15
 				
 		//run()：封装线程执行的代码，直接调用，相当于普通方法的调用
 		//start()：启动线程；然后由JVM调用此线程的run()方法
-
+	
 		public class MyThreadDemo {
 		    public static void main(String[] args) {
 		        MyThread my1 = new MyThread();
@@ -77,7 +78,7 @@ date: 2021-01-09 11:38:15
 		        }
 		    }
 		}
-
+	
 		public class MyRunnableDemo {
 		    public static void main(String[] args) {
 		        //创建MyRunnable类的对象
@@ -138,7 +139,7 @@ date: 2021-01-09 11:38:15
 		        }
 		    }
 		}
-
+	
 		public class ThreadSleepDemo {
 		    public static void main(String[] args) {
 		        ThreadSleep ts1 = new ThreadSleep();
@@ -200,7 +201,7 @@ date: 2021-01-09 11:38:15
 		        }
 		    }
 		}
-
+	
 		public class ThreadJoinDemo {
 		    public static void main(String[] args) {
 		        ThreadJoin tj1 = new ThreadJoin();
@@ -299,7 +300,7 @@ date: 2021-01-09 11:38:15
 			        }
 			    }
 			}
-
+	
 			public class SellTicketDemo {
 			    public static void main(String[] args) {
 			        SellTicket st = new SellTicket();
@@ -434,11 +435,11 @@ date: 2021-01-09 11:38:15
 # Lock锁 #
 
 	Lock中提供了获得锁和释放锁的方法
-        void lock()：获得锁
-        void unlock()：释放锁
-
-    Lock是接口不能直接实例化，这里采用它的实现类ReentrantLock来实例化
-        ReentrantLock​()：创建一个ReentrantLock的实例
+	    void lock()：获得锁
+	    void unlock()：释放锁
+	
+	Lock是接口不能直接实例化，这里采用它的实现类ReentrantLock来实例化
+	    ReentrantLock​()：创建一个ReentrantLock的实例
 
 ## Lock的使用 ##
 

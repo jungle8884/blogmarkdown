@@ -1,6 +1,7 @@
 ---
 title: Java-Note18
 categories:
+  - 后端
   - Java
 tags:
   - Map
@@ -39,7 +40,7 @@ author: Jungle
 				        System.out.println(map);
 				    }
 				}
-		
+			
 				输出:
 					null
 					昆凌
@@ -62,13 +63,13 @@ author: Jungle
 		        Integer v4 = map1.remove("杨超越");
 		        System.out.println(v4);
 		        System.out.println(map1);
-			
-			输出:
-				178
-				null
-				{迪丽热巴=165, 杨幂=168}
-				
-				Process finished with exit code 0
+		    
+		    输出:
+		    	178
+		    	null
+		    	{迪丽热巴=165, 杨幂=168}
+		    	
+		    	Process finished with exit code 0
 
 - public V get(Object key): 根据指定的键, 在Map集合中获取对应的值
 	- 返回值V:
@@ -92,17 +93,17 @@ author: Jungle
 		        System.out.println(v6);
 		        System.out.println(map1);
 		        System.out.println("-----------------------");
-			输出:
-				178
-				null
-				{迪丽热巴=165, 杨幂=168}
-				-----------------------
-				165
-				null
-				{迪丽热巴=165, 杨幂=168}
-				-----------------------
-
-				Process finished with exit code 0
+		    输出:
+		    	178
+		    	null
+		    	{迪丽热巴=165, 杨幂=168}
+		    	-----------------------
+		    	165
+		    	null
+		    	{迪丽热巴=165, 杨幂=168}
+		    	-----------------------
+    
+		    	Process finished with exit code 0
 
 - boolean containsKey(Object key): 判断集合中是否包含指定的键
 	- 返回值: 包含返回true; 不包含返回false.
@@ -123,11 +124,11 @@ author: Jungle
 			1. 使用Map集合中的方法keySet()，把Map集合所有的key取出来，存储到一个Set集合中
 
 					Map<String, Integer> map = new HashMap<>();
-			        map.put("赵丽颖", 168);
-			        map.put("杨颖", 165);
-			        map.put("林志玲", 178);
-			
-			        Set<String> set = map.keySet(); //将map中所有的key取出来, 存储到一个Set集合中.
+			   	 map.put("赵丽颖", 168);
+			   	 map.put("杨颖", 165);
+			   	 map.put("林志玲", 178);
+				
+			   	 Set<String> set = map.keySet(); //将map中所有的key取出来, 存储到一个Set集合中.
 				
 			2. 遍历Set集合，获取Map集合中的每一个key
 			3. 通过Map集合中的方法get(key)，通过key找到value
@@ -142,9 +143,9 @@ author: Jungle
 				- 使用增强for循环：
 								
 						for (String key : map.keySet()) {
-				            Integer value = map.get(key);
-				            System.out.println(key + "=" + value);
-				        }
+				  	      Integer value = map.get(key);
+				  	      System.out.println(key + "=" + value);
+				  	  }
 			
 
 - public Set<Map.Entry<K, V>> entrySet(): 获取到Map集合中所有的键值对对象的集合(Set集合) 
@@ -160,20 +161,20 @@ author: Jungle
 			- 迭代器：
 				
 					Iterator<Map.Entry<String, Integer>> it = entrySet.iterator();
-			        while (it.hasNext()){
-			            Map.Entry<String, Integer> entry = it.next();
-			            String key = entry.getKey();
-			            Integer value = entry.getValue();
-			            System.out.println(key + "=" + value);
-			        }
+			  	  while (it.hasNext()){
+			  	      Map.Entry<String, Integer> entry = it.next();
+			  	      String key = entry.getKey();
+			  	      Integer value = entry.getValue();
+			  	      System.out.println(key + "=" + value);
+			  	  }
 
 			- 增强for:
 
 					for (Map.Entry<String, Integer> entry : entrySet) {
-			            String key = entry.getKey();
-			            Integer value = entry.getValue();
-			            System.out.println(key + "=" + value);
-			        }
+			  	      String key = entry.getKey();
+			  	      Integer value = entry.getValue();
+			  	      System.out.println(key + "=" + value);
+			  	  }
 
 
 ----------
@@ -187,13 +188,15 @@ author: Jungle
 3. HashMap存储自定义类型键值
 	1. Map集合保证key是唯一的：作为key的元素，必须重写hashCode方法和equals方法，以保证key唯一
 	2. key: string类型
+		
 		- String类重写hashCode方法和equals方法，可以保证key唯一
 	3. value: Person类型
+		
 		- value可以重复（同名同年龄的人视为同一个）
 	4. 实现代码：
 	
 				package demo;
-		
+			
 				import java.util.HashMap;
 				import java.util.LinkedHashMap;
 				import java.util.Set;
@@ -214,18 +217,17 @@ author: Jungle
 				
 				    }
 				}
-			
-				
-	5. 输出：
-
-				上海=Person{name='李四', age=19}
-
+		
+5. 输出：
+	
+			上海=Person{name='李四', age=19}
+		
 				广州=Person{name='王五', age=20}
 				
 				北京=Person{name='张三', age=18}
 				
 				深圳=Person{name='李三', age=18}
-				
+		
 
 ----------
 ## java.util.LinkedHashMap<k,v>集合 extends HashMap<k,v>集合 ##

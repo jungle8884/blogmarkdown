@@ -1,11 +1,12 @@
 ---
 title: Ado.net
 categories:
-  - 计算机技术
+  - 后端
+  - C#
 tags:
   - C#
   - Ado.net
-date: 2020-10-16 20:20:42
+date: 2020-10-16 
 author: Jungle
 
 ---
@@ -40,13 +41,13 @@ author: Jungle
 ## 获取对象的所有公有属性 ##
 
 		PropertyInfo[] properties = type.GetProperties();
-	
+
 ## 获取对象的指定属性 ##
 
 		PropertyInfo prop = type.GetProperty("属性名称");
 		prop.GetValue(对象名); //获取属性值
 		prop.SetValue(对象名, 属性值); //设置属性值
-		
+
 
 ## 获取对象的所有公有字段 ##
 
@@ -60,7 +61,7 @@ author: Jungle
 
 		MethodInfo method = type.GetMethod("方法名称");
 		method.Invoke(对象名, null); //没有参数的方法的调用
-		
+
 ## 获取当前Type的所有公共构造函数 ##
 
 		 ConstructorInfo[] cons = type.GetConstructors();
@@ -73,10 +74,10 @@ author: Jungle
 		类名称 对象名 = (类名称)con.Invoke(oParam);
 
 ## 加载程序集  ##
-		
+
 		Assembly assembly = Assembly.Load("程序集的名称");
 		Assembly assembly = Assembly.LoadFile("程序集的名称"); //要带上后缀 .dll
-
+	
 		Type type = assembly.GetType("程序集名称.类名称");
 		object obj = Activator.CreateInstance(type);
 		MethodInfo method = type.GetMethod("方法名称");

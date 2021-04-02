@@ -1,9 +1,10 @@
 ---
-title: 网络爬虫
+title: 什么是网络爬虫
 categories:
-  - 计算机技术
+  - 工具
 tags:
   - 爬虫
+  - http
 date: 2019-09-30 14:35:05
 author: Jungle
 ---
@@ -70,7 +71,7 @@ author: Jungle
 			url = "http://www.httpbin.org//ip" 
 			resp = opener.open(url) # 3
 			print(resp.read())
-	
+		
 			输出: b'{\n  "origin": "223.104.175.125, 223.104.175.125"\n}\n'
 	5. http://www.httpbin.org : 这个网站可以方便的查看http请求的一些参数
 	6. 使用 urllib.request.ProxyHandler 传入一个代理, 这个代理是一个字典, 字典的 key 依赖于代理服务器能够接收的类型, 一般是 http 或者 https , 值是 ip:port .
@@ -135,8 +136,9 @@ author: Jungle
 			                  "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 "
 			                  "Safari/537.36"
 			}
-			
-			
+		
+		
+		​	
 			def get_opener():
 			    # 1. 登录
 			    # 1.1 创建一个cookie_jar对象
@@ -146,8 +148,9 @@ author: Jungle
 			    # 1.3 使用上一步创建的handler创建一个opener
 			    opener = request.build_opener(handler)
 			    return opener
-			
-			
+		
+		
+		​	
 			def login_cnki(opener):
 			    # 1.4 使用opener发送登录的请求(邮箱和密码)
 			    data = {
@@ -157,8 +160,9 @@ author: Jungle
 			    login_url = "https://kns.cnki.net/kns/logindigital.aspx?ParentLocation=http://www.cnki.net"
 			    req = request.Request(login_url, data=parse.urlencode(data).encode('utf-8'), headers=headers)
 			    opener.open(req)
-			
-			
+		
+		
+		​	
 			def visit_profile(opener):
 			    # 2. 访问个人主页
 			    # 获取个人主页的页面的时候, 不要新建一个opener
@@ -169,8 +173,9 @@ author: Jungle
 			    resp = opener.open(req)
 			    with open('cnki.html', 'w', encoding="utf-8") as fp:
 			        fp.write(resp.read().decode('utf-8'))
-			
-			
+		
+		
+		​	
 			if __name__ == '__main__':
 			    opener = get_opener()
 			    login_cnki(opener)
@@ -280,36 +285,40 @@ author: Jungle
 					6. or 	或
 					7. and 	与
 					8. mod 	取余
-								
+		
     9. lxml库
 	    1. 使用lxml 解析
 	    
-			    from lxml import etree
+		       from lxml import etree
+		       
+		       text = """某个网页代码"""
 		
-				text = """某个网页代码"""
-				
-				
-				def save_text():
-				    with open("Try_lxml.html", "w", encoding="UTF-8") as fp:
-				        html_element = etree.HTML(text)  # 解析字符串, 返回element对象
-				        fp.write(etree.tostring(html_element, encoding="UTF-8").decode("UTF-8"))
-				
-				
-				def parse_text():
-				    html_element = etree.HTML(text)  # 解析字符串, 返回element对象
-				    print(etree.tostring(html_element, encoding="UTF-8").decode("UTF-8"))
-				
-				
-				def parse_file():
-				    parser = etree.HTMLParser(encoding="UTF-8")     # 遇到不规范时需要指定解析器
-				    html_element = etree.parse("Try_lxml.html", parser=parser)  # 解析文件, 返回element对象
-				    print(etree.tostring(html_element, encoding="UTF-8").decode("UTF-8"))
-				
-				
-				if __name__ == '__main__':
-				    save_text()
-				    parse_file()
-
+		
+		   ​	
+		   	def save_text():
+		   	    with open("Try_lxml.html", "w", encoding="UTF-8") as fp:
+		   	        html_element = etree.HTML(text)  # 解析字符串, 返回element对象
+		   	        fp.write(etree.tostring(html_element, encoding="UTF-8").decode("UTF-8"))
+		
+		
+		   ​	
+		   	def parse_text():
+		   	    html_element = etree.HTML(text)  # 解析字符串, 返回element对象
+		   	    print(etree.tostring(html_element, encoding="UTF-8").decode("UTF-8"))
+		
+		
+		   ​	
+		   	def parse_file():
+		   	    parser = etree.HTMLParser(encoding="UTF-8")     # 遇到不规范时需要指定解析器
+		   	    html_element = etree.parse("Try_lxml.html", parser=parser)  # 解析文件, 返回element对象
+		   	    print(etree.tostring(html_element, encoding="UTF-8").decode("UTF-8"))
+		
+		
+   ​	
+		   	if __name__ == '__main__':
+		   	    save_text()
+		   	    parse_file()
+		
 		2. lxml和xpath结合使用:
 		
 				from lxml import etree

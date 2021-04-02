@@ -1,9 +1,10 @@
 ---
 title: 学会在github上搜索项目
 categories:
-  - 其他笔记
+  - 工具
+  - github
 tags:
-  - github搜索
+  - github
 date: 2020-10-12 13:55:57
 author: Jungle
 

@@ -1,6 +1,7 @@
 ---
-title: Java-note23
+title: Java-Note23
 categories:
+  - 后端
   - Java
 tags:
   - 基础加强笔记
@@ -339,14 +340,14 @@ date: 2021-3-18
 	​	        return name;
 	​	    }
 	​	
-		    public void setName(String name) {
-		        this.name = name;
-		    }
-		
-		    public int getAge() {
-		        return age;
-		    }
-		
+	​	    public void setName(String name) {
+	​	        this.name = name;
+	​	    }
+	​	
+	​	    public int getAge() {
+	​	        return age;
+	​	    }
+	​	
 		    public void setAge(int age) {
 		        this.age = age;
 		    }

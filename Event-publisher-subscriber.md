@@ -1,7 +1,8 @@
 ---
 title: Event_publisher_subscriber
 categories:
-  - 计算机技术
+  - 后端
+  - C#
 tags:
   - C#
   - 委托与事件
@@ -93,14 +94,14 @@ author: Jungle
 **测试代码：**
 
 			#region 测试事件
-            {
-                Incrementer incrementer = new Incrementer(); //发布者
-                Dozens doZensCounter = new Dozens(incrementer); //订阅者, 在调用构造函数时，便已经订阅了 事件处理程序。
-
-                incrementer.DoCount(); //设置触发器
-                Console.WriteLine( "Numbers of dozens = {0}", doZensCounter.DozensCount);
-            }
-            #endregion
+	        {
+	            Incrementer incrementer = new Incrementer(); //发布者
+	            Dozens doZensCounter = new Dozens(incrementer); //订阅者, 在调用构造函数时，便已经订阅了 事件处理程序。
+	
+	            incrementer.DoCount(); //设置触发器
+	            Console.WriteLine( "Numbers of dozens = {0}", doZensCounter.DozensCount);
+	        }
+	        #endregion
 
 ----------
 **输出：**
@@ -169,14 +170,14 @@ author: Jungle
 **测试代码：**
 
 			#region 测试事件
-            {
-                Incrementer incrementer = new Incrementer(); //发布者
-                Dozens doZensCounter = new Dozens(incrementer); //订阅者, 在调用构造函数时，便已经订阅了 事件处理程序。
-
-                incrementer.DoCount(); //设置触发器
-                Console.WriteLine( "Numbers of dozens = {0}", doZensCounter.DozensCount);
-            }
-            #endregion
+	        {
+	            Incrementer incrementer = new Incrementer(); //发布者
+	            Dozens doZensCounter = new Dozens(incrementer); //订阅者, 在调用构造函数时，便已经订阅了 事件处理程序。
+	
+	            incrementer.DoCount(); //设置触发器
+	            Console.WriteLine( "Numbers of dozens = {0}", doZensCounter.DozensCount);
+	        }
+	        #endregion
 
 **输出与上面一致**
 
@@ -258,14 +259,14 @@ author: Jungle
 **测试代码：**
 
 			#region 测试事件
-            {
-                Incrementer incrementer = new Incrementer(); //发布者
-                Dozens doZensCounter = new Dozens(incrementer); //订阅者, 在调用构造函数时，便已经订阅了 事件处理程序。
-
-                incrementer.DoCount(); //设置触发器
-                Console.WriteLine( "Numbers of dozens = {0}", doZensCounter.DozensCount);
-            }
-            #endregion
+	        {
+	            Incrementer incrementer = new Incrementer(); //发布者
+	            Dozens doZensCounter = new Dozens(incrementer); //订阅者, 在调用构造函数时，便已经订阅了 事件处理程序。
+	
+	            incrementer.DoCount(); //设置触发器
+	            Console.WriteLine( "Numbers of dozens = {0}", doZensCounter.DozensCount);
+	        }
+	        #endregion
 
 ----------
 **输出:**

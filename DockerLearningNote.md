@@ -1,6 +1,7 @@
 ---
 title: Docker学习笔记
 categories:
+  - 运维
   - Docker
 tags:
   - docker
@@ -8,7 +9,7 @@ tags:
   - 容器
 author:
   - Jungle
-date: 2021-03-19 15:27:15
+date: 2021-03-19 
 ---
 
 # Docker的常用命令 #

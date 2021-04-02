@@ -1,10 +1,11 @@
 ---
 title: 豆瓣排行榜小爬虫
 categories:
-  - 计算机技术
+  - 工具
 tags:
+  - Python
   - 爬虫
-date: 2019-12-03 19:33:36
+date: 2019-12-03 
 author:	Jungle
 ---
 ## 目标网页: https://movie.douban.com/chart ##
@@ -24,32 +25,33 @@ author:	Jungle
 	response = requests.get(url, headers=headers)
 	# print(response.text)
 	text = response.text
-	
-	
-	# 2. 将抓取下来的信息按一定的规则进行提取
-	html = etree.HTML(text)
-	trs = html.xpath("//tr[@class='item']")
-	movies = []
-	for tr in trs:
-	    # print(etree.tostring(tr, encoding='UTF-8').decode('UTF-8'))
-	    a_s = tr.xpath(".//a[@class='nbg']")    # xpath 永远返回的是一个列表
-	    for a in a_s:
-	        title = a.xpath("@title")   # 电影名
-	        img = a.xpath(".//img//@src")   # 图片
-	    divs = tr.xpath(".//div[@class='pl2']")
-	    for div in divs:
-	        actors = div.xpath(".//p[@class='pl']")
-	        for actor in actors:
-	            actor = actor.xpath(".//text()")    # 演员
-	        score = div.xpath(".//span[@class='rating_nums']//text()")  # 评分
-	    movie = {
-	        'title': title,
-	        'score': score,
-	        'img': img,
-	        'actor': actor,
-	    }
-	    movies.append(movie)
-	print(movies)
+
+
+​	
+​	# 2. 将抓取下来的信息按一定的规则进行提取
+​	html = etree.HTML(text)
+​	trs = html.xpath("//tr[@class='item']")
+​	movies = []
+​	for tr in trs:
+​	    # print(etree.tostring(tr, encoding='UTF-8').decode('UTF-8'))
+​	    a_s = tr.xpath(".//a[@class='nbg']")    # xpath 永远返回的是一个列表
+​	    for a in a_s:
+​	        title = a.xpath("@title")   # 电影名
+​	        img = a.xpath(".//img//@src")   # 图片
+​	    divs = tr.xpath(".//div[@class='pl2']")
+​	    for div in divs:
+​	        actors = div.xpath(".//p[@class='pl']")
+​	        for actor in actors:
+​	            actor = actor.xpath(".//text()")    # 演员
+​	        score = div.xpath(".//span[@class='rating_nums']//text()")  # 评分
+​	    movie = {
+​	        'title': title,
+​	        'score': score,
+​	        'img': img,
+​	        'actor': actor,
+​	    }
+​	    movies.append(movie)
+​	print(movies)
 
 
 **运行结果:**

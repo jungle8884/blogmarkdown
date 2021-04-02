@@ -1,8 +1,10 @@
 ---
-title: CET-6-Writing
+title: 六级写作
 categories:
+  - 读书
   - 英语
 tags:
+  - 六级
   - 写作 
 date: 2020-09-18 10:21:32
 author: Jungle
@@ -26,6 +28,7 @@ top: 1
 **用两段表示就够了。**
 
 - on one hand, +第一个观点。
+	
 	- 或者
 - **First and foremost, +第一个观点**：
 	- 可以使用的转述句
@@ -37,6 +40,7 @@ top: 1
 			It is often the case that 用于举例子
 
 - on the other hand, +第二个观点
+	
 	- 或者
 - **Subsequently, +第二个观点**
 

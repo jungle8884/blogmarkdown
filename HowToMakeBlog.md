@@ -3,7 +3,8 @@ title: 搭建hexo博客
 date: 2019/8/10
 author: Jungle
 categories:
-- 其他笔记
+- 工具
+- git
 tags:
 - 博客搭建
 ---

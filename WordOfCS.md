@@ -1,9 +1,9 @@
 ---
 title: WordofCS
 categories:
-  - 英语
+  - 读书
+  - 单词
 tags:
-  - 词汇
   - 机器学习
   - 深度学习
   - 计算机专业英语

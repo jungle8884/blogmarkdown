@@ -1,6 +1,7 @@
 ---
 title: 工厂模式
 categories:
+  - 后端
   - 设计模式
 tags:
   - 创建型模式

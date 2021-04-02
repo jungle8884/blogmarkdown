@@ -3,7 +3,7 @@ title: 误差反向传播算法(BackPropagation算法)
 categories:
   - 机器学习
 tags:
-  - 人工神经网络
+  - BP
 date: 2020-03-19 14:49:40
 author: Jungle
 
@@ -28,7 +28,7 @@ author: Jungle
 		6. 选择下一个训练样本向量作为输入，再进行学习，计算输出
 		7. 重复5、6步骤，通过多个样本的反复训练，不断修正各单元的连接权值和阈值，直至网络全局误差函数小于预先设定的极小值，学习结束
 		8. 应用测试样本检查模式识别的准确性
-		
+
 
 ----------
 
@@ -286,8 +286,9 @@ author: Jungle
 				
 					fclose(fp1);
 				}
-				
-				
+		
+		
+		​		
 				/*两个输入a、b（10以内的数），一个输出 c，c=a+b。
 				换句话说就是教BP神经网络加法运算 */
 				void  trainNetwork(){
@@ -408,8 +409,9 @@ author: Jungle
 								fscanf(fp1,"%lf",&d_out[i][j]);
 						fclose(fp2);
 					}
-					
-					
+
+
+​					
 					void initBPNework(){
 					
 						int i,j;
@@ -562,8 +564,9 @@ author: Jungle
 					
 						fclose(fp1);
 					}
-					
-					
+
+
+​					
 					void  trainNetwork(){
 					
 						int i,c=0,j;
@@ -618,7 +621,8 @@ author: Jungle
 					
 					}
 
-							  
+
+​							  
 
 		- 输出:
 			

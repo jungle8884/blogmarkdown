@@ -1,19 +1,18 @@
 ---
 title: Java-Note20
 categories:
+  - 后端
   - Java
 tags:
   - File
-  - BufferStream
-  - InputStreamReader
-  - OutputStreamWriter
-  - FileReader
-  - FileWriter
-  - BufferReader
-  - BufferWriter
+  - 字符缓存流
+  - 字符流
+  - 编码
+  - 解码
+  - IO流
 author:
   - Jungle
-date: 2020-12-14 15:19:37
+date: 2020-12-14 
 
 ---
 
@@ -258,12 +257,12 @@ public boolean delete()：删除由此抽象路径名表示的文件或目录
 	​	        FileInputStream fis = new FileInputStream("E:\\itcast\\字节流复制图片.avi");
 	​	        FileOutputStream fos = new FileOutputStream("myByteStream\\字节流复制图片.avi");
 	​	
-		        byte[] bys = new byte[1024];
-		        int len;
-		        while ((len=fis.read(bys))!=-1) {
-		            fos.write(bys,0,len);
-		        }
-		
+	​	        byte[] bys = new byte[1024];
+	​	        int len;
+	​	        while ((len=fis.read(bys))!=-1) {
+	​	            fos.write(bys,0,len);
+	​	        }
+	​	
 		        fos.close();
 		        fis.close();
 		    }

@@ -1,6 +1,7 @@
 ---
-title: Java-note22
+title: Java-Note22
 categories:
+  - 后端
   - Java
 tags:
   - 网络编程
@@ -274,17 +275,17 @@ date: 2021-02-06 12:25:30
 			//创建服务器端的Socket对象(ServerSocket)
 	  	  //ServerSocket​(int port) 创建绑定到指定端口的服务器套接字
 	  	  ServerSocket ss = new ServerSocket(10000);
-		
+			
 	  	  //Socket accept​() 侦听要连接到此套接字并接受它
 	  	  Socket s = ss.accept();
-		
+			
 	  	  //获取输入流，读数据，并把数据显示在控制台
 	  	  InputStream is = s.getInputStream();
 	  	  byte[] bys = new byte[1024];
 	  	  int len = is.read(bys); //数据不多，读一次就好了
 	  	  String data = new String(bys,0,len);
 	  	  System.out.println("数据是：" + data);
-		
+			
 	  	  //释放资源
 	  	  s.close();
 	  	  ss.close();

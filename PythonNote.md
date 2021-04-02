@@ -1,11 +1,11 @@
 ---
-title: PythonNote
+title: Python学习笔记
 date:  2019-08-31 14:28:16
 author: Jungle
 categories:
-- 其他笔记
+- 机器学习
 tags:
-- python
+- Python
 ---
 	### 课堂笔记
 	- 数字: int, float, complex
