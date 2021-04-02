@@ -21,7 +21,7 @@ author: jungle
 
 ## 代码设计
 
-![image-20210330214708757](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210330214708757.png)
+![image-20210330214708757](images\image-20210330214708757.png)
 
 > 运算类（基类）
 >
@@ -188,7 +188,7 @@ public class Test {
 
 # 工厂方法模式
 
-![image-20210331185044469](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210331185044469.png)
+![image-20210331185044469](images\image-20210331185044469.png)
 
 ## 代码设计
 
@@ -277,7 +277,7 @@ public class DivFactory implements IFactory {
 > - 将一个简单工厂模式的工厂类（OperationSimpleFactory），扩展成了一个工厂抽象类接口（IFactory）和多个具体生成对象的工厂（AddFactory ...）；
 > - 当需要增加开根号的运算时，只需要增加此功能的运算类（OperationSqrt）和相应的工厂类(SqrtFactory implements IFactory)即可，不会违反 **开放-封闭** 原则。
 
-![image-20210331184928077](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210331184928077.png)
+![image-20210331184928077](images\image-20210331184928077.png)
 
 ```java
 package FactoryPattern.Factory;
@@ -299,9 +299,9 @@ public class Test {
 
 # 抽象工厂模式
 
-> 回顾工厂方法模式
+## 回顾工厂方法模式
 
-![image-20210401192456234](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210401192456234.png)
+![image-20210401192456234](images\image-20210401192456234.png)
 
 > User : （数据库访问类）用户类
 
@@ -442,11 +442,13 @@ public class Test {
 }
 ```
 
-> **问题来了**：只有一个User类和User操作类的时候，只需要工厂方法模式即可；
+## 抽象工厂模式实例
 
+> 只有一个User类和User操作类的时候，只需要工厂方法模式即可；
+>
 > 只增加一张部门表如下：
 >
-> ![image-20210401195912460](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210401195912460.png)
+> ![image-20210401195912460](images\image-20210401195912460.png)
 
 > Department : 数据库对应的表
 
@@ -639,7 +641,7 @@ public class Test {
 >
 > 也就是说，为创建不同的产品对象，客户端应使用不同的具体工厂。
 
-
+## 抽象工厂模式定义
 
 > 抽象工厂模式：提供一个创建一系列相关或相互依赖对象的接口，而无需指定它们具体的类。
 >
@@ -650,9 +652,11 @@ public class Test {
 >   - 每增加一张项目表（比如Project表），就需要增加三个类：IProject，SqlServerProject，MySqlProject 以及扩展（修改） IFactory，SqlServerFactory，MySqlFactory。
 >   - 很明显，扩展的时候会对IFactory，SqlServerFactory，MySqlFactory进行修改，违反了 **开发-封闭** 原则
 
-![image-20210401193738506](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210401193738506.png)
+![image-20210401193738506](images\image-20210401193738506.png)
 
 > 为创建不同的产品对象，客户端应使用不同的具体工厂。
+>
+> 未完待续。。。
 
 > 用反射+抽象工厂的数据访问程序...
 
