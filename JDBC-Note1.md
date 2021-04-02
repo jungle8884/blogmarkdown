@@ -147,7 +147,7 @@ author: Jungle
 			            }
 			        }
 				
-		4. ResultSet：结果集对象,封装查询结果
+		4. ResultSet：结果集对象,封装查询结果 （实例请看---访问数据库中的表）
 			* boolean next(): 游标向下移动一行，判断当前行是否是最后一行末尾(是否有数据)，
 								如果是，则返回false，如果不是则返回true
 			* getXxx(参数):获取数据
@@ -172,14 +172,8 @@ author: Jungle
 		
 		                System.out.println(id + "---" + name + "---" + balance);
 		            }
-	
-			* 练习：
-				* 定义一个方法，查询emp表的数据将其封装为对象，然后装载集合，返回。
-					1. 定义Emp类
-					2. 定义方法 public List<Emp> findAll(){}
-					3. 实现方法 select * from emp;
 						
-		5. PreparedStatement：执行sql的对象
+		5. PreparedStatement：执行sql的对象 （sql注入实例请看登录练习）
 			1. SQL注入问题：在拼接sql时，有一些sql的特殊关键字参与字符串的拼接。会造成安全性问题
 				1. 输入用户随便，输入密码：a' or 'a' = 'a
 				2. sql：select * from user where username = 'fhdsjkf' and password = 'a' or 'a' = 'a' 
@@ -191,7 +185,8 @@ author: Jungle
 				2. 注册驱动
 				3. 获取数据库连接对象 Connection
 				4. 定义sql
-					* 注意：sql的参数使用？作为占位符。 如：select * from user where username = ? and password = ?;
+					* 注意：sql的参数使用？作为占位符。 
+						如：select * from user where username = ? and password = ?;
 				5. 获取执行sql语句的对象 PreparedStatement  Connection.prepareStatement(String sql) 
 				6. 给？赋值：
 					* 方法： setXxx(参数1,参数2)
@@ -204,6 +199,8 @@ author: Jungle
 			5. 注意：后期都会使用PreparedStatement来完成增删改查的所有操作
 				1. 可以防止SQL注入
 				2. 效率更高
+
+
 
 ## 抽取JDBC工具类 ： JDBCUtils
 	* 目的：简化书写
@@ -218,201 +215,202 @@ author: Jungle
 					password=
 
 
-		3. 抽取一个方法释放资源
+```java
+   3. 抽取一个方法释放资源
+    * 代码实现：
+        public class JDBCUtils {
+        private static String url;
+        private static String user;
+        private static String password;
+        private static String driver;
+        /**
+         * 文件的读取，只需要读取一次即可拿到这些值。使用静态代码块
+         */
+        static{
+            //读取资源文件，获取值。
+
+            try {
+                //1. 创建Properties集合类。
+                Properties pro = new Properties();
+
+                //获取src路径下的文件的方式--->ClassLoader 类加载器
+                ClassLoader classLoader = JDBCUtils.class.getClassLoader();
+                URL res  = classLoader.getResource("jdbc.properties");
+                String path = res.getPath();
+                // /D:/IdeaProjects/itcast/out/production/day04_jdbc/jdbc.properties
+				// System.out.println(path);
+				
+                //2. 加载文件
+                pro.load(new FileReader(path));
+
+                //3. 获取数据，赋值
+                url = pro.getProperty("url");
+                user = pro.getProperty("user");
+                password = pro.getProperty("password");
+                driver = pro.getProperty("driver");
+                //4. 注册驱动
+                Class.forName(driver);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } //static
+        
 	
-	* 代码实现：
-		public class JDBCUtils {
-	    private static String url;
-	    private static String user;
-	    private static String password;
-	    private static String driver;
-	    /**
-	     * 文件的读取，只需要读取一次即可拿到这些值。使用静态代码块
-	     */
-	    static{
-	        //读取资源文件，获取值。
-	
-	        try {
-	            //1. 创建Properties集合类。
-	            Properties pro = new Properties();
-	
-	            //获取src路径下的文件的方式--->ClassLoader 类加载器
-	            ClassLoader classLoader = JDBCUtils.class.getClassLoader();
-	            URL res  = classLoader.getResource("jdbc.properties");
-	            String path = res.getPath();
-	            System.out.println(path);///D:/IdeaProjects/itcast/out/production/day04_jdbc/jdbc.properties
-	            //2. 加载文件
-	           // pro.load(new FileReader("D:\\IdeaProjects\\itcast\\day04_jdbc\\src\\jdbc.properties"));
-	            pro.load(new FileReader(path));
-	
-	            //3. 获取数据，赋值
-	            url = pro.getProperty("url");
-	            user = pro.getProperty("user");
-	            password = pro.getProperty("password");
-	            driver = pro.getProperty("driver");
-	            //4. 注册驱动
-	            Class.forName(driver);
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        } catch (ClassNotFoundException e) {
-	            e.printStackTrace();
-	        }
-	    }
+       /**
+         * 获取连接
+         * @return 连接对象
+         */
+        public static Connection getConnection() throws SQLException {
+            return DriverManager.getConnection(url, user, password);
+        }
+
+        /**
+         * 释放资源
+         * @param stmt
+         * @param conn
+         */
+        public static void close(Statement stmt,Connection conn){
+            if( stmt != null){
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if( conn != null){
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
 
-​	
-​	    /**
-​	     * 获取连接
-​	     * @return 连接对象
-​	     */
-​	    public static Connection getConnection() throws SQLException {
-​	
-​	        return DriverManager.getConnection(url, user, password);
-​	    }
-​	
-​	    /**
-​	     * 释放资源
-​	     * @param stmt
-​	     * @param conn
-​	     */
-​	    public static void close(Statement stmt,Connection conn){
-​	        if( stmt != null){
-​	            try {
-​	                stmt.close();
-​	            } catch (SQLException e) {
-​	                e.printStackTrace();
-​	            }
-​	        }
-​	
-​	        if( conn != null){
-​	            try {
-​	                conn.close();
-​	            } catch (SQLException e) {
-​	                e.printStackTrace();
-​	            }
-​	        }
-​	    }
 
+        /**
+         * 释放资源
+         * @param stmt
+         * @param conn
+         */
+        public static void close(ResultSet rs,Statement stmt, Connection conn){
+            if( rs != null){
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 
-​	
-​	    /**
-​	     * 释放资源
-​	     * @param stmt
-​	     * @param conn
-​	     */
-​	    public static void close(ResultSet rs,Statement stmt, Connection conn){
-​	        if( rs != null){
-​	            try {
-​	                rs.close();
-​	            } catch (SQLException e) {
-​	                e.printStackTrace();
-​	            }
-​	        }
-​	
-​	        if( stmt != null){
-​	            try {
-​	                stmt.close();
-​	            } catch (SQLException e) {
-​	                e.printStackTrace();
-​	            }
-​	        }
-​	
-​	        if( conn != null){
-​	            try {
-​	                conn.close();
-​	            } catch (SQLException e) {
-​	                e.printStackTrace();
-​	            }
-​	        }
-​	    }
-​	
-​	}
-​	
-​	* 练习：
-​		* 需求：
-​			1. 通过键盘录入用户名和密码
-​			2. 判断用户是否登录成功
-​				* select * from user where username = "" and password = "";
-​				* 如果这个sql有查询结果，则成功，反之，则失败
-​	
-​		* 步骤：
-​			1. 创建数据库表 user
-​				CREATE TABLE USER(
-​					id INT PRIMARY KEY AUTO_INCREMENT,
-​					username VARCHAR(32),
-​					PASSWORD VARCHAR(32)
-​				
-				);
-	
-				INSERT INTO USER VALUES(NULL,'zhangsan','123');
-				INSERT INTO USER VALUES(NULL,'lisi','234');
-	
-			2. 代码实现：
-				public class JDBCDemo9 {
-	
-				    public static void main(String[] args) {
-				        //1.键盘录入，接受用户名和密码
-				        Scanner sc = new Scanner(System.in);
-				        System.out.println("请输入用户名：");
-				        String username = sc.nextLine();
-				        System.out.println("请输入密码：");
-				        String password = sc.nextLine();
-				        //2.调用方法
-				        boolean flag = new JDBCDemo9().login(username, password);
-				        //3.判断结果，输出不同语句
-				        if(flag){
-				            //登录成功
-				            System.out.println("登录成功！");
-				        }else{
-				            System.out.println("用户名或密码错误！");
-				        }
+            if( stmt != null){
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 
+            if( conn != null){
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
-​				
-​				    }
+     }  
+```
 
+## 登录练习
 
-​				
-​				
-​				    /**
-​				     * 登录方法
-​				     */
-​				    public boolean login(String username ,String password){
-​				        if(username == null || password == null){
-​				            return false;
-​				        }
-​				        //连接数据库判断是否登录成功
-​				        Connection conn = null;
-​				        Statement stmt =  null;
-​				        ResultSet rs = null;
-​				        //1.获取连接
-​				        try {
-​				            conn =  JDBCUtils.getConnection();
-​				            //2.定义sql
-​				            String sql = "select * from user where username = '"+username+"' and password = '"+password+"' ";
-​				            //3.获取执行sql的对象
-​				            stmt = conn.createStatement();
-​				            //4.执行查询
-​				            rs = stmt.executeQuery(sql);
-​				            //5.判断
-​				           /* if(rs.next()){//如果有下一行，则返回true
-​				                return true;
-​				            }else{
-​				                return false;
-​				            }*/
-​				           return rs.next();//如果有下一行，则返回true
-​				
-​				        } catch (SQLException e) {
-​				            e.printStackTrace();
-​				        }finally {
-​				            JDBCUtils.close(rs,stmt,conn);
-​				        }
+```java
+	* 练习：
+    * 需求：
+        1. 通过键盘录入用户名和密码
+        2. 判断用户是否登录成功
+            * select * from user where username = "" and password = "";
+            * 如果这个sql有查询结果，则成功，反之，则失败
 
+    * 步骤：
+        1. 创建数据库表 user
+            CREATE TABLE USER(
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                username VARCHAR(32),
+                PASSWORD VARCHAR(32)
 
-​				
-​				        return false;
-​				    }
-​				}
+            );
+            INSERT INTO USER VALUES(NULL,'zhangsan','123');
+			INSERT INTO USER VALUES(NULL,'lisi','234');
+
+		2. 代码实现：
+			public class JDBCDemo9 {
+
+			    public static void main(String[] args) {
+			        //1.键盘录入，接受用户名和密码
+			        Scanner sc = new Scanner(System.in);
+			        System.out.println("请输入用户名：");
+			        String username = sc.nextLine();
+			        System.out.println("请输入密码：");
+			        String password = sc.nextLine();
+			        //2.调用方法
+			        boolean flag = new JDBCDemo9().login(username, password);
+			        //3.判断结果，输出不同语句
+			        if(flag){
+			            //登录成功
+			            System.out.println("登录成功！");
+			        }else{
+			            System.out.println("用户名或密码错误！");
+			        }
+			    }
+			    
+	   /**
+         * 登录方法
+         */
+        public boolean login(String username ,String password){
+            if(username == null || password == null){
+                return false;
+            }
+            //连接数据库判断是否登录成功
+            Connection conn = null;
+            Statement stmt =  null;
+            ResultSet rs = null;
+            //1.获取连接
+            try {
+                conn =  JDBCUtils.getConnection();
+                //2.定义sql
+                String sql = "select * from user where username = '"+username+"' and password = '"+password+"' ";
+                //3.获取执行sql的对象
+                stmt = conn.createStatement();
+                //4.执行查询
+                rs = stmt.executeQuery(sql);
+                //5.判断
+               return rs.next();//如果有下一行，则返回true
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }finally {
+                JDBCUtils.close(rs,stmt,conn);
+            }
+
+            return false;
+        }
+    }
+```
+
+> 危险的登录方式！！！
+>
+> - SQL注入问题：在拼接sql时，有一些sql的特殊关键字参与字符串的拼接，会造成安全性问题。
+>   - 输入用户随便，输入密码：a' or 'a' = 'a
+>   - sql：select * from user where username = 'fhdsjkf' and password = 'a' or  'a' = 'a'
+>     - 虽然 username = 'fhdsjkf' and password = 'a' 条件判断错误，
+>     - 但是 or 'a' = 'a' 恒等，依然会 select * from user where 'a' = 'a'  查询成功！
+> - 解决sql注入问题：使用PreparedStatement对象来解决
+
+<img src="images/image-20210402161250818.png" alt="image-20210402161250818"  />
 
 ## JDBC控制事务
 
@@ -482,12 +480,279 @@ author: Jungle
 		}	
 	}
 
-> ​	思考：
+## 访问数据库中的表
+
+> - 定义一个方法，查询emp表的数据将其封装为对象，然后装载集合，返回。
 >
-> - 将sql语句放在文件中，以;结尾，每行一条语句
->   - 增删改是一类
->   - 查询是一类
-> - 通过赋值sql，执行sql语句
+>   1. 定义Emp类 （与数据库一一对应）
+>
+>   2. 定义方法 public List<Emp> findAll(){}
+>
+>   3. 实现方法 select * from emp;
+>
+> - 一张表对应一个类，一条记录对应一个对象，将数据保存在对象集合中。
+
+```java
+package cn.itcast.jdbc;
+
+import cn.itcast.domain.Emp;
+import cn.itcast.util.JDBCUtils;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * * 定义一个方法，查询emp表的数据将其封装为对象，然后装载集合，返回。
+ */
+public class JDBCDemo8 {
+
+    public static void main(String[] args) {
+        List<Emp> list = new JDBCDemo8().findAll2();
+        System.out.println(list);
+        System.out.println(list.size());
+    }
+    /**
+     * 查询所有emp对象
+     * @return
+     */
+    public List<Emp> findAll(){
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        List<Emp> list = null;
+        try {
+            //1.注册驱动
+            Class.forName("com.mysql.jdbc.Driver");
+            //2.获取连接
+            conn = DriverManager.getConnection("jdbc:mysql:///db3", "root", "root");
+            //3.定义sql
+            String sql = "select * from emp";
+            //4.获取执行sql的对象
+            stmt = conn.createStatement();
+            //5.执行sql
+            rs = stmt.executeQuery(sql);
+            //6.遍历结果集，封装对象，装载集合
+            Emp emp = null;
+            list = new ArrayList<Emp>();
+            while(rs.next()){
+                //获取数据
+                int id = rs.getInt("id");
+                String ename = rs.getString("ename");
+                int job_id = rs.getInt("job_id");
+                int mgr = rs.getInt("mgr");
+                Date joindate = rs.getDate("joindate");
+                double salary = rs.getDouble("salary");
+                double bonus = rs.getDouble("bonus");
+                int dept_id = rs.getInt("dept_id");
+                // 创建emp对象,并赋值
+                emp = new Emp();
+                emp.setId(id);
+                emp.setEname(ename);
+                emp.setJob_id(job_id);
+                emp.setMgr(mgr);
+                emp.setJoindate(joindate);
+                emp.setSalary(salary);
+                emp.setBonus(bonus);
+                emp.setDept_id(dept_id);
+
+                //装载集合
+                list.add(emp);
+            }
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if(rs != null){
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if(stmt != null){
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if(conn != null){
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return list;
+    }
 
 
-​			
+    /**
+     * 演示JDBC工具类
+     * @return
+     */
+    public List<Emp> findAll2(){
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        List<Emp> list = null;
+        try {
+           /* //1.注册驱动
+            Class.forName("com.mysql.jdbc.Driver");
+            //2.获取连接
+            conn = DriverManager.getConnection("jdbc:mysql:///db3", "root", "root");
+            */
+            conn = JDBCUtils.getConnection();
+            //3.定义sql
+            String sql = "select * from emp";
+            //4.获取执行sql的对象
+            stmt = conn.createStatement();
+            //5.执行sql
+            rs = stmt.executeQuery(sql);
+            //6.遍历结果集，封装对象，装载集合
+            Emp emp = null;
+            list = new ArrayList<Emp>();
+            while(rs.next()){
+                //获取数据
+                int id = rs.getInt("id");
+                String ename = rs.getString("ename");
+                int job_id = rs.getInt("job_id");
+                int mgr = rs.getInt("mgr");
+                Date joindate = rs.getDate("joindate");
+                double salary = rs.getDouble("salary");
+                double bonus = rs.getDouble("bonus");
+                int dept_id = rs.getInt("dept_id");
+                // 创建emp对象,并赋值
+                emp = new Emp();
+                emp.setId(id);
+                emp.setEname(ename);
+                emp.setJob_id(job_id);
+                emp.setMgr(mgr);
+                emp.setJoindate(joindate);
+                emp.setSalary(salary);
+                emp.setBonus(bonus);
+                emp.setDept_id(dept_id);
+
+                //装载集合
+                list.add(emp);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            JDBCUtils.close(rs,stmt,conn);
+        }
+        return list;
+    }
+
+}
+```
+
+```java
+package cn.itcast.domain;
+
+import java.util.Date;
+
+/**
+ * 封装Emp表数据的JavaBean
+ */
+public class Emp {
+    private int id;
+    private String ename;
+    private int job_id;
+    private int mgr;
+    private Date joindate;
+    private double salary;
+    private double bonus;
+    private int dept_id;
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getEname() {
+        return ename;
+    }
+
+    public void setEname(String ename) {
+        this.ename = ename;
+    }
+
+    public int getJob_id() {
+        return job_id;
+    }
+
+    public void setJob_id(int job_id) {
+        this.job_id = job_id;
+    }
+
+    public int getMgr() {
+        return mgr;
+    }
+
+    public void setMgr(int mgr) {
+        this.mgr = mgr;
+    }
+
+    public Date getJoindate() {
+        return joindate;
+    }
+
+    public void setJoindate(Date joindate) {
+        this.joindate = joindate;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+
+    public int getDept_id() {
+        return dept_id;
+    }
+
+    public void setDept_id(int dept_id) {
+        this.dept_id = dept_id;
+    }
+
+
+    public double getBonus() {
+        return bonus;
+    }
+
+    public void setBonus(double bonus) {
+        this.bonus = bonus;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Emp{" +
+                "id=" + id +
+                ", ename='" + ename + '\'' +
+                ", job_id=" + job_id +
+                ", mgr=" + mgr +
+                ", joindate=" + joindate +
+                ", salary=" + salary +
+                ", bonus=" + bonus +
+                ", dept_id=" + dept_id +
+                '}';
+    }
+}
+```
+

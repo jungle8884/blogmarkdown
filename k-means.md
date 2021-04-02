@@ -1,5 +1,5 @@
 ---
-title: k_means
+title: k-means
 categories:
   - 机器学习
   - 分类算法
@@ -71,19 +71,19 @@ author: jungle
 ​		    # mat 代表 matrix 矩阵 [m 行 2 列], 行号0~7代表样本序号
 ​		    clusterAssment = np.mat(np.zeros((m, 2)))
 ​		
-		    # 第1步 初始化centroids质心
-		    centroids = randCent(data, k)   # 随机生成k=2个质心
-		    while clusterChange:  # 若质心发生了改变就继续执行
-		        clusterChange = False
-		        # 显示质心变化之前---看过程用
-		        # showCluster(data, k, centroids, clusterAssment)
-		        # 遍历所有样本 data[0~7, :] m==8
-		        # 第1轮的质心是在样本中的, 并没有排除, 因此会有两次样本自身的计算, 但并不影响结果
-		        for i in range(m):
-		            # 每一行都要找最小距离
-		            minDist = 100000.0
-		            minIndex = -1
-		
+​		    # 第1步 初始化centroids质心
+​		    centroids = randCent(data, k)   # 随机生成k=2个质心
+​		    while clusterChange:  # 若质心发生了改变就继续执行
+​		        clusterChange = False
+​		        # 显示质心变化之前---看过程用
+​		        # showCluster(data, k, centroids, clusterAssment)
+​		        # 遍历所有样本 data[0~7, :] m==8
+​		        # 第1轮的质心是在样本中的, 并没有排除, 因此会有两次样本自身的计算, 但并不影响结果
+​		        for i in range(m):
+​		            # 每一行都要找最小距离
+​		            minDist = 100000.0
+​		            minIndex = -1
+​		
 		            # 遍历所有的质心 centroids[0~1, :]  k==2
 		            # 第2步 找出最近的质心, 索引j保存到minIndex
 		            for j in range(k):
@@ -122,12 +122,12 @@ author: jungle
 ​		        print("数据不是二维的")
 ​		        return 1
 ​		
-		    # 红圆圈 蓝色正方形 黑色正三角-质心颜色
-		    mark = ['or', 'sb', '*k', '*k']
-		    if k > len(mark):
-		        print("k值太大了")
-		        return 1
-		
+​		    # 红圆圈 蓝色正方形 黑色正三角-质心颜色
+​		    mark = ['or', 'sb', '*k', '*k']
+​		    if k > len(mark):
+​		        print("k值太大了")
+​		        return 1
+​		
 		    # 绘制坐标轴, 标题
 		    plt.title('k-means')
 		    plt.xlabel('X-Axis')
