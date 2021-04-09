@@ -1,5 +1,5 @@
 ---
-title: git 学习记录
+title: git初试
 date: 2019-6-13 
 author: Jungle
 categories:
