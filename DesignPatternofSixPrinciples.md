@@ -26,72 +26,6 @@ date: 2021-04-09 21:38:52
 
 - 当应用的需求改变时, 在不修改源代码的前提下, 可以扩展模块的功能, 使其满足新的需求.
 - 遵守开闭原则的软件，其稳定性高和延续性强，从而易于扩展和维护.
-- 可以通过“抽象约束、封装变化”来实现开闭原则, 即通过接口或者抽象类为软件实体定义一个相对稳定的抽象层，而将相同的可变因素封装在相同的具体实现类中.
-
-```C#
-/// <summary>
-/// 接收数据
-/// </summary>
-/// <param name="type"></param>
-/// <param name="bs"></param>
-void DecvData(byte type, byte[] bs)
-{
-    if ((byte)PACKAGETYPE.RECON_TOWER_STATE == type)
-    {
-        //ReconTowerState tmp = new ReconTowerState("000000");
-        //tmp.FromBytes(bs);
-        //// 如果接收到的信息的车辆ID是配置文件中设定的车辆ID
-        //if (tmp.VehicleID == Forms_PublicData.VehicleID) 
-        //{
-        //    reconTowerState = tmp;
-        //    this.Invoke(new Action(updateUI));
-        //}
-        Forms_PublicMethod.addLayerBeforeSetValue<ReconTowerState>(reconTowerState, bs);
-    }
-
-    if ((byte)PACKAGETYPE.POSITION_AND_ATTITUDE == type)
-    {
-        //PositionAndAttitude tmp = new PositionAndAttitude("000000");
-        //tmp.FromBytes(bs);                
-        //// 如果接收到的信息的车辆ID是配置文件中设定的车辆ID
-        //if (tmp.VehicleID == Forms_PublicData.VehicleID) 
-        //{
-        //    PAA = tmp;
-        //    userControlTurn.Para = PAA.Yaw;
-        //    userControlTurn.RealTime();
-        //}
-        Forms_PublicMethod.addLayerBeforeSetValue<PositionAndAttitude>(PAA, bs);
-    }
-}     
-```
-
-> 抽象出公共代码逻辑：
-
-```C#
-/// <summary>
-/// 接受数据之前
-/// 加一层
-/// 待测试
-/// </summary>
-/// <typeparam name="T">接收数据的对应的类型</typeparam>
-/// <param name="t">接收数据的对应的对象</param>
-/// <param name="bs">接收的字节数据</param>
-/// <param name="name">车辆id的名字</param>
-public static bool addLayerBeforeSetValue<T>(T t, byte[] bs, String name = "VehicleID") where T : IAgentPackage
-{
-    Type type = typeof(T);
-    T tmp = (T)Activator.CreateInstance(type, "");
-    PropertyInfo prop = type.GetProperty(name);
-    tmp.FromBytes(bs);
-    if (prop.GetValue(tmp).Equals(prop.GetValue(t)))
-    {
-        t = tmp;
-        return true;
-    }
-
-    return false;
-}
-```
 
 
 
@@ -119,13 +53,9 @@ public static bool addLayerBeforeSetValue<T>(T t, byte[] bs, String name = "Vehi
 
 **[Liskov Substitution Principle, LSP]**
 
-- 任何基类可以出现的地方，子类一定可以出现 (父类引用指向子类对象)
+- 子类应该可以完全替换父类。
 
-- 当一个父类引用指向一个子类对象的时候,这里就有里氏替换原则.
-
-- 里氏代换原则是对开闭原则的补充
-
-- 子类可以扩展父类的功能，但不能改变父类原有的功能
+- 也就是说在使用继承时，只扩展新功能，而不要破坏父类原有的功能。
 
   
 
@@ -133,8 +63,8 @@ public static bool addLayerBeforeSetValue<T>(T t, byte[] bs, String name = "Vehi
 
 ## 4、依赖倒置原则：
 
-> 1、上层模块不应该依赖底层模块，它们都应该依赖于抽象。
-> 2、抽象不应该依赖于细节，细节应该依赖于抽象。
+> 1、细节应该依赖于抽象，抽象不应依赖于细节。
+> 2、把抽象层放在程序设计的高层，并保持稳定，程序的细节变化由低层的实现层来完成。
 >
 > High level modules should not depend upon low level modules. Both should depend upon abstractions.
 >  Abstractions should not depend upon details. Details should depend upon abstractions.
@@ -155,13 +85,13 @@ public static bool addLayerBeforeSetValue<T>(T t, byte[] bs, String name = "Vehi
 
 ## 5、迪米特法则：
 
-> 又名“最少知道原则”，一个类不应知道自己操作的类的细节，换言之，只和朋友谈话，不和朋友的朋友谈话。
+> 一个类不应知道自己操作的类的细节，换言之，只和朋友谈话，不和朋友的朋友谈话。
 >
 > Talk only to your immediate friends and not to strangers
 
 **[Demeter Principle]**
 
-- 迪米特法则，又称最少知识原则
+- 迪米特法则，又名“最少知道原则”
 - 如果两个软件实体无须直接通信，那么就不应当发生直接的相互调用，可以通过第三方转发该调用。
 - 目的是降低类之间的耦合度，提高模块的相对独立性.
 
@@ -169,7 +99,9 @@ public static bool addLayerBeforeSetValue<T>(T t, byte[] bs, String name = "Vehi
 
 ## 6、接口隔离原则：
 
-> 客户端不应依赖它不需要的接口。如果一个接口在实现时，部分方法由于冗余被客户端空实现，则应该将接口拆分，让实现类只需依赖自己需要的接口方法。
+> 客户端不应依赖它不需要的接口。
+>
+> 如果一个接口在实现时，部分方法由于冗余被客户端空实现，则应该将接口拆分，让实现类只需依赖自己需要的接口方法。
 
 **[Interface Segregation Principle]**
 
