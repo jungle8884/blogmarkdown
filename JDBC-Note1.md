@@ -17,7 +17,7 @@ author: Jungle
 	2. 快速入门
 	3. 对JDBC中各个接口和类详解
 
-![image-20210331201555292](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210331201555292.png)
+![image-20210331201555292](JDBC-Note1/image-20210331201555292.png)
 
 ## JDBC
 
@@ -410,7 +410,7 @@ author: Jungle
 >     - 但是 or 'a' = 'a' 恒等，依然会 select * from user where 'a' = 'a'  查询成功！
 > - 解决sql注入问题：使用PreparedStatement对象来解决
 
-<img src="images/image-20210402161250818.png" alt="image-20210402161250818"  />
+<img src="JDBC-Note1/image-20210402161250818.png" alt="image-20210402161250818"  />
 
 ## JDBC控制事务
 

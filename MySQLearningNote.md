@@ -75,7 +75,7 @@ author: Jungle
 					* 表：对应 文件
 					* 数据：对应 数据
 
-**结构图：**![mysql](C:\Users\LeBro\Pictures\mysql.png)
+**结构图：**![mysql](MySQLearningNote/mysql.png)
 
 
 
@@ -115,7 +115,7 @@ author: Jungle
 
 **分类图**
 
-![mysql_SQL](C:\Users\LeBro\Pictures\mysql_SQL.png)
+![mysql_SQL](MySQLearningNote/mysql_SQL.png)
 
 
 
@@ -492,7 +492,7 @@ mysql> desc host;
 
 **学生表结构图：**
 
-<img src="C:\Users\LeBro\Pictures\studenttable.png" alt="studenttable" style="zoom: 50%;" />
+<img src="MySQLearningNote/studenttable.png" alt="studenttable" style="zoom: 50%;" />
 
 ```sql
 -- 先建立一个新的测试数据库
@@ -1813,14 +1813,14 @@ alter table employee add constraint emp_depid_fk foreign key (dep_id) references
 > 如：部门和员工
 > 分析：一个部门有多个员工，一个员工只能对应一个部门
 
-![image-20210328153207034](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210328153207034.png)
+![image-20210328153207034](MySQLearningNote/image-20210328153207034.png)
 
 > 多对多结构图
 >
 > 如：学生和课程
 > 实现方式：多对多关系实现需要借助第三张中间表。中间表至少包含两个字段，这两个字段作为第三张表的外键，分别指向两张表的主键
 
-![image-20210328154906892](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210328154906892.png)
+![image-20210328154906892](MySQLearningNote/image-20210328154906892.png)
 
 > 一对一结构图
 >
@@ -1828,13 +1828,13 @@ alter table employee add constraint emp_depid_fk foreign key (dep_id) references
 >
 > 实现方式：一对一关系实现，可以在任意一方添加唯一外键指向另一方的主键。
 
-![image-20210328155650922](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210328155650922.png)
+![image-20210328155650922](MySQLearningNote/image-20210328155650922.png)
 
 **注：一般会直接合并成一张表！** 
 
 > 案例：结构图分析
 
-![image-20210328161247977](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210328161247977.png)
+![image-20210328161247977](MySQLearningNote/image-20210328161247977.png)
 
 ```sql
 -- 创建旅游线路分类表 tab_category
@@ -1903,7 +1903,7 @@ alter table employee add constraint emp_depid_fk foreign key (dep_id) references
 
 > 结构图查看
 
-![image-20210328162130951](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210328162130951.png)
+![image-20210328162130951](MySQLearningNote/image-20210328162130951.png)
 
 ## 数据库设计的范式
 
@@ -1948,7 +1948,7 @@ alter table employee add constraint emp_depid_fk foreign key (dep_id) references
 
 > 初始表：
 
-![image-20210328163354932](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210328163354932.png)
+![image-20210328163354932](MySQLearningNote/image-20210328163354932.png)
 
 > 修改后满足第一范式，但仍存在的问题：
 >
@@ -1956,7 +1956,7 @@ alter table employee add constraint emp_depid_fk foreign key (dep_id) references
 > 2. 数据添加存在问题：添加新开设的系和系主任时，数据不合法
 > 3. 数据删除也存在问题：张无忌同学毕业了，删除数据，会将系的数据一起删除
 
-![image-20210328163505294](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210328163505294.png)
+![image-20210328163505294](MySQLearningNote/image-20210328163505294.png)
 
 
 
@@ -1966,13 +1966,13 @@ alter table employee add constraint emp_depid_fk foreign key (dep_id) references
 >
 > 但仍未解决第2, 3问题
 
-![image-20210328171157606](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210328171157606.png)
+![image-20210328171157606](MySQLearningNote/image-20210328171157606.png)
 
 > 修改后满足第三范式（在2NF基础上消除传递依赖）
 >
 > 全部解决！
 
-![image-20210328172818747](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210328172818747.png)
+![image-20210328172818747](MySQLearningNote/image-20210328172818747.png)
 
 ------
 

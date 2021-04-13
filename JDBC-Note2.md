@@ -15,7 +15,7 @@ author: Jungle
 	
 	2. Spring JDBC : JDBC Template
 
-![image-20210405165138868](images/image-20210405165138868.png)
+![image-20210405165138868](JDBC-Note2/image-20210405165138868.png)
 
 ## 数据库连接池
 	1. 概念：其实就是一个容器(集合)，存放数据库连接的容器。

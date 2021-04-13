@@ -537,7 +537,7 @@ jungle.java  lighthouse
 
 ## 小结
 
-<img src="D:\hexo\source\_posts\images\summary.png" alt="summary" style="zoom:80%;" />
+<img src="DockerLearningNote/summary.png" alt="summary" style="zoom:80%;" />
 
 
 
@@ -717,7 +717,7 @@ OCK I/O       PIDS
 
 ### 使用kibana
 
-<img src="D:\hexo\source\_posts\images\kibana.png" alt="kibana" style="zoom:80%;" />
+<img src="DockerLearningNote/kibana.png" alt="kibana" style="zoom:80%;" />
 
 ## 可视化
 
@@ -744,7 +744,7 @@ ip地址:你设置的端口号
 
 展示如下：
 
-![panel](D:\hexo\source\_posts\images\panel.png)
+![panel](DockerLearningNote/panel.png)
 
 可视化面板平时少用，这里主要测试玩一下！
 
@@ -786,7 +786,7 @@ bootfs（boot file system）主要包含bootloader和kernel，bootloader主要�
 
 rootfs（root file system），在bootfs之上。包含的就是典型的Linux系统中的 /dev, /proc, /bin, /etc 等标准目录和文件。rootfs就是各种不同的操作系统发行版，比如Ubuntu，Centos等等。
 
-![unionFS](D:\hexo\source\_posts\images\unionFS.png)
+![unionFS](DockerLearningNote/unionFS.png)
 
 **虚拟机是分钟级别，容器是秒级！**
 
@@ -1039,7 +1039,7 @@ docker run -it -v 主机目录:容器内目录
 3. 启动容器
 4. 容器内的数据依旧是同步的！
 
-![volume](D:\hexo\source\_posts\images\volume.png)
+![volume](DockerLearningNote/volume.png)
 
 **以后修改只需要在本地修改即可，容器会自动同步！**
 
@@ -1469,7 +1469,7 @@ dockerfile 是用来构建docker镜像的文件！命令参数脚本！
 3. docker run 运行镜像
 4. docker push 发布镜像 （docker hub）
 
-<img src="images\centosimages.png" alt="centosimages" style="zoom: 67%;" />
+<img src="DockerLearningNote/centosimages.png" alt="centosimages" style="zoom: 67%;" />
 
 
 
@@ -1482,7 +1482,7 @@ LABEL org.label-schema.schema-version="1.0"     org.label-schema.name="CentOS Ba
 CMD ["/bin/bash"]
 ```
 
-<img src="images\centosdockerfile.png" alt="centosdockerfile" style="zoom:67%;" />
+<img src="DockerLearningNote/centosdockerfile.png" alt="centosdockerfile" style="zoom:67%;" />
 
 > 很多官方镜像都是基础包，很多功能没有，我们通常会自己搭建自己的镜像！
 >
@@ -1499,7 +1499,7 @@ CMD ["/bin/bash"]
 3. ’#‘ 表示注释
 4. 每一个指令都会创建一个新的镜像层，并提交！
 
-![image-20210325134640475](images\image-20210325134640475.png)
+![image-20210325134640475](DockerLearningNote/image-20210325134640475.png)
 
 dockerfile 是面向开发的，以后发布项目，做镜像，就需要编写dockerfile文件，这个文件十分简单！
 
@@ -1534,7 +1534,7 @@ ENV			# 构建的时候设置环境变量！
 
 Docker Hub 中 99% 镜像都是从这个基础镜像过来的 FROM Scratch，然后配置需要的软件和配置进行的构建。
 
-![image-20210325150538229](images\image-20210325150538229.png)
+![image-20210325150538229](DockerLearningNote/image-20210325150538229.png)
 
 ### 创建一个自己的 Centos
 
@@ -2209,7 +2209,7 @@ System.out.println("----This is my test web logs----");
 
 > 打开 xxx.xxx.xxx.xxx:8080/test
 
-![image-20210327161356692](images\image-20210327161356692.png)
+![image-20210327161356692](DockerLearningNote/image-20210327161356692.png)
 
 > 项目部署成功，可以访问！
 
@@ -2288,7 +2288,7 @@ Options:
   -u, --username string   Username
 ```
 
-![image-20210327163020547](C:\Users\LeBro\AppData\Roaming\Typora\typora-user-images\image-20210327163020547.png)
+![image-20210327163020547](DockerLearningNote/image-20210327163020547.png)
 
 4，登录完之后就 Docker push 上去就OK了！
 
@@ -2322,15 +2322,15 @@ denied: requested access to the resource is denied
 
 3，创建命名空间
 
-![image-20210327170213403](images\image-20210327170213403.png)
+![image-20210327170213403](DockerLearningNote/image-20210327170213403.png)
 
 4，创建容器镜像
 
-![image-20210327170237677](images\image-20210327170237677.png)
+![image-20210327170237677](DockerLearningNote/image-20210327170237677.png)
 
 5，推送到阿里云
 
-![image-20210327170703487](images\image-20210327170703487.png)
+![image-20210327170703487](DockerLearningNote/image-20210327170703487.png)
 
 > 一定要参考阿里云提示！
 
@@ -2356,7 +2356,7 @@ diytomcat_1.0: digest: sha256:d99fcb82434ae344da5b0dbfc897c32b7cdfec07721428e74f
 
 结构图：
 
-<img src="images\docker.png" alt="docker" style="zoom:50%;" />
+<img src="DockerLearningNote/docker.png" alt="docker" style="zoom:50%;" />
 
 
 
