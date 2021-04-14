@@ -137,7 +137,6 @@ date: 2021-04-02
 		* 使用注解：@注解名称
 
 
-​	
 ​	* 作用分类：
 ​		①编写文档：通过代码里标识的注解生成文档【生成文档doc文档】
 ​		②代码分析：通过代码里标识的注解对代码进行分析【使用反射】
@@ -185,174 +184,13 @@ date: 2021-04-02
 			* @Documented：描述注解是否被抽取到api文档中
 			* @Inherited：描述注解是否被子类继承
 
+> 注解的使用详细介绍：[getAnnotation](https://www.liaoxuefeng.com/wiki/1252599548343744/1265102026065728)
+
 
 	* 在程序使用(解析)注解：获取注解中定义的属性值
 		1. 获取注解定义的位置的对象  （Class，Method,Field）
 		2. 获取指定的注解
 			* getAnnotation(Class)
-			//其实就是在内存中生成了一个该注解接口的子类实现对象
-	
-		            public class ProImpl implements Pro{
-		                public String className(){
-		                    return "cn.itcast.annotation.Demo1";
-		                }
-		                public String methodName(){
-		                    return "show";
-		                }
-		            }
+			* 其实就是在内存中生成了一个该注解接口的子类实现对象
 		3. 调用注解中的抽象方法获取配置的属性值
 
-
-## 工程中可能会用到的思想 ##
-- 从数据库中取出一条记录
-- 创建一个对应的类（属性顺序与数据库中一一对应）
-- 赋值到对应的实例对象中
-
-		package Reflect;/*
-		  @author: Jungle
-		  @DESCRIPTION: 通过反射创造对象
-		  @creteTime: 2021/3/15  
-		*/
-		
-		import demo.Person;
-		
-		import java.io.FileNotFoundException;
-		import java.io.FileReader;
-		import java.io.IOException;
-		import java.lang.reflect.Constructor;
-		import java.lang.reflect.Field;
-		import java.lang.reflect.InvocationTargetException;
-		import java.lang.reflect.Method;
-		import java.util.Properties;
-		
-		/*
-		* 对数据对象反射赋值
-		* Person prepared_for_person = new Person("Jungle", 26); 是模拟数据库里的一条记录, 并保存在一个对象中
-		* */
-		public class ReflectDemo {
-		    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchFieldException, IOException {
-		        System.out.println("----------------------------");
-		        //已经准备好的本地数据
-		        Person prepared_for_person = new Person("Jungle", 26);
-		
-		        //反射赋值
-		//        Class<?> Class_Person = Class.forName("demo.Person"); //将字节码文件加载进内存，返回Class类对象
-		//        Constructor<?> con = Class_Person.getConstructor(); //获得构造函数
-		//        Object obj = con.newInstance(); //构造实例
-		//        Person person = null; //声明一个引用
-		//        if (obj instanceof Person) { //向下转型一定要判断
-		//            person = (Person)obj; //obj本来就是Person类型才可以这样向下转型
-		//            //对该实例赋值
-		//            Field[] fields = Class_Person.getDeclaredFields(); //获得所有的字段数组
-		//            for (Field field : fields) {
-		//                field.setAccessible(true); //设置私有访问权限
-		//                //字段自动化赋值
-		//                String sMethodName = "get" + field.getName().substring(0,1).toUpperCase() + field.getName().substring(1);
-		//                field.set(person, Class_Person.getMethod(sMethodName).invoke(prepared_for_person));
-		//            }
-		//            System.out.print(person);
-		//        }
-		//        System.out.println("----------------------------");
-		        //通过配置文件实现上面的功能
-		
-		        Properties props = new Properties(); //加载配置文件
-		        FileReader fr = new FileReader("config.txt");
-		        props.load(fr);
-		        fr.close();
-		        String className = props.getProperty("className"); //通过配置文件来获取类名称
-		        //通过反射来使用
-		        Class<?> c = Class.forName(className); //获取Class类对象
-		        //Class<?> c = Person.class;
-		        //Class<?> c = new Person().getClass();
-		        //System.out.println(c);
-		        Constructor<?> cs = c.getConstructor();
-		        Object o = cs.newInstance();
-		        //Object o = c.newInstance(); //空参构造对象可以使用类对象直接调用newInstance方法
-		        Person p = null;
-		        if (o instanceof Person) {
-		            p = (Person)o;
-		            Field[] fs = c.getDeclaredFields();
-		            for (Field f : fs) {
-		                f.setAccessible(true);
-		                String sMName = "get" +
-		                        f.getName().substring(0, 1).toUpperCase() +
-		                        f.getName().substring(1); //字符串拼凑获取getXXX方法名称
-		                //System.out.println(c.getMethod(sMName).invoke(prepared_for_person));
-		                //c.getMethod(sMName).invoke(prepared_for_person) 调用方法获取的属性值---对应本地数据对象
-		                f.set(o, c.getMethod(sMName).invoke(prepared_for_person));
-		            }
-		        }
-		        System.out.println(p); //打印反射赋值后的对象
-		        System.out.println("----------------------------");
-		
-		    }
-		}
-- Person类
-
-		package demo;
-		
-		import java.util.Objects;
-		
-		public class Person {
-		    private String name;
-		    private int age;
-		
-		    public Person() {}
-		
-		    public Person(String name, int age) {
-		        this.name = name;
-		        this.age = age;
-		    }
-		
-		    private Person(String name) {
-		        this.name = name;
-		    }
-		
-		    private Person(int age) {
-		        this.age = age;
-		    }
-		
-		    @Override
-		    public String toString() {
-		        return "Person{" +
-		                "name='" + name + '\'' +
-		                ", age=" + age +
-		                '}' + '\n';
-		    }
-		
-		    @Override
-		    public boolean equals(Object o) {
-		        if (this == o) return true;
-		        if (o == null || getClass() != o.getClass()) return false;
-		        Person person = (Person) o;
-		        return age == person.age &&
-		                Objects.equals(name, person.name);
-		    }
-		
-		    @Override
-		    public int hashCode() {
-		        return Objects.hash(name, age);
-		    }
-	
-	
-	​	    public String getName() {
-	​	        return name;
-	​	    }
-	​	
-	​	    public void setName(String name) {
-	​	        this.name = name;
-	​	    }
-	​	
-	​	    public int getAge() {
-	​	        return age;
-	​	    }
-	​	
-	​	    public void setAge(int age) {
-	​	        this.age = age;
-	​	    }
-	​	}
-- 配置文件
-
-		className=demo.Person
-
-----------
