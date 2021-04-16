@@ -14,6 +14,13 @@ date: 2021-03-19
 
 # Docker的常用命令 #
 
+## 安装docker
+
+- 自行官网查看！
+
+- [Docker](https://docs.docker.com/)
+- [DockerHub](https://hub.docker.com/)
+
 ## 启动Docker
 
 - systemctl start docker
@@ -537,7 +544,7 @@ jungle.java  lighthouse
 
 ## 小结
 
-<img src="DockerLearningNote/summary.png" alt="summary" style="zoom:80%;" />
+<img src="DockerLearningNoteBase/summary.png" alt="summary" style="zoom: 67%;" />
 
 
 
@@ -717,7 +724,7 @@ OCK I/O       PIDS
 
 ### 使用kibana
 
-<img src="DockerLearningNote/kibana.png" alt="kibana" style="zoom:80%;" />
+<img src="DockerLearningNoteBase/kibana.png" alt="kibana" style="zoom:80%;" />
 
 ## 可视化
 
@@ -744,7 +751,7 @@ ip地址:你设置的端口号
 
 展示如下：
 
-![panel](DockerLearningNote/panel.png)
+![panel](DockerLearningNoteBase/panel.png)
 
 可视化面板平时少用，这里主要测试玩一下！
 
@@ -786,7 +793,7 @@ bootfs（boot file system）主要包含bootloader和kernel，bootloader主要�
 
 rootfs（root file system），在bootfs之上。包含的就是典型的Linux系统中的 /dev, /proc, /bin, /etc 等标准目录和文件。rootfs就是各种不同的操作系统发行版，比如Ubuntu，Centos等等。
 
-![unionFS](DockerLearningNote/unionFS.png)
+![unionFS](DockerLearningNoteBase/unionFS.png)
 
 **虚拟机是分钟级别，容器是秒级！**
 
@@ -1039,7 +1046,7 @@ docker run -it -v 主机目录:容器内目录
 3. 启动容器
 4. 容器内的数据依旧是同步的！
 
-![volume](DockerLearningNote/volume.png)
+![volume](DockerLearningNoteBase/volume.png)
 
 **以后修改只需要在本地修改即可，容器会自动同步！**
 
@@ -1469,7 +1476,7 @@ dockerfile 是用来构建docker镜像的文件！命令参数脚本！
 3. docker run 运行镜像
 4. docker push 发布镜像 （docker hub）
 
-<img src="DockerLearningNote/centosimages.png" alt="centosimages" style="zoom: 67%;" />
+<img src="DockerLearningNoteBase/centosimages.png" alt="centosimages" style="zoom: 67%;" />
 
 
 
@@ -1482,7 +1489,7 @@ LABEL org.label-schema.schema-version="1.0"     org.label-schema.name="CentOS Ba
 CMD ["/bin/bash"]
 ```
 
-<img src="DockerLearningNote/centosdockerfile.png" alt="centosdockerfile" style="zoom:67%;" />
+<img src="DockerLearningNoteBase/centosdockerfile.png" alt="centosdockerfile" style="zoom:67%;" />
 
 > 很多官方镜像都是基础包，很多功能没有，我们通常会自己搭建自己的镜像！
 >
@@ -1499,7 +1506,7 @@ CMD ["/bin/bash"]
 3. ’#‘ 表示注释
 4. 每一个指令都会创建一个新的镜像层，并提交！
 
-![image-20210325134640475](DockerLearningNote/image-20210325134640475.png)
+![image-20210325134640475](DockerLearningNoteBase/image-20210325134640475.png)
 
 dockerfile 是面向开发的，以后发布项目，做镜像，就需要编写dockerfile文件，这个文件十分简单！
 
@@ -1534,7 +1541,7 @@ ENV			# 构建的时候设置环境变量！
 
 Docker Hub 中 99% 镜像都是从这个基础镜像过来的 FROM Scratch，然后配置需要的软件和配置进行的构建。
 
-![image-20210325150538229](DockerLearningNote/image-20210325150538229.png)
+![image-20210325150538229](DockerLearningNoteBase/image-20210325150538229.png)
 
 ### 创建一个自己的 Centos
 
@@ -2209,7 +2216,7 @@ System.out.println("----This is my test web logs----");
 
 > 打开 xxx.xxx.xxx.xxx:8080/test
 
-![image-20210327161356692](DockerLearningNote/image-20210327161356692.png)
+![image-20210327161356692](DockerLearningNoteBase/image-20210327161356692.png)
 
 > 项目部署成功，可以访问！
 
@@ -2288,7 +2295,7 @@ Options:
   -u, --username string   Username
 ```
 
-![image-20210327163020547](DockerLearningNote/image-20210327163020547.png)
+![image-20210327163020547](DockerLearningNoteBase/image-20210327163020547.png)
 
 4，登录完之后就 Docker push 上去就OK了！
 
@@ -2322,15 +2329,15 @@ denied: requested access to the resource is denied
 
 3，创建命名空间
 
-![image-20210327170213403](DockerLearningNote/image-20210327170213403.png)
+![image-20210327170213403](DockerLearningNoteBase/image-20210327170213403.png)
 
 4，创建容器镜像
 
-![image-20210327170237677](DockerLearningNote/image-20210327170237677.png)
+![image-20210327170237677](DockerLearningNoteBase/image-20210327170237677.png)
 
 5，推送到阿里云
 
-![image-20210327170703487](DockerLearningNote/image-20210327170703487.png)
+![image-20210327170703487](DockerLearningNoteBase/image-20210327170703487.png)
 
 > 一定要参考阿里云提示！
 
@@ -2356,11 +2363,352 @@ diytomcat_1.0: digest: sha256:d99fcb82434ae344da5b0dbfc897c32b7cdfec07721428e74f
 
 结构图：
 
-<img src="DockerLearningNote/docker.png" alt="docker" style="zoom:50%;" />
+<img src="DockerLearningNoteBase/docker.png" alt="docker" style="zoom:50%;" />
 
 
 
 # Docker网络
+
+## 理解Docker网络
+
+先清空所有环境！
+
+> 测试：ip addr
+
+```shell
+[root@VM-12-17-centos ~]# ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 52:54:00:17:d3:0f brd ff:ff:ff:ff:ff:ff
+    inet 10.0.12.17/22 brd 10.0.15.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::5054:ff:fe17:d30f/64 scope link 
+       valid_lft forever preferred_lft forever
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:4e:42:61:de brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:4eff:fe42:61de/64 scope link 
+       valid_lft forever preferred_lft forever
+```
+
+> 发现三个网络
+
+- 本机回环地址：127.0.0.1
+
+- 腾讯云内网地址：10.0.12.17
+- docker0地址：172.17.0.1
+
+![image-20210415193351393](DockerLearningNoteBase/image-20210415193351393.png)
+
+> 测试
+
+```shell
+# -p, --publish list : Publish a container's port(s) to the host
+[root@VM-12-17-centos ~]# docker run -d -P --name tomcat01 tomcat
+Unable to find image 'tomcat:latest' locally
+latest: Pulling from library/tomcat
+
+# 查看容器的内部网络地址 ip addr，发现容器启动的时候会得到一个 eth0@if19 ip地址，docker分配的！
+[root@VM-12-17-centos ~]# docker exec -it tomcat01 ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+18: eth0@if19: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+       
+# 思考：linux 能不能 ping 通 容器内部？
+[root@VM-12-17-centos ~]# ping 172.17.0.2
+PING 172.17.0.2 (172.17.0.2) 56(84) bytes of data.
+64 bytes from 172.17.0.2: icmp_seq=1 ttl=64 time=0.068 ms
+64 bytes from 172.17.0.2: icmp_seq=2 ttl=64 time=0.065 ms
+64 bytes from 172.17.0.2: icmp_seq=3 ttl=64 time=0.052 ms
+64 bytes from 172.17.0.2: icmp_seq=4 ttl=64 time=0.052 ms
+64 bytes from 172.17.0.2: icmp_seq=5 ttl=64 time=0.047 ms
+64 bytes from 172.17.0.2: icmp_seq=6 ttl=64 time=0.054 ms
+
+# linux 可以 ping 通 docker 容器内部
+```
+
+> 原理
+
+1、每启动一个docker容器，docker就会给docker容器分配一个ip，只要安装了docker，就会有一个网卡docker0
+
+桥接模式，使用的技术是 `veth-pair` 技术！
+
+再次测试 ip addr
+
+```shell
+[root@VM-12-17-centos ~]# ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 52:54:00:17:d3:0f brd ff:ff:ff:ff:ff:ff
+    inet 10.0.12.17/22 brd 10.0.15.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::5054:ff:fe17:d30f/64 scope link 
+       valid_lft forever preferred_lft forever
+3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:4e:42:61:de brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:4eff:fe42:61de/64 scope link 
+       valid_lft forever preferred_lft forever
+19: vethf000591@if18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default 
+    link/ether ca:23:22:f7:39:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::c823:22ff:fef7:3902/64 scope link 
+       valid_lft forever preferred_lft forever
+```
+
+发现成对出现：
+
+```shell
+18: eth0@if19: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+```
+
+```shell
+19: vethf000591@if18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default 
+    link/ether ca:23:22:f7:39:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::c823:22ff:fef7:3902/64 scope link 
+       valid_lft forever preferred_lft forever
+```
+
+2、再启动一个容器测试，发现又多了一对儿网卡
+
+```shell
+[root@VM-12-17-centos ~]# docker run -d -P --name=tomcat02 tomcat
+e0bda1a92d206ed31ab59a371ced33263e667ea04dfe30954c270c9623df99c7
+[root@VM-12-17-centos ~]# ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 52:54:00:17:d3:0f brd ff:ff:ff:ff:ff:ff
+    inet 10.0.12.17/22 brd 10.0.15.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::5054:ff:fe17:d30f/64 scope link 
+       valid_lft forever preferred_lft forever
+3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:4e:42:61:de brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:4eff:fe42:61de/64 scope link 
+       valid_lft forever preferred_lft forever
+19: vethf000591@if18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default 
+    link/ether ca:23:22:f7:39:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::c823:22ff:fef7:3902/64 scope link 
+       valid_lft forever preferred_lft forever
+# 在 linux 里面是 20
+21: vethb0650be@if20: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default 
+    link/ether a6:1b:92:cd:78:b6 brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::a41b:92ff:fecd:78b6/64 scope link 
+       valid_lft forever preferred_lft forever
+     
+# 进入容器查看
+[root@VM-12-17-centos ~]# docker exec -it tomcat02 ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+# 在容器内是 21
+20: eth0@if21: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:ac:11:00:03 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 172.17.0.3/16 brd 172.17.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+```
+
+> 发现这个容器带来的网卡都是一对对的
+>
+> `veth-pair` 就是一对的虚拟设备接口，都是成对出现，一层连着协议，一段彼此相连
+>
+> 正因为有这个特性，`evth-pair` 充当一个桥梁，连接各种虚拟网络设备的
+>
+> `veth`: virtual ethernet 虚拟以太网
+
+3、测试 tomcat01 和 tomcat02 是否 可以 ping 通！
+
+```shell
+[root@VM-12-17-centos ~]# docker exec -it tomcat02 ping 172.17.0.2
+PING 172.17.0.2 (172.17.0.2) 56(84) bytes of data.
+64 bytes from 172.17.0.2: icmp_seq=1 ttl=64 time=0.071 ms
+64 bytes from 172.17.0.2: icmp_seq=2 ttl=64 time=0.051 ms
+64 bytes from 172.17.0.2: icmp_seq=3 ttl=64 time=0.055 ms
+64 bytes from 172.17.0.2: icmp_seq=4 ttl=64 time=0.052 ms
+```
+
+> 结论：容器和容器之间是可以互相 ping 通的！
+>
+
+4、网络模型图
+
+![image-20210415204233927](DockerLearningNoteBase/image-20210415204233927.png)
+
+> 结论：tomcat01 和 tomcat02 是公用的一个路由器，docker0
+>
+> 所有的容器不指定网络的情况下，都是 docker0 路由的，docker 会给容器分配一个默认的可用 ip
+
+**Docker使用的是linux的桥接，宿主机中是一个Docker容器的网桥 docker0！**
+
+<img src="DockerLearningNoteBase/image-20210415210158712.png" alt="image-20210415210158712" style="zoom:67%;" />
+
+Docker 中的所有网络接口都是虚拟的，虚拟的转发效率高！（比如：内网传递文件！）
+
+只要容器一删除，对应网桥就没了！
+
+![image-20210415213740118](DockerLearningNoteBase/image-20210415213740118.png)
+
+## -- link
+
+> 思考一个场景，我们编写了一个微服务，database url=ip，项目不重启，数据库ip换掉了，我们希望可以处理这个这个问题：可以通过名字来进行访问容器？
+
+```shell
+[root@VM-12-17-centos ~]# docker ps
+CONTAINER ID   IMAGE     COMMAND             CREATED             STATUS             PORTS                     NAMES
+e0bda1a92d20   tomcat    "catalina.sh run"   About an hour ago   Up About an hour   0.0.0.0:49154->8080/tcp   tomcat02
+042859ae6623   tomcat    "catalina.sh run"   2 hours ago         Up 2 hours         0.0.0.0:49153->8080/tcp   tomcat01
+
+[root@VM-12-17-centos ~]# docker exec -it tomcat02 ping tomcat01
+ping: tomcat01: Name or service not known
+
+# 如何解决？
+# 通过 --link
+[root@VM-12-17-centos ~]# docker run -d -P --name tomcat03 --link tomcat02 tomcat
+e846adfffef8b993e8f84265fd0fc91617fdceee5efecd694998c01d7bac2f78
+
+[root@VM-12-17-centos ~]# docker exec -it tomcat03 ping tomcat02
+PING tomcat02 (172.17.0.3) 56(84) bytes of data.
+64 bytes from tomcat02 (172.17.0.3): icmp_seq=1 ttl=64 time=0.073 ms
+64 bytes from tomcat02 (172.17.0.3): icmp_seq=2 ttl=64 time=0.051 ms
+64 bytes from tomcat02 (172.17.0.3): icmp_seq=3 ttl=64 time=0.052 ms
+
+# 反向可以ping通么？
+[root@VM-12-17-centos ~]# docker exec -it tomcat02 ping tomcat03
+ping: tomcat03: Name or service not known
+```
+
+> 探究 inspect ！
+
+```shell
+[root@VM-12-17-centos ~]# docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+d7c8fc0e97f1   bridge    bridge    local
+0fbb24593354   host      host      local
+d84d07fe350f   none      null      local
+```
+
+**重点信息：d7c8fc0e97f1**
+
+<img src="DockerLearningNoteBase/image-20210415213444455.png" alt="image-20210415213444455" style="zoom:67%;" />
+
+```shell
+# 详细信息
+# 探究网络 d7c8fc0e97f1 
+[root@VM-12-17-centos ~]# docker network inspect d7c8fc0e97f1
+[
+    {
+        "Name": "bridge",
+        "Id": "d7c8fc0e97f1d92d0ef5f0fb0ed9b9e7044ec40eace85cf4fe935ad27526561c",
+        "Created": "2021-03-27T15:43:52.02817124+08:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.17.0.0/16",
+                    "Gateway": "172.17.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "042859ae66234a8b0990faf5002c398f39cb22fc905375f22d6944d9af3d6780": {
+                "Name": "tomcat01",
+                "EndpointID": "1440ca3512bef51e95c9a01f4be62e8f38e1aa07a327291d266796783f3cff8c",
+                "MacAddress": "02:42:ac:11:00:02",
+                "IPv4Address": "172.17.0.2/16",
+                "IPv6Address": ""
+            },
+            "e0bda1a92d206ed31ab59a371ced33263e667ea04dfe30954c270c9623df99c7": {
+                "Name": "tomcat02",
+                "EndpointID": "f793d9b39d3ddf88756219df33ddd81f9a425f07b8f5eb67abe2d0843b31b52d",
+                "MacAddress": "02:42:ac:11:00:03",
+                "IPv4Address": "172.17.0.3/16",
+                "IPv6Address": ""
+            },
+            "e846adfffef8b993e8f84265fd0fc91617fdceee5efecd694998c01d7bac2f78": {
+                "Name": "tomcat03",
+                "EndpointID": "9667aa357315e6d3c458379c94bd65c078f0cbe467cc66318e7941135a9dcc76",
+                "MacAddress": "02:42:ac:11:00:04",
+                "IPv4Address": "172.17.0.4/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {
+            "com.docker.network.bridge.default_bridge": "true",
+            "com.docker.network.bridge.enable_icc": "true",
+            "com.docker.network.bridge.enable_ip_masquerade": "true",
+            "com.docker.network.bridge.host_binding_ipv4": "0.0.0.0",
+            "com.docker.network.bridge.name": "docker0",
+            "com.docker.network.driver.mtu": "1500"
+        },
+        "Labels": {}
+    }
+]
+```
+
+其实这个tomcat03就是在本地配置了tomcat02
+
+```shell
+# 查看 hosts 配置，发现原理！
+[root@VM-12-17-centos ~]# docker exec -it tomcat03 cat /etc/hosts
+127.0.0.1	localhost
+::1	localhost ip6-localhost ip6-loopback
+fe00::0	ip6-localnet
+ff00::0	ip6-mcastprefix
+ff02::1	ip6-allnodes
+ff02::2	ip6-allrouters
+172.17.0.3	tomcat02 e0bda1a92d20
+172.17.0.4	e846adfffef8
+```
+
+本质探究：`--link` 就是在`hosts`配置中增加了一个`172.17.0.3 tomcat02 e0bda1a92d20` 
+
+现在已经不建议使用 `--link` 了！
+
+自定义网络！不适用docker0！
+
+docker0问题：它不支持容器名连接访问！
+
+## 自定义网络
+
+
 
 
 

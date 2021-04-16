@@ -3,7 +3,8 @@ title: Python学习笔记
 date:  2019-08-31 14:28:16
 author: Jungle
 categories:
-- 机器学习
+- DL
+- Python
 tags:
 - Python
 ---
