@@ -2605,6 +2605,10 @@ ping: tomcat03: Name or service not known
 ```
 
 > 探究 inspect ！
+>
+> - docker network ls
+> - docker network inspect d7c8fc0e97f1
+> - docker exec -it tomcat03 cat /etc/hosts
 
 ```shell
 [root@VM-12-17-centos ~]# docker network ls
@@ -2707,6 +2711,588 @@ ff02::2	ip6-allrouters
 docker0问题：它不支持容器名连接访问！
 
 ## 自定义网络
+
+> 查看所有的网络
+
+```shell
+[root@VM-12-17-centos ~]# docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+d7c8fc0e97f1   bridge    bridge    local
+0fbb24593354   host      host      local
+d84d07fe350f   none      null      local
+```
+
+**网络模式**
+
+- bridge：桥接 docker （默认，自己搭建也使用 `bridge模式`）
+
+- none：不配置网络
+- host：和宿主机共享网络
+- container：容器内连通！（用的少！局限性大，了解即可。）
+
+> **测试一下自定义网络**
+
+- 测试之前先清除之前创建的容器
+
+  ```shell
+  [root@VM-12-17-centos ~]# docker rm -f $(docker ps -aq)
+  e846adfffef8
+  e0bda1a92d20
+  042859ae6623
+  
+  # 回到默认网卡设置
+  [root@VM-12-17-centos ~]# ip addr
+  1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+      link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+      inet 127.0.0.1/8 scope host lo
+         valid_lft forever preferred_lft forever
+      inet6 ::1/128 scope host 
+         valid_lft forever preferred_lft forever
+  2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+      link/ether 52:54:00:17:d3:0f brd ff:ff:ff:ff:ff:ff
+      inet 10.0.12.17/22 brd 10.0.15.255 scope global eth0
+         valid_lft forever preferred_lft forever
+      inet6 fe80::5054:ff:fe17:d30f/64 scope link 
+         valid_lft forever preferred_lft forever
+  3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+      link/ether 02:42:4e:42:61:de brd ff:ff:ff:ff:ff:ff
+      inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+         valid_lft forever preferred_lft forever
+      inet6 fe80::42:4eff:fe42:61de/64 scope link 
+         valid_lft forever preferred_lft forever
+  ```
+
+- 自定义一个网络
+
+  ```shell
+  # 直接启动命令，--net bridge，而这个就是我们的docker0
+  # docker0 特点：默认，域名不能访问，--link可以打通连接！
+  # 默认参数： --net bridge，以下两条命令等价
+  docker run -d -P --name tomcat01 tomcat
+  docker run -d -P --name tomcat01 --net bridge tomcat
+  
+  # 自定义网络 mynet
+  # --driver bridge			桥接 （不写默认也是桥接）
+  # --subnet 192.168.0.0/16	子网	192.168.0.2~192.168.255.255
+  # --gateway 192.168.0.1		网关	（出去的关口，路由）
+  [root@VM-12-17-centos ~]# docker network create --driver bridge --subnet 192.168.0.0/16 --gateway 192.168.0.1 mynet
+  df13fd2b3aa48f1c865f5f00ec09ed713062546a36652649c68e5f78c5b3df06
+  
+  [root@VM-12-17-centos ~]# docker network ls
+  NETWORK ID     NAME      DRIVER    SCOPE
+  d7c8fc0e97f1   bridge    bridge    local
+  0fbb24593354   host      host      local
+  df13fd2b3aa4   mynet     bridge    local
+  d84d07fe350f   none      null      local
+  ```
+
+- 创建好自己的网络了！
+
+  ```shell
+  [root@VM-12-17-centos ~]# docker network inspect mynet
+  [
+      {
+          "Name": "mynet",
+          "Id": "df13fd2b3aa48f1c865f5f00ec09ed713062546a36652649c68e5f78c5b3df06",
+          "Created": "2021-04-16T14:41:23.157993578+08:00",
+          "Scope": "local",
+          "Driver": "bridge",
+          "EnableIPv6": false,
+          "IPAM": {
+              "Driver": "default",
+              "Options": {},
+              "Config": [
+                  {
+                      "Subnet": "192.168.0.0/16",
+                      "Gateway": "192.168.0.1"
+                  }
+              ]
+          },
+          "Internal": false,
+          "Attachable": false,
+          "Ingress": false,
+          "ConfigFrom": {
+              "Network": ""
+          },
+          "ConfigOnly": false,
+          "Containers": {},
+          "Options": {},
+          "Labels": {}
+      }
+  ]
+  ```
+
+- 用自定义网络 `mynet` 建立两个容器，再查看：
+
+  ```shell
+  [root@VM-12-17-centos ~]# docker run -d -P --name tomcat01 --net mynet tomcat
+  8c74bffded3e9f119c3bcb60e94cbdbf8b8f0278ce6c65b91b78d61ae6415bf6
+  
+  [root@VM-12-17-centos ~]# docker run -d -P --name tomcat02 --net mynet tomcat
+  1284589786eda77ca3c5e39c20c7d211d52681d5e9e17ebc263ac396b413adbf
+  
+  [root@VM-12-17-centos ~]# docker network inspect mynet
+  [
+      {
+          "Name": "mynet",
+          "Id": "df13fd2b3aa48f1c865f5f00ec09ed713062546a36652649c68e5f78c5b3df06",
+          "Created": "2021-04-16T14:41:23.157993578+08:00",
+          "Scope": "local",
+          "Driver": "bridge",
+          "EnableIPv6": false,
+          "IPAM": {
+              "Driver": "default",
+              "Options": {},
+              "Config": [
+                  {
+                      "Subnet": "192.168.0.0/16",
+                      "Gateway": "192.168.0.1"
+                  }
+              ]
+          },
+          "Internal": false,
+          "Attachable": false,
+          "Ingress": false,
+          "ConfigFrom": {
+              "Network": ""
+          },
+          "ConfigOnly": false,
+          "Containers": {
+              "1284589786eda77ca3c5e39c20c7d211d52681d5e9e17ebc263ac396b413adbf": {
+                  "Name": "tomcat02",
+                  "EndpointID": "cbc3f6c714dd20918f9ac25a9ba1811ba09e540b8a6716d9f842996265c0d68f",
+                  "MacAddress": "02:42:c0:a8:00:03",
+                  "IPv4Address": "192.168.0.3/16",
+                  "IPv6Address": ""
+              },
+              "8c74bffded3e9f119c3bcb60e94cbdbf8b8f0278ce6c65b91b78d61ae6415bf6": {
+                  "Name": "tomcat01",
+                  "EndpointID": "b5e12aadc90f9420a20ac1e9aef7159683464bacbf56ac44207d94e454f97892",
+                  "MacAddress": "02:42:c0:a8:00:02",
+                  "IPv4Address": "192.168.0.2/16",
+                  "IPv6Address": ""
+              }
+          },
+          "Options": {},
+          "Labels": {}
+      }
+  ]
+  ```
+
+- 再次测试 `ping` 连接：
+
+  ```shell
+  [root@VM-12-17-centos ~]# docker exec -it tomcat01 ping 192.168.0.3
+  PING 192.168.0.3 (192.168.0.3) 56(84) bytes of data.
+  64 bytes from 192.168.0.3: icmp_seq=1 ttl=64 time=0.082 ms
+  64 bytes from 192.168.0.3: icmp_seq=2 ttl=64 time=0.039 ms
+  64 bytes from 192.168.0.3: icmp_seq=3 ttl=64 time=0.055 ms
+  64 bytes from 192.168.0.3: icmp_seq=4 ttl=64 time=0.051 ms
+  64 bytes from 192.168.0.3: icmp_seq=5 ttl=64 time=0.049 ms
+  64 bytes from 192.168.0.3: icmp_seq=6 ttl=64 time=0.044 ms
+  64 bytes from 192.168.0.3: icmp_seq=7 ttl=64 time=0.050 ms
+  64 bytes from 192.168.0.3: icmp_seq=8 ttl=64 time=0.051 ms
+  64 bytes from 192.168.0.3: icmp_seq=9 ttl=64 time=0.054 ms
+  ^C
+  --- 192.168.0.3 ping statistics ---
+  9 packets transmitted, 9 received, 0% packet loss, time 1007ms
+  rtt min/avg/max/mdev = 0.039/0.052/0.082/0.014 ms
+  
+  # 现在不使用 --link 也可以 ping 名字了！
+  [root@VM-12-17-centos ~]# docker exec -it tomcat01 ping tomcat02
+  PING tomcat02 (192.168.0.3) 56(84) bytes of data.
+  64 bytes from tomcat02.mynet (192.168.0.3): icmp_seq=1 ttl=64 time=0.033 ms
+  64 bytes from tomcat02.mynet (192.168.0.3): icmp_seq=2 ttl=64 time=0.067 ms
+  64 bytes from tomcat02.mynet (192.168.0.3): icmp_seq=3 ttl=64 time=0.061 ms
+  64 bytes from tomcat02.mynet (192.168.0.3): icmp_seq=4 ttl=64 time=0.054 ms
+  64 bytes from tomcat02.mynet (192.168.0.3): icmp_seq=5 ttl=64 time=0.053 ms
+  ^C
+  --- tomcat02 ping statistics ---
+  5 packets transmitted, 5 received, 0% packet loss, time 1003ms
+  rtt min/avg/max/mdev = 0.033/0.053/0.067/0.014 ms
+  ```
+
+> 小结：
+>
+> - 自定义的网络docker都已经帮我们维护好了对应的关系，推荐平时这样使用网络！
+>
+> - 好处：不同的集群使用不同的网络，保证集群是安全和健康的！
+>
+>   ![image-20210416150327178](DockerLearningNoteBase/image-20210416150327178.png)
+
+
+
+## 网络连通
+
+> 重新清除后新建不同网卡的两个容器
+
+```shell
+[root@VM-12-17-centos ~]# docker run -d -P --name tomcat-mynet-01 --net mynet tomcat
+8bd02ab3e0200c2be56840220b39f455f75fe2cdd2a630b8be0ef95588059f01
+[root@VM-12-17-centos ~]# docker run -d -P --name tomcat-mynet-02 --net mynet tomcat
+2f593210f5ed5a2941607384f96fff1ce723612ee9c59f08addae3fed4f1724a
+[root@VM-12-17-centos ~]# docker run -d -P --name tomcat01 tomcat
+a395f0e39607e873a952281b68d5f7c361e80efb2d4437fef280713693843d2e
+[root@VM-12-17-centos ~]# docker run -d -P --name tomcat02 tomcat
+10445e3fe8f99ae3f9eb85153491c2ffc28878c2ba508c48396e02b0c5f64d02
+```
+
+- 连通命令：connect
+
+<img src="DockerLearningNoteBase/image-20210416153000091.png" alt="image-20210416153000091" style="zoom: 67%;" />
+
+> 测试打通 tomcat01 到 mynet
+
+![image-20210416153309867](DockerLearningNoteBase/image-20210416153309867.png)
+
+```shell
+[root@VM-12-17-centos ~]# docker network connect mynet tomcat01
+[root@VM-12-17-centos ~]# docker network inspect mynet
+[
+    {
+        "Name": "mynet",
+        "Id": "df13fd2b3aa48f1c865f5f00ec09ed713062546a36652649c68e5f78c5b3df06",
+        "Created": "2021-04-16T14:41:23.157993578+08:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "192.168.0.0/16",
+                    "Gateway": "192.168.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "2f593210f5ed5a2941607384f96fff1ce723612ee9c59f08addae3fed4f1724a": {
+                "Name": "tomcat-mynet-02",
+                "EndpointID": "5be75b6adeabc0bfd1052382e7d50a008984407bcbd1f40823ffda89fcfe1a1a",
+                "MacAddress": "02:42:c0:a8:00:03",
+                "IPv4Address": "192.168.0.3/16",
+                "IPv6Address": ""
+            },
+            "8bd02ab3e0200c2be56840220b39f455f75fe2cdd2a630b8be0ef95588059f01": {
+                "Name": "tomcat-mynet-01",
+                "EndpointID": "afaba6eaf67059eb97ecc1c60d3bcecd6802b060830bba4e87e7e5b74a9a6456",
+                "MacAddress": "02:42:c0:a8:00:02",
+                "IPv4Address": "192.168.0.2/16",
+                "IPv6Address": ""
+            },
+            "a395f0e39607e873a952281b68d5f7c361e80efb2d4437fef280713693843d2e": {
+                "Name": "tomcat01",
+                "EndpointID": "fe9960b718e3ffe231e5348df3c65eec83bb3f93bbd617fae87c05bc3cc42062",
+                "MacAddress": "02:42:c0:a8:00:04",
+                "IPv4Address": "192.168.0.4/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {},
+        "Labels": {}
+    }
+]
+```
+
+> 连通之后就是将 tomcat01 放到了 mynet 网络下？
+
+![image-20210416153710887](DockerLearningNoteBase/image-20210416153710887.png)
+
+
+
+**一个容器两个ip地址！**(类似于腾讯云云服务器的公网和私网)
+
+- 公网ip
+
+- 私网ip
+
+> 测试
+
+```shell
+# 01 连通 ok
+[root@VM-12-17-centos ~]# docker exec -it tomcat01 ping tomcat-mynet-01
+PING tomcat-mynet-01 (192.168.0.2) 56(84) bytes of data.
+64 bytes from tomcat-mynet-01.mynet (192.168.0.2): icmp_seq=1 ttl=64 time=0.057 ms
+64 bytes from tomcat-mynet-01.mynet (192.168.0.2): icmp_seq=2 ttl=64 time=0.062 ms
+64 bytes from tomcat-mynet-01.mynet (192.168.0.2): icmp_seq=3 ttl=64 time=0.057 ms
+64 bytes from tomcat-mynet-01.mynet (192.168.0.2): icmp_seq=4 ttl=64 time=0.057 ms
+^C
+--- tomcat-mynet-01 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3ms
+rtt min/avg/max/mdev = 0.057/0.058/0.062/0.005 ms
+
+# 02 依旧打不通的
+[root@VM-12-17-centos ~]# docker exec -it tomcat02 ping tomcat-mynet-01
+ping: tomcat-mynet-01: Name or service not known
+```
+
+> 结论：假设要跨网络操作别人，就需要使用 `docker network connect [当前网络名] [跨网络待操作容器名]` 来连通！
+
+
+
+## 实战：部署 Redis 集群
+
+![image-20210416171445405](DockerLearningNoteBase/image-20210416171445405.png)
+
+```shell
+# 创建网卡
+docker network create redis --subnet 172.38.0.0/16
+
+docker network ls 
+
+docker network inspect redis
+```
+
+
+
+<img src="DockerLearningNoteBase/image-20210416184147703.png" alt="image-20210416184147703" style="zoom:67%;" />
+
+```shell
+# 通过脚本创建六个redis配置
+for port in $(seq 1 6);\
+do \
+mkdir -p /mydata/redis/node-${port}/conf
+touch /mydata/redis/node-${port}/conf/redis.conf
+cat << EOF >/mydata/redis/node-${port}/conf/redis.conf
+port 6379
+bind 0.0.0.0
+cluster-enabled yes
+cluster-config-file nodes.conf
+cluster-node-timeout 5000
+cluster-announce-ip 172.38.0.1${port}
+cluster-announce-port 6379
+cluster-announce-bus-port 16379
+appendonly yes
+EOF
+done
+```
+
+
+
+![image-20210416185222335](DockerLearningNoteBase/image-20210416185222335.png)
+
+
+
+```shell
+# 启动 6个redis 容器：
+
+# 方式一：
+docker run -p 637${port}:6379 -p 1637${port}:16379 --name redis-${port} \
+-v /mydata/redis/node-${port}/data:/data \
+-v /mydata/redis/node-${port}/conf/redis.conf:/etc/redis/redis.conf \
+-d --net redis --ip 172.38.0.1${port} redis:5.0.9-alpine3.11 redis-server /etc/redis/redis.conf
+
+# 方式二：
+docker run -p 6371:6379 -p 16371:16379 --name redis-1 \
+-v /mydata/redis/node-1/data:/data \
+-v /mydata/redis/node-1/conf/redis.conf:/etc/redis/redis.conf \
+-d --net redis --ip 172.38.0.11 redis:5.0.9-alpine3.11 redis-server /etc/redis/redis.conf
+
+docker run -p 6372:6379 -p 16372:16379 --name redis-2 \
+-v /mydata/redis/node-2/data:/data \
+-v /mydata/redis/node-2/conf/redis.conf:/etc/redis/redis.conf \
+-d --net redis --ip 172.38.0.12 redis:5.0.9-alpine3.11 redis-server /etc/redis/redis.conf
+
+docker run -p 6373:6379 -p 16373:16379 --name redis-3 \
+-v /mydata/redis/node-3/data:/data \
+-v /mydata/redis/node-3/conf/redis.conf:/etc/redis/redis.conf \
+-d --net redis --ip 172.38.0.13 redis:5.0.9-alpine3.11 redis-server /etc/redis/redis.conf
+
+docker run -p 6374:6379 -p 16374:16379 --name redis-4 \
+-v /mydata/redis/node-4/data:/data \
+-v /mydata/redis/node-4/conf/redis.conf:/etc/redis/redis.conf \
+-d --net redis --ip 172.38.0.14 redis:5.0.9-alpine3.11 redis-server /etc/redis/redis.conf
+
+docker run -p 6375:6379 -p 16375:16379 --name redis-5 \
+-v /mydata/redis/node-5/data:/data \
+-v /mydata/redis/node-5/conf/redis.conf:/etc/redis/redis.conf \
+-d --net redis --ip 172.38.0.15 redis:5.0.9-alpine3.11 redis-server /etc/redis/redis.conf
+
+docker run -p 6376:6379 -p 16376:16379 --name redis-6 \
+-v /mydata/redis/node-6/data:/data \
+-v /mydata/redis/node-6/conf/redis.conf:/etc/redis/redis.conf \
+-d --net redis --ip 172.38.0.16 redis:5.0.9-alpine3.11 redis-server /etc/redis/redis.conf
+```
+
+**查看容器**
+
+![image-20210416191447136](DockerLearningNoteBase/image-20210416191447136.png)
+
+
+
+```shell
+# 先进入
+[root@VM-12-17-centos conf]# docker exec -it redis-1 /bin/sh
+/data # ls
+appendonly.aof  nodes.conf
+
+# 再创建集群
+/data # redis-cli --cluster create 172.38.0.11:6379 172.38.0.12:6379 172.38.0.13:6379 172.38.
+0.14:6379 172.38.0.15:6379 172.38.0.16:6379 --cluster-replicas 1
+>>> Performing hash slots allocation on 6 nodes...
+Master[0] -> Slots 0 - 5460
+Master[1] -> Slots 5461 - 10922
+Master[2] -> Slots 10923 - 16383
+Adding replica 172.38.0.15:6379 to 172.38.0.11:6379
+Adding replica 172.38.0.16:6379 to 172.38.0.12:6379
+Adding replica 172.38.0.14:6379 to 172.38.0.13:6379
+M: 02dbbd0d5db194e4b71e759d8cc33285573be316 172.38.0.11:6379
+   slots:[0-5460] (5461 slots) master
+M: 9f3255270fc4bcfb44a8d005fec5e7ef69fdebb0 172.38.0.12:6379
+   slots:[5461-10922] (5462 slots) master
+M: c305a46914d4fdfa716b070b047b0d0c6ede8e34 172.38.0.13:6379
+   slots:[10923-16383] (5461 slots) master
+S: 780c4085b21b79631bf1813060c7bb101dca2461 172.38.0.14:6379
+   replicates c305a46914d4fdfa716b070b047b0d0c6ede8e34
+S: dcb668dc19c834b1e9fa102ac0d00833e5fe1588 172.38.0.15:6379
+   replicates 02dbbd0d5db194e4b71e759d8cc33285573be316
+S: 4533477587c14227544b0f0ca5bb757e300db6f9 172.38.0.16:6379
+   replicates 9f3255270fc4bcfb44a8d005fec5e7ef69fdebb0
+Can I set the above configuration? (type 'yes' to accept): yes
+>>> Nodes configuration updated
+>>> Assign a different config epoch to each node
+>>> Sending CLUSTER MEET messages to join the cluster
+Waiting for the cluster to join
+....
+>>> Performing Cluster Check (using node 172.38.0.11:6379)
+M: 02dbbd0d5db194e4b71e759d8cc33285573be316 172.38.0.11:6379
+   slots:[0-5460] (5461 slots) master
+   1 additional replica(s)
+M: 9f3255270fc4bcfb44a8d005fec5e7ef69fdebb0 172.38.0.12:6379
+   slots:[5461-10922] (5462 slots) master
+   1 additional replica(s)
+M: c305a46914d4fdfa716b070b047b0d0c6ede8e34 172.38.0.13:6379
+   slots:[10923-16383] (5461 slots) master
+   1 additional replica(s)
+S: 780c4085b21b79631bf1813060c7bb101dca2461 172.38.0.14:6379
+   slots: (0 slots) slave
+   replicates c305a46914d4fdfa716b070b047b0d0c6ede8e34
+S: 4533477587c14227544b0f0ca5bb757e300db6f9 172.38.0.16:6379
+   slots: (0 slots) slave
+   replicates 9f3255270fc4bcfb44a8d005fec5e7ef69fdebb0
+S: dcb668dc19c834b1e9fa102ac0d00833e5fe1588 172.38.0.15:6379
+   slots: (0 slots) slave
+   replicates 02dbbd0d5db194e4b71e759d8cc33285573be316
+[OK] All nodes agree about slots configuration.
+>>> Check for open slots...
+>>> Check slots coverage...
+[OK] All 16384 slots covered.
+```
+
+> 测试集群
+
+```shell
+/data # redis-cli -c
+
+127.0.0.1:6379> cluster info
+cluster_state:ok
+cluster_slots_assigned:16384
+cluster_slots_ok:16384
+cluster_slots_pfail:0
+cluster_slots_fail:0
+cluster_known_nodes:6
+cluster_size:3
+cluster_current_epoch:6
+cluster_my_epoch:1
+cluster_stats_messages_ping_sent:291
+cluster_stats_messages_pong_sent:289
+cluster_stats_messages_sent:580
+cluster_stats_messages_ping_received:284
+cluster_stats_messages_pong_received:291
+cluster_stats_messages_meet_received:5
+cluster_stats_messages_received:580
+
+127.0.0.1:6379> cluster nodes
+9f3255270fc4bcfb44a8d005fec5e7ef69fdebb0 172.38.0.12:6379@16379 master - 0 1618572166767 2 connected 5461-10922
+c305a46914d4fdfa716b070b047b0d0c6ede8e34 172.38.0.13:6379@16379 master - 0 1618572165000 3 connected 10923-16383
+780c4085b21b79631bf1813060c7bb101dca2461 172.38.0.14:6379@16379 slave c305a46914d4fdfa716b070b047b0d0c6ede8e34 0 1618572165766 4 connected
+02dbbd0d5db194e4b71e759d8cc33285573be316 172.38.0.11:6379@16379 myself,master - 0 1618572164000 1 connected 0-5460
+4533477587c14227544b0f0ca5bb757e300db6f9 172.38.0.16:6379@16379 slave 9f3255270fc4bcfb44a8d005fec5e7ef69fdebb0 0 1618572165000 6 connected
+dcb668dc19c834b1e9fa102ac0d00833e5fe1588 172.38.0.15:6379@16379 slave 02dbbd0d5db194e4b71e759d8cc33285573be316 0 1618572166567 5 connected
+
+127.0.0.1:6379> set a b
+-> Redirected to slot [15495] located at 172.38.0.13:6379
+OK
+172.38.0.13:6379>
+```
+
+**停掉`redis-3`再测试：**
+
+```shell
+[root@VM-12-17-centos ~]# docker stop redis-3
+redis-3
+```
+
+```shell
+# 停掉后重新连接
+/data # redis-cli -c
+
+127.0.0.1:6379> get a
+-> Redirected to slot [15495] located at 172.38.0.14:6379
+"b"
+
+# docker搭建redis集群完成！
+172.38.0.14:6379> cluster nodes
+4533477587c14227544b0f0ca5bb757e300db6f9 172.38.0.16:6379@16379 slave 9f3255270fc4bcfb44a8d005fec5e7ef69fdebb0 0 1618572533000 6 connected
+c305a46914d4fdfa716b070b047b0d0c6ede8e34 172.38.0.13:6379@16379 master,fail - 1618572350612 1618572349000 3 connected
+780c4085b21b79631bf1813060c7bb101dca2461 172.38.0.14:6379@16379 myself,master - 0 1618572533000 8 connected 10923-16383
+02dbbd0d5db194e4b71e759d8cc33285573be316 172.38.0.11:6379@16379 master - 0 1618572533000 1 connected 0-5460
+dcb668dc19c834b1e9fa102ac0d00833e5fe1588 172.38.0.15:6379@16379 slave 02dbbd0d5db194e4b71e759d8cc33285573be316 0 1618572533859 5 connected
+9f3255270fc4bcfb44a8d005fec5e7ef69fdebb0 172.38.0.12:6379@16379 master - 0 1618572534561 2 connected 5461-10922
+172.38.0.14:6379> 
+```
+
+**使用了docker之后，所有的技术都会变得简单起来！**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
