@@ -859,7 +859,7 @@ class Pupil extends Student {
 
 > js原型链 （了解），java叫继承
 
-![image-20210411173404781](JavaScript-Note1/image-20210411173404781.png)
+![image-20210411173404781](JavaScript-Note/image-20210411173404781.png)
 
 
 

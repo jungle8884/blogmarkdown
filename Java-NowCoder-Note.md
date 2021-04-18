@@ -17,7 +17,7 @@ date: 2021-04-13
 
 ### 搭建开发环境--Maven
 
-<img src="Java-NowCoder-Note1/image-20210413155327508.png" alt="image-20210413155327508" style="zoom:67%;" />
+<img src="Java-NowCoder-Note/image-20210413155327508.png" alt="image-20210413155327508" style="zoom:67%;" />
 
 - [下载链接](http://maven.apache.org/)
 
@@ -112,7 +112,7 @@ D:\Codes\Work>mvn archetype:generate -DgroupId=com.jungle8884.mavendemo1 -Dartif
   - 会生成taget文件夹
   - 如下图：
 
-  <img src="Java-NowCoder-Note1/image-20210413172106645.png" alt="image-20210413172106645" style="zoom: 80%;" />
+  <img src="Java-NowCoder-Note/image-20210413172106645.png" alt="image-20210413172106645" style="zoom: 80%;" />
 
   ```
   D:\Codes\Work\mavendemo1>mvn compile
@@ -231,7 +231,7 @@ D:\Codes\Work>mvn archetype:generate -DgroupId=com.jungle8884.mavendemo1 -Dartif
   - 生成对应文件：AppTest.class
   - 如下图：
 
-![image-20210413172343661](Java-NowCoder-Note1/image-20210413172343661.png)
+![image-20210413172343661](Java-NowCoder-Note/image-20210413172343661.png)
 
 #### 使用IntelliJ IDEA创建项目
 
@@ -241,23 +241,23 @@ D:\Codes\Work>mvn archetype:generate -DgroupId=com.jungle8884.mavendemo1 -Dartif
 
 - `D:\apache-maven-3.8.1\conf\settings.xml`
 
-  ![image-20210413204056208](Java-NowCoder-Note1/image-20210413204056208.png)
+  ![image-20210413204056208](Java-NowCoder-Note/image-20210413204056208.png)
 
 - 新建Maven项目：
 
-  ![image-20210413204355924](Java-NowCoder-Note1/image-20210413204355924.png)
+  ![image-20210413204355924](Java-NowCoder-Note/image-20210413204355924.png)
 
-  ![image-20210413204657056](Java-NowCoder-Note1/image-20210413204657056.png)
+  ![image-20210413204657056](Java-NowCoder-Note/image-20210413204657056.png)
 
-  ![image-20210413204744364](Java-NowCoder-Note1/image-20210413204744364.png)
+  ![image-20210413204744364](Java-NowCoder-Note/image-20210413204744364.png)
 
-  ![image-20210413204921218](Java-NowCoder-Note1/image-20210413204921218.png)
+  ![image-20210413204921218](Java-NowCoder-Note/image-20210413204921218.png)
 
 
 
 - 发现与CMD命令创建一致！
 
-  ![image-20210413205427608](Java-NowCoder-Note1/image-20210413205427608.png)
+  ![image-20210413205427608](Java-NowCoder-Note/image-20210413205427608.png)
 
 
 
@@ -266,7 +266,7 @@ D:\Codes\Work>mvn archetype:generate -DgroupId=com.jungle8884.mavendemo1 -Dartif
   - 不断尝试后，发现换了个最新的IntelliJ IDEA 2021版本
   - 成功运行！
 
-  ![image-20210413215305063](Java-NowCoder-Note1/image-20210413215305063.png)
+  ![image-20210413215305063](Java-NowCoder-Note/image-20210413215305063.png)
 
 ------
 
@@ -276,11 +276,11 @@ D:\Codes\Work>mvn archetype:generate -DgroupId=com.jungle8884.mavendemo1 -Dartif
 
 [链接](https://start.spring.io)
 
-![image-20210413175933733](Java-NowCoder-Note1/image-20210413175933733.png)
+![image-20210413175933733](Java-NowCoder-Note/image-20210413175933733.png)
 
 - generate project
 
-![image-20210413181551924](Java-NowCoder-Note1/image-20210413181551924.png)
+![image-20210413181551924](Java-NowCoder-Note/image-20210413181551924.png)
 
 - 自己在操作时发现没有AOP，于是只能自己添加！
 
@@ -358,15 +358,15 @@ D:\Codes\Work>mvn archetype:generate -DgroupId=com.jungle8884.mavendemo1 -Dartif
 
 - 测试：CommunityApplicationTests
 
-  ![image-20210414104128988](Java-NowCoder-Note1/image-20210414104128988.png)
+  ![image-20210414104128988](Java-NowCoder-Note/image-20210414104128988.png)
 
 - 运行：CommunityApplication
 
-  ![image-20210414105050597](Java-NowCoder-Note1/image-20210414105050597.png)
+  ![image-20210414105050597](Java-NowCoder-Note/image-20210414105050597.png)
 
   Spring boot 会启动 tomcat：http://localhost:8080/
 
-   ![image-20210414105005806](Java-NowCoder-Note1/image-20210414105005806.png)
+   ![image-20210414105005806](Java-NowCoder-Note/image-20210414105005806.png)
 
   ------
 
@@ -374,17 +374,17 @@ D:\Codes\Work>mvn archetype:generate -DgroupId=com.jungle8884.mavendemo1 -Dartif
 
 
 
-![image-20210414105652894](Java-NowCoder-Note1/image-20210414105652894.png)
+![image-20210414105652894](Java-NowCoder-Note/image-20210414105652894.png)
 
 > 入门示例
 
 1. 新建controller包，再新建AlphaController示例类
 
-![image-20210414115959020](Java-NowCoder-Note1/image-20210414115959020.png)
+![image-20210414115959020](Java-NowCoder-Note/image-20210414115959020.png)
 
 2. 自己写一个sayHello方法，再添上对应的注解
 
-   ![image-20210414120116904](Java-NowCoder-Note1/image-20210414120116904.png)
+   ![image-20210414120116904](Java-NowCoder-Note/image-20210414120116904.png)
 
 3. 示例代码：
 
@@ -408,7 +408,7 @@ D:\Codes\Work>mvn archetype:generate -DgroupId=com.jungle8884.mavendemo1 -Dartif
 
 4. 打开本地服务器页面：http://localhost:8080/alpha/hello
 
-   ![image-20210414120252093](Java-NowCoder-Note1/image-20210414120252093.png)
+   ![image-20210414120252093](Java-NowCoder-Note/image-20210414120252093.png)
 
 5. 可能会遇到的问题：8080端口被占用了
 
@@ -421,19 +421,19 @@ D:\Codes\Work>mvn archetype:generate -DgroupId=com.jungle8884.mavendemo1 -Dartif
 
    - 输入：http://localhost:8090/community/alpha/hello
 
-   ![image-20210414121522176](Java-NowCoder-Note1/image-20210414121522176.png)
+   ![image-20210414121522176](Java-NowCoder-Note/image-20210414121522176.png)
 
 ------
 
 ## Spring入门
 
-![image-20210414131449300](Java-NowCoder-Note1/image-20210414131449300.png)
+![image-20210414131449300](Java-NowCoder-Note/image-20210414131449300.png)
 
 [Spring 链接](https://spring.io/)
 
 > 学习 [spring-framework](https://spring.io/projects/spring-framework#learn)
 
-![image-20210414131754965](Java-NowCoder-Note1/image-20210414131754965.png)
+![image-20210414131754965](Java-NowCoder-Note/image-20210414131754965.png)
 
 ### Spring IOC
 
@@ -441,7 +441,7 @@ D:\Codes\Work>mvn archetype:generate -DgroupId=com.jungle8884.mavendemo1 -Dartif
 >
 > 控制反转
 
-![image-20210414132340909](Java-NowCoder-Note1/image-20210414132340909.png)
+![image-20210414132340909](Java-NowCoder-Note/image-20210414132340909.png)
 
 - 本节课程：[视频链接](https://www.bilibili.com/video/BV1TV411m788?t=1024&p=3)
   - `JavaBean`的介绍：[JavaBean](https://www.liaoxuefeng.com/wiki/1252599548343744/1260474416351680)
@@ -586,21 +586,22 @@ D:\Codes\Work>mvn archetype:generate -DgroupId=com.jungle8884.mavendemo1 -Dartif
   > - 运行CommunityApplication.main()
   > - 打开：http://localhost:8080/community/alpha/data
   
-  ![image-20210414165924161](Java-NowCoder-Note1/image-20210414165924161.png)
+  ![image-20210414165924161](Java-NowCoder-Note/image-20210414165924161.png)
   
   ------
-  
-  
 
+### Spring MVC
 
+![image-20210416195856272](Java-NowCoder-Note/image-20210416195856272.png)
 
+> 先学习一下 [HTTP协议](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Overview)
+>
 
+![image-20210416200140144](Java-NowCoder-Note/image-20210416200140144.png)
 
+![image-20210416200150415](Java-NowCoder-Note/image-20210416200150415.png)
 
-
-
-
-
+HTTP被设计于20世纪90年代初期，是一种可扩展的协议。它是应用层的协议，通过[TCP](https://developer.mozilla.org/en-US/docs/Glossary/TCP)，或者是[TLS](https://developer.mozilla.org/en-US/docs/Glossary/TLS)－加密的TCP连接来发送，理论上任何可靠的传输协议都可以使用。因为其良好的扩展性，时至今日，它不仅被用来传输超文本文档，还用来传输图片、视频或者向服务器发送如HTML表单这样的信息。HTTP还可以根据网页需求，仅获取部分Web文档内容更新网页
 
 
 
