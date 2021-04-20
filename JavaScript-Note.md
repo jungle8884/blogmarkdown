@@ -1,5 +1,5 @@
 ---
-title: JavaScript-Note1
+title: JavaScript
 categories:
   - 前端
 tags:
