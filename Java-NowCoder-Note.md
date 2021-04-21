@@ -948,6 +948,10 @@ mybatis.configuration.mapUnderscoreToCamelCase=true
 
 ## 版本控制：
 
+> 历史
+
+<img src="Java-NowCoder-Note/image-20210421165547367.png" alt="image-20210421165547367" style="zoom: 80%;" />
+
 > [git book](https://git-scm.com/book/zh/v2)
 
 <img src="Java-NowCoder-Note/image-20210421164104358.png" alt="image-20210421164104358"  />
@@ -966,11 +970,39 @@ mybatis.configuration.mapUnderscoreToCamelCase=true
 
 ------
 
+## 发送邮件
+
+![image-20210421171301387](Java-NowCoder-Note/image-20210421171301387.png)
+
+注册新浪邮箱，开启pop3服务：
+
+![image-20210421210912776](Java-NowCoder-Note/image-20210421210912776.png)
+
+邮箱依赖：
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-mail</artifactId>
+    <version>2.4.5</version>
+</dependency>
+```
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+------
 
 
 
