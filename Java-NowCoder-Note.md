@@ -804,6 +804,174 @@ mybatis.configuration.mapUnderscoreToCamelCase=true
 
 [百度云链接：提取码：8884 ](https://pan.baidu.com/s/1ebRtHVvth2Rx4rCCR23AYg)
 
+----------------------------------
+
+## 项目调试技巧
+
+![image-20210421163610323](Java-NowCoder-Note/image-20210421163610323.png)
+
+**响应状态码**
+
+- 302
+- 404
+- 500
+
+**断点调试**
+
+- IDEA
+  - F7: step into
+  - F8: step over
+  - F9：执行到底
+- 浏览器
+  - F10: step over
+  - F11: step into
+  - F8：执行到底
+
+**设置日志级别**
+
+[网址](https://logback.qos.ch/manual/architecture.html)
+
+![image-20210421155420828](Java-NowCoder-Note/image-20210421155420828.png)
+
+> 在resource根目录下新建：logback-spring.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <contextName>community</contextName>
+    <!--<property name="LOG_PATH" value="./community-log"/>-->
+    <property name="LOG_PATH" value="D:/Codes/Work/data"/>
+    <property name="APPDIR" value="community"/>
+
+    <!-- error file -->
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APPDIR}/log_error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${APPDIR}/error/log-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>5MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>error</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- warn file -->
+    <appender name="FILE_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APPDIR}/log_warn.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${APPDIR}/warn/log-warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>5MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>warn</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- info file -->
+    <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APPDIR}/log_info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${APPDIR}/info/log-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>5MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>info</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- console -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>debug</level>
+        </filter>
+    </appender>
+
+    <logger name="com.nowcoder.community" level="debug"/>
+
+    <root level="info">
+        <appender-ref ref="FILE_ERROR"/>
+        <appender-ref ref="FILE_WARN"/>
+        <appender-ref ref="FILE_INFO"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>
+```
+
+> 控制台输出：
+>
+> com.nowcoder.community.LoggerTests
+> 2021-04-21 16:34:12,213 DEBUG [main] c.n.c.LoggerTests [LoggerTests.java:19] debug log
+> 2021-04-21 16:34:12,213 INFO [main] c.n.c.LoggerTests [LoggerTests.java:20] info log
+> 2021-04-21 16:34:12,214 WARN [main] c.n.c.LoggerTests [LoggerTests.java:21] warn log
+> 2021-04-21 16:34:12,214 ERROR [main] c.n.c.LoggerTests [LoggerTests.java:22] error log
+
+文件夹下：
+
+![image-20210421163800124](Java-NowCoder-Note/image-20210421163800124.png)
+
+------
+
+## 版本控制：
+
+> [git book](https://git-scm.com/book/zh/v2)
+
+<img src="Java-NowCoder-Note/image-20210421164104358.png" alt="image-20210421164104358"  />
+
+![image-20210421164601792](Java-NowCoder-Note/image-20210421164601792.png)
+
+
+
+<img src="Java-NowCoder-Note/image-20210421164625337.png" alt="image-20210421164625337" style="zoom:67%;" />
+
+
+
+![image-20210421164411327](Java-NowCoder-Note/image-20210421164411327.png)
+
+![image-20210421164442520](Java-NowCoder-Note/image-20210421164442520.png)
+
+------
+
+
+
+
+
+
+
 
 
 
