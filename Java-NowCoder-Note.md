@@ -13,7 +13,7 @@ date: 2021-04-13
 
 # 牛客 Java 高级工程师
 
-## 搭建开发环境
+## 第一章内容
 
 ### 搭建开发环境--Maven
 
@@ -425,7 +425,7 @@ D:\Codes\Work>mvn archetype:generate -DgroupId=com.jungle8884.mavendemo1 -Dartif
 
 ------
 
-## Spring入门
+### Spring入门
 
 ![image-20210414131449300](Java-NowCoder-Note/image-20210414131449300.png)
 
@@ -435,7 +435,7 @@ D:\Codes\Work>mvn archetype:generate -DgroupId=com.jungle8884.mavendemo1 -Dartif
 
 ![image-20210414131754965](Java-NowCoder-Note/image-20210414131754965.png)
 
-### Spring IOC
+#### Spring IOC
 
 > IOC：Inversion of Control
 >
@@ -590,7 +590,7 @@ D:\Codes\Work>mvn archetype:generate -DgroupId=com.jungle8884.mavendemo1 -Dartif
   
   ------
 
-### Spring MVC
+#### Spring MVC
 
 ![image-20210418144929314](Java-NowCoder-Note/image-20210418144929314.png)
 
@@ -615,7 +615,7 @@ D:\Codes\Work>mvn archetype:generate -DgroupId=com.jungle8884.mavendemo1 -Dartif
 
 ![image-20210418151912024](Java-NowCoder-Note/image-20210418151912024.png)
 
-### MyBatis入门
+#### MyBatis入门
 
 ![image-20210418201823518](Java-NowCoder-Note/image-20210418201823518.png)
 
@@ -786,7 +786,7 @@ mybatis.configuration.mapUnderscoreToCamelCase=true
 
 
 
-### 遇到的问题：
+#### 遇到的问题：
 
 > 问题一：打开项目后，没有提示，无法编译了
 >
@@ -796,7 +796,9 @@ mybatis.configuration.mapUnderscoreToCamelCase=true
 
 ![image-20210418160506795](Java-NowCoder-Note/image-20210418160506795.png)
 
-## 开发社区首页
+## 第二章内容
+
+### 开发社区首页
 
 ![image-20210420135951481](Java-NowCoder-Note/image-20210420135951481.png)
 
@@ -806,7 +808,7 @@ mybatis.configuration.mapUnderscoreToCamelCase=true
 
 ----------------------------------
 
-## 项目调试技巧
+### 项目调试技巧
 
 ![image-20210421163610323](Java-NowCoder-Note/image-20210421163610323.png)
 
@@ -946,7 +948,7 @@ mybatis.configuration.mapUnderscoreToCamelCase=true
 
 ------
 
-## 版本控制：
+### 版本控制：
 
 > 历史
 
@@ -970,7 +972,7 @@ mybatis.configuration.mapUnderscoreToCamelCase=true
 
 ------
 
-## 发送邮件
+### 发送邮件
 
 ![image-20210421171301387](Java-NowCoder-Note/image-20210421171301387.png)
 
@@ -988,23 +990,912 @@ mybatis.configuration.mapUnderscoreToCamelCase=true
 </dependency>
 ```
 
+邮箱配置：
 
+```xml
+# MailProperties
+spring.mail.host=smtp.sina.com
+spring.mail.port=465
+spring.mail.username=jungle8884@sina.com
+spring.mail.password=520310743ff6028f # 注意是授权码
+spring.mail.protocol=smtps
+spring.mail.properties.mail.smtp.ssl.enable=true
+```
 
+> 遇到的问题：org.springframework.mail.MailAuthenticationException: Authentication failed;
 
+![image-20210422092237657](Java-NowCoder-Note/image-20210422092237657.png)
 
+**注意：是授权码不是密码！**
 
+------
 
+### 注册功能
 
+![image-20210422094013185](Java-NowCoder-Note/image-20210422094013185.png)
 
+**需要的包：**
 
+```xml
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+    <version>3.12.0</version>
+</dependency>
+```
 
+------
 
+### 会话管理
+
+![image-20210422160916327](Java-NowCoder-Note/image-20210422160916327.png)
+
+**服务器-分布式部署尽量不要使用Session！**
+
+![image-20210422165142032](Java-NowCoder-Note/image-20210422165142032.png)
+
+session 存放在nosql:redis数据库中。
+
+------
+
+### 生成验证码
+
+![image-20210422165501459](Java-NowCoder-Note/image-20210422165501459.png)
+
+> 如何使用：
+
+pom:
+
+```xml
+<dependency>
+    <groupId>com.github.penggle</groupId>
+    <artifactId>kaptcha</artifactId>
+    <version>2.3.2</version>
+</dependency>
+```
+
+配置服务器域名：
+
+```properties
+# community 网站域名，测试阶段为本机
+community.path.domain=http://localhost:8080
+```
+
+js文件：
+
+![image-20210422193944258](Java-NowCoder-Note/image-20210422193944258.png)
+
+![image-20210422194031178](Java-NowCoder-Note/image-20210422194031178.png)
+
+![image-20210422194115815](Java-NowCoder-Note/image-20210422194115815.png)
+
+LoginController ：
+
+```java
+@GetMapping("/kaptcha")
+public void getKaptcha(HttpServletResponse response, HttpSession session) {
+    // 生成验证码
+    String text = kaptchaProducer.createText();
+    BufferedImage image = kaptchaProducer.createImage(text);
+
+    // 将验证码存入session
+    session.setAttribute("kaptcha", text);
+
+    // 将图片输出给浏览器
+    try {
+        OutputStream os = response.getOutputStream();
+        ImageIO.write(image, "png", os); // 输出图片
+    } catch (IOException e) {
+        logger.error("响应验证码失败：" + e.getMessage());
+    }
+}
+```
+
+------
+
+### 登录、退出功能
+
+![image-20210422194410445](Java-NowCoder-Note/image-20210422194410445.png)
+
+注解中写sql:
+
+- 动态sql
+
+  ![image-20210422200727511](Java-NowCoder-Note/image-20210422200727511.png)
+
+- 静态sql:
+
+  ![image-20210422200754491](Java-NowCoder-Note/image-20210422200754491.png)
+
+### 模板引擎遇到的问题!
+
+[模板引擎](https://blog.csdn.net/DBC_121/article/details/104480132)
+
+> 问题：在写模板引擎时，发现验证码提示信息不起作用！
+
+![image-20210423140314144](Java-NowCoder-Note/image-20210423140314144.png)
+
+```js
+<div class="col-sm-6">
+    <input type="text" th:class="|form-control ${codeMsg}!=null ? is-invalid : ''|"
+           id="verifycode" name="code" placeholder="请输入验证码!">
+    <div class="invalid-feedback" th:text="${codeMsg}">
+        验证码不正确!
+    </div>
+</div>
+```
+
+> index.html
+
+```html
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" th:href="@{/img/icon.png}"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/global.css}" />
+    <title>牛客网-首页</title>
+</head>
+<body>
+<div class="nk-container">
+    <!-- 头部 -->
+    <header class="bg-dark sticky-top" th:fragment="header">
+        <div class="container">
+            <!-- 导航 -->
+            <nav class="navbar navbar-expand-lg navbar-dark">
+
+                <!-- logo -->
+                <a class="navbar-brand" href="#"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- 功能 -->
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item ml-3 btn-group-vertical">
+                            <a class="nav-link" th:href="@{/index}">首页</a>
+                        </li>
+                        <li class="nav-item ml-3 btn-group-vertical">
+                            <a class="nav-link position-relative" href="site/letter.html">消息<span class="badge badge-danger">12</span></a>
+                        </li>
+                        <li class="nav-item ml-3 btn-group-vertical">
+                            <a class="nav-link" th:href="@{/register}">注册</a>
+                        </li>
+                        <li class="nav-item ml-3 btn-group-vertical">
+                            <a class="nav-link" th:href="@{/login}">登录</a>
+                        </li>
+                        <li class="nav-item ml-3 btn-group-vertical dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img src="http://images.nowcoder.com/head/1t.png" class="rounded-circle" style="width:30px;"/>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item text-center" href="site/profile.html">个人主页</a>
+                                <a class="dropdown-item text-center" href="site/setting.html">账号设置</a>
+                                <a class="dropdown-item text-center" th:href="@{/logout}">退出登录</a>
+                                <div class="dropdown-divider"></div>
+                                <span class="dropdown-item text-center text-secondary">nowcoder</span>
+                            </div>
+                        </li>
+                    </ul>
+                    <!-- 搜索 -->
+                    <form class="form-inline my-2 my-lg-0" action="site/search.html">
+                        <input class="form-control mr-sm-2" type="search" aria-label="Search" />
+                        <button class="btn btn-outline-light my-2 my-sm-0" type="submit">搜索</button>
+                    </form>
+                </div>
+
+            </nav>
+        </div>
+    </header>
+
+    <!-- 内容 -->
+    <div class="main">
+        <div class="container">
+            <div class="position-relative">
+                <!-- 筛选条件 -->
+                <ul class="nav nav-tabs mb-3">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">最新</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">最热</a>
+                    </li>
+                </ul>
+                <button type="button" class="btn btn-primary btn-sm position-absolute rt-0" data-toggle="modal" data-target="#publishModal">我要发布</button>
+            </div>
+
+            <!-- 弹出框 -->
+            <div class="modal fade" id="publishModal" tabindex="-1" role="dialog" aria-labelledby="publishModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="publishModalLabel">新帖发布</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">标题：</label>
+                                    <input type="text" class="form-control" id="recipient-name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label">正文：</label>
+                                    <textarea class="form-control" id="message-text" rows="15"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" id="publishBtn">发布</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 提示框 -->
+            <div class="modal fade" id="hintModal" tabindex="-1" role="dialog" aria-labelledby="hintModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="hintModalLabel">提示</h5>
+                        </div>
+                        <div class="modal-body" id="hintBody">
+                            发布完毕!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 帖子列表 -->
+            <ul class="list-unstyled">
+                <li class="media pb-3 pt-3 mb-3 border-bottom" th:each="map:${discussPosts}">
+                    <a href="site/profile.html">
+                        <img th:src="${map.user.headerUrl}" class="mr-4 rounded-circle" alt="用户头像" style="width:50px;height:50px;">
+                    </a>
+                    <div class="media-body">
+                        <h6 class="mt-0 mb-3">
+                            <a href="#" th:utext="${map.post.title}">备战春招，面试刷题跟他复习，一个月全搞定！</a>
+                            <span class="badge badge-secondary bg-primary" th:if="${map.post.type==1}">置顶</span>
+                            <span class="badge badge-secondary bg-danger"th:if="${map.post.status==1}">精华</span>
+                        </h6>
+                        <div class="text-muted font-size-12">
+                            <u class="mr-3" th:utext="${map.user.username}">寒江雪</u> 发布于  <b th:text="${#dates.format(map.post.createTime,'yyyy-MM-dd HH:mm:ss')}">2019-04-15 15:32:18</b>
+                            <ul class="d-inline float-right">
+                                <li class="d-inline ml-2">赞 11</li>
+                                <li class="d-inline ml-2">|</li>
+                                <li class="d-inline ml-2">回帖 7</li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+
+            <!-- 分页 -->
+            <nav class="mt-5"th:if="${page.rows>0}">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{${page.path}(current=1)}">首页</a>
+                    </li>
+                    <li th:class="|page-item ${page.current==1?'disabled':''}|">
+                        <a class="page-link" th:href="@{${page.path}(current=${page.current-1})}">上一页</a></li>
+                    <li th:class="|page-item ${i==page.current?'active':''}|"  th:each="i:${#numbers.sequence(page.from,page.to)}">
+                        <a class="page-link" th:href="@{${page.path}(current=${i})}" th:text="${i}">1</a>
+                    </li>
+                    <li th:class="|page-item ${page.current==page.total?'disabled':''}|">
+                        <a class="page-link" th:href="@{${page.path}(current=${page.current+1})}">下一页</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{${page.path}(current=${page.total})}">末页</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- 尾部 -->
+    <footer class="bg-dark" th:fragment="footer">
+        <div class="container">
+            <div class="row">
+                <!-- 二维码 -->
+                <div class="col-4 qrcode">
+                    <img src="https://uploadfiles.nowcoder.com/app/app_download.png" class="img-thumbnail" style="width:136px;" />
+                </div>
+                <!-- 公司信息 -->
+                <div class="col-8 detail-info">
+                    <div class="row">
+                        <div class="col">
+                            <ul class="nav">
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" href="#">关于我们</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" href="#">加入我们</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" href="#">意见反馈</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" href="#">企业服务</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" href="#">联系我们</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" href="#">免责声明</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" href="#">友情链接</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <ul class="nav btn-group-vertical company-info">
+                                <li class="nav-item text-white-50">
+                                    公司地址：北京市朝阳区大屯路东金泉时代3-2708北京牛客科技有限公司
+                                </li>
+                                <li class="nav-item text-white-50">
+                                    联系方式：010-60728802(电话)&nbsp;&nbsp;&nbsp;&nbsp;admin@nowcoder.com
+                                </li>
+                                <li class="nav-item text-white-50">
+                                    牛客科技©2018 All rights reserved
+                                </li>
+                                <li class="nav-item text-white-50">
+                                    京ICP备14055008号-4 &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <img src="http://static.nowcoder.com/company/images/res/ghs.png" style="width:18px;" />
+                                    京公网安备 11010502036488号
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script th:src="@{js/global.js}"></script>
+<script th:src="@{js/index.js}"></script>
+</body>
+</html>
+```
+
+**以验证码为例, 设置动态样式时, 去掉 `is-invalid` 的引号!**
+
+> 完整login.html
+
+```html
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/global.css}"/>
+    <link rel="stylesheet" th:href="@{/css/login.css}"/>
+    <title>牛客网-登录</title>
+</head>
+<body>
+<div class="nk-container">
+    <!-- 头部 -->
+    <header class="bg-dark sticky-top" th:replace="index::header">
+    </header>
+
+    <!-- 内容 -->
+    <div class="main">
+        <div class="container pl-5 pr-5 pt-3 pb-3 mt-3 mb-3">
+            <h3 class="text-center text-info border-bottom pb-3">登&nbsp;&nbsp;录</h3>
+            <form class="mt-5" method="post" th:action="@{/login}">
+                <div class="form-group row">
+                    <label for="username" class="col-sm-2 col-form-label text-right">账号:</label>
+                    <div class="col-sm-10">
+<!--                        <input type="text" th:class="|form-control is-invalid ${usernameMsg}!=null ?'is-valid':''|"-->
+<!--                               th:value="${param.username}"-->
+<!--                               id="username" name="username" placeholder="请输入您的账号!" required>-->
+<!--                        th:value="${param.username}" 是从request参数中取值，-->
+                        <input type="text" th:class="|form-control ${usernameMsg}!=null ? is-invalid : ''|"
+                               th:value="${param.username}"
+                               id="username" name="username" placeholder="请输入您的账号!" required>
+                        <div class="invalid-feedback" th:text="${usernameMsg}">
+                            该账号不存在!
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label for="password" class="col-sm-2 col-form-label text-right">密码:</label>
+                    <div class="col-sm-10">
+                        <input type="password"
+                               th:class="|form-control ${passwordMsg}!=null ? is-invalid : ''|"
+                               th:value="${param.password}"
+                               id="password" name="password" placeholder="请输入您的密码!" required>
+                        <div class="invalid-feedback" th:text="${passwordMsg}">
+                            密码长度不能小于8位!
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label for="verifycode" class="col-sm-2 col-form-label text-right">验证码:</label>
+                    <div class="col-sm-6">
+                        <input type="text" th:class="|form-control ${codeMsg}!=null ? is-invalid : ''|"
+                               id="verifycode" name="code" placeholder="请输入验证码!">
+                        <div class="invalid-feedback" th:text="${codeMsg}">
+                            验证码不正确!
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <img th:src="@{/kaptcha}" id="kaptcha" style="width:100px;height:40px;"
+                             class="mr-2"/>
+                        <a href="javascript:refresh_kaptcha();" class="font-size-12 align-bottom">刷新验证码</a>
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-10">
+                        <input type="checkbox" id="remember-me" name="rememberme"
+                               th:checked="${param.rememberme}">
+                        <label class="form-check-label" for="remember-me">记住我</label>
+                        <a href="forget.html" class="text-danger float-right">忘记密码?</a>
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-10 text-center">
+                        <button type="submit" class="btn btn-info text-white form-control">立即登录</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 尾部 -->
+    <footer class="bg-dark" th:replace="index::footer">
+    </footer>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script th:src="@{/js/global.js}"></script>
+<script>
+    function refresh_kaptcha() {
+        // ?p=Math.random() 是为了欺骗浏览器让它知道验证码的访问路径变了，获取新的验证码
+        var path = CONTEXT_PATH + "/kaptcha?p=" + Math.random();
+        $("#kaptcha").attr("src", path);
+    }
+</script>
+</body>
+</html>
+```
+
+> 完整register页面
+
+```html
+<!doctype html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/global.css}"/>
+    <link rel="stylesheet" th:href="@{/css/login.css}"/>
+    <title>牛客网-注册</title>
+</head>
+<body>
+<div class="nk-container">
+    <!-- 头部 复用 index.html 的header-->
+    <header class="bg-dark sticky-top" th:replace="index::header">
+    </header>
+
+    <!-- 内容 -->
+    <div class="main">
+        <div class="container pl-5 pr-5 pt-3 pb-3 mt-3 mb-3">
+            <h3 class="text-center text-info border-bottom pb-3">注&nbsp;&nbsp;册</h3>
+            <form class="mt-5" method="post" action="#" th:action="@{/register}">
+                <div class="form-group row">
+                    <label for="username" class="col-sm-2 col-form-label text-right">账号:</label>
+                    <div class="col-sm-10">
+                        <input type="text" th:class="|form-control ${usernameMsg} != null ? is-invalid : ''}|"
+                               th:value="${user != null ? user.username : ''}"
+                               id="username" name="username" placeholder="请输入您的账号!" required>
+                        <div class="invalid-feedback" th:text="${usernameMsg}">
+                            该账号已存在!
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label for="password" class="col-sm-2 col-form-label text-right">密码:</label>
+                    <div class="col-sm-10">
+                        <input type="password" th:class="|form-control ${passwordMsg} != null ? is-invalid : ''}|"
+                               th:value="${user != null ? user.password : ''}"
+                               id="password" name="password" placeholder="请输入您的密码!" required>
+                        <div class="invalid-feedback" th:text="${passwordMsg}">
+                            密码长度不能小于8位!
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label for="confirm-password" class="col-sm-2 col-form-label text-right">确认密码:</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control"
+                               th:value="${user != null ? user.password : ''}"
+                               id="confirm-password" placeholder="请再次输入密码!" required>
+                        <div class="invalid-feedback">
+                            两次输入的密码不一致!
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="email" class="col-sm-2 col-form-label text-right">邮箱:</label>
+                    <div class="col-sm-10">
+                        <input type="email" th:class="|form-control ${emailMsg} != null ? is-invalid : ''}|"
+                               th:value="${user != null ? user.email : ''}"
+                               id="email" name="email" placeholder="请输入您的邮箱!" required>
+                        <div class="invalid-feedback" th:text="${emailMsg}">
+                            该邮箱已注册!
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-10 text-center">
+                        <button type="submit" class="btn btn-info text-white form-control">立即注册</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 尾部 -->
+    <footer class="bg-dark" th:replace="index::footer">
+    </footer>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script th:src="@{/js/global.js}"></script>
+<script th:src="@{/js/register.js}"></script>
+</body>
+</html>
+```
 
 
 
 ------
 
+### 显示登录信息
 
+![image-20210423144914255](Java-NowCoder-Note/image-20210423144914255.png)
+
+**业务逻辑演示:**
+
+![image-20210423154915815](Java-NowCoder-Note/image-20210423154915815.png)
+
+**因为user信息比较敏感, 浏览器只存与user相关的凭证, user存在数据库中.**
+
+------
+
+### 账号设置
+
+![image-20210423183348860](Java-NowCoder-Note/image-20210423183348860.png)
+
+> setting.html
+>
+> 关键网页代码
+
+```html
+<!-- 上传头像 -->
+<h6 class="text-left text-info border-bottom pb-2">上传头像</h6>
+<form class="mt-5" method="post" enctype="multipart/form-data" th:action="@{/user/upload}">
+    <div class="form-group row mt-4">
+        <label for="head-image" class="col-sm-2 col-form-label text-right">选择头像:</label>
+        <div class="col-sm-10">
+            <div class="custom-file">
+                <input type="file" th:class="|custom-file-input ${error!=null ? is-invalid : ''}|"
+                       id="head-image" name="headerImage" lang="es" required="">
+                <label class="custom-file-label" for="head-image" data-browse="文件">选择一张图片</label>
+                <div class="invalid-feedback" th:text="${error}">
+                    该图片不存在！
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row mt-4">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10 text-center">
+            <button type="submit" class="btn btn-info text-white form-control">立即上传</button>
+        </div>
+    </div>
+</form>
+```
+
+
+
+------
+
+### 检查登录状态
+
+
+
+![image-20210423202838851](Java-NowCoder-Note/image-20210423202838851.png)
+
+> 自定义注解: LoginRequired
+
+```java
+package com.nowcoder.community.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/*
+* 规定需要登录
+* 具体在拦截器中设置逻辑
+* */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface LoginRequired {
+
+}
+```
+
+> 新建拦截器: LoginRequiredInterceptor
+
+```Java
+package com.nowcoder.community.controller.interceptor;
+
+import com.nowcoder.community.annotation.LoginRequired;
+import com.nowcoder.community.util.HostHolder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Method;
+
+@Component
+public class LoginRequiredInterceptor implements HandlerInterceptor {
+
+    @Autowired
+    private HostHolder hostHolder;
+
+    /**
+     * 在Controller之前执行
+     * 在请求之前将user暂存到hostHolder
+     * @param request
+     * @param response
+     * @param handler 只判断拦截的是否是 方法
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean preHandle(
+            HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
+        if (handler instanceof HandlerMethod) {
+            HandlerMethod handlerMethod = (HandlerMethod) handler;
+            Method method = handlerMethod.getMethod(); //获取拦截到的method对象
+            LoginRequired loginRequired = method.getAnnotation(LoginRequired.class); //只拦截添加了注解的方法
+            // 不为null表示需要登录才行; 第二个null表示没获取到user即没登录.
+            if (loginRequired != null && hostHolder.getUser() == null) {
+                // /community+/login
+                response.sendRedirect(request.getContextPath() + "/login");
+                System.out.println("----------------------拦截---------------------");
+                return false;
+            }
+        }
+        return true;
+    }
+
+}
+```
+
+> 注入拦截器到 WebMvcConfig
+
+```Java
+package com.nowcoder.community.config;
+
+import com.nowcoder.community.controller.interceptor.AlphaInterceptor;
+import com.nowcoder.community.controller.interceptor.LoginRequiredInterceptor;
+import com.nowcoder.community.controller.interceptor.LoginTicketInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Autowired
+    private AlphaInterceptor alphaInterceptor;
+
+    @Autowired
+    private LoginTicketInterceptor loginTicketInterceptor;
+
+    @Autowired
+    private LoginRequiredInterceptor loginRequiredInterceptor;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry
+                .addInterceptor(alphaInterceptor) //注入拦截器
+                .excludePathPatterns("/*/*.css", "/*/*.js", "/*/*.png", "/*/*.jpg", "/*/*.jpeg") //排除静态资源
+                .addPathPatterns("/register", "/login"); //明确要拦截的路径
+
+        registry
+                .addInterceptor(loginTicketInterceptor) //注入拦截器
+                .excludePathPatterns("/*/*.css", "/*/*.js", "/*/*.png", "/*/*.jpg", "/*/*.jpeg"); //排除静态资源
+
+        registry
+                .addInterceptor(loginRequiredInterceptor) //注入拦截器
+                .excludePathPatterns("/*/*.css", "/*/*.js", "/*/*.png", "/*/*.jpg", "/*/*.jpeg"); //排除静态资源
+    }
+}
+```
+
+
+
+> UserController-在需要登录的方法上里添加添加注解: 
+
+<img src="Java-NowCoder-Note/image-20210423210249228.png" alt="image-20210423210249228" style="zoom: 80%;" />
+
+```Java
+package com.nowcoder.community.controller;
+
+import com.nowcoder.community.annotation.LoginRequired;
+import com.nowcoder.community.entity.User;
+import com.nowcoder.community.service.UserService;
+import com.nowcoder.community.util.CommunityUtil;
+import com.nowcoder.community.util.HostHolder;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
+@Controller
+@RequestMapping("/user")
+public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    @Value("${community.path.upload}")
+    private String uploadPath;
+
+    @Value("${community.path.domain}")
+    private String domain;
+
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private HostHolder hostHolder;
+
+    /**
+     * 跳转设置页面
+     *
+     * @return
+     */
+    @LoginRequired //规定需要登录才能跳转页面
+    @GetMapping("/setting")
+    public String getSettingPage(Model model) {
+        return "site/setting";
+    }
+
+    /**
+     * 提交修改头像请求
+     *
+     * @param headerImage
+     * @param model
+     * @return
+     */
+    @LoginRequired //规定需要登录才能跳转页面
+    @PostMapping("/upload")
+    public String uploadHeader(MultipartFile headerImage, Model model) {
+        // 判断有没有图片
+        if (headerImage == null) {
+            model.addAttribute("error", "您还没有选择图片！");
+            return "site/setting";
+        }
+
+        // 通过图片的后缀名来判断图片格式
+        String fileName = headerImage.getOriginalFilename();
+        String suffix = fileName.substring(fileName.lastIndexOf("."));
+        if (StringUtils.isBlank(suffix)) {
+            model.addAttribute("error", "文件格式不正确！");
+            return "site/setting";
+        }
+
+        // 生成随机文件名
+        fileName = CommunityUtil.generateUUID() + suffix;
+        // 确定文件存放的路径
+        File dest = new File(uploadPath + "/" + fileName);
+        try {
+            // 存储文件
+            headerImage.transferTo(dest);
+        } catch (IOException e) {
+            logger.error("上传文件失败：", e.getMessage());
+            throw new RuntimeException("上传文件失败，服务器发生异常！", e);
+        }
+
+        // 更新当前用户头像的路径(web访问路径)
+        // http://localhost:8080/community/user/header/xxx.png
+        User user = hostHolder.getUser();
+        String headerUrl = domain + contextPath + "/user/header/" + fileName;
+        userService.updateHeader(user.getId(), headerUrl);
+
+        return "redirect:/index";
+    }
+
+    /**
+     * 返回用户头像
+     *
+     * @param fileName
+     * @param response
+     */
+    @GetMapping("/header/{fileName}")
+    public void getHeader(@PathVariable("fileName") String fileName, HttpServletResponse response) {
+        // 服务器存放路径
+        fileName = uploadPath + "/" + fileName;
+        // 文件后缀
+        String suffix = fileName.substring(fileName.lastIndexOf("."));
+        // 响应图片
+        response.setContentType("image/" + suffix);
+
+        try (FileInputStream fis = new FileInputStream(fileName);
+             OutputStream os = response.getOutputStream(); ) {
+            byte[] buffer = new byte[1024];
+            int b = 0;
+            while ((b = fis.read(buffer)) != -1) { // 读到b个字节的数据, 最大1024个字节
+                os.write(buffer, 0, b);
+            }
+        } catch (IOException e) {
+            logger.error("读取文件失败：", e.getMessage());
+        }
+    }
+
+}
+```
+
+------
+
+## 第三章内容
 
 
 
