@@ -898,7 +898,6 @@ id	name	age	score	birthday	insert_time
 >     	排序
 >   - limit
 >     	分页限定
->
 
 
 
@@ -2822,7 +2821,7 @@ ON
   start transaction;
   -- 转账操作
   update account set balance = balance - 500 where id = 1;
-update account set balance = balance + 500 where id = 2;
+  update account set balance = balance + 500 where id = 2;
   ```
 
 > set global transaction isolation level read uncommitted;
