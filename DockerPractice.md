@@ -24,7 +24,7 @@ docker run -d -p 80:9000 --restart=always -v /var/run/docker.sock:/var/run/docke
 ## 2、运行容器：pytorch-jungle
 
 ```shell
-docker run -p 9090:9090 --rm -it --name=pytorch-jungle --runtime=nvidia -v /home/vr/deep-learning-for-image-processing:/home/vr/deep-learning-for-image-processing 5ffed6c83695
+docker run -p 9090:9090 --rm -it --name=pytorch-jungle --runtime=nvidia --shm-size 64G -v /home/vr/deep-learning-for-image-processing:/home/vr/deep-learning-for-image-processing 5ffed6c83695
 ```
 
 
