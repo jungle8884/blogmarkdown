@@ -4,7 +4,6 @@ categories:
   - 后端
   - Java
 tags:
-  - 并发
   - 多线程
 author:
   - Jungle

@@ -4,7 +4,6 @@ categories:
   - 后端
   - 设计模式
 tags:
-  - 设计模式
   - 单例模式
 author:
   - Jungle
@@ -200,10 +199,6 @@ public class Singleton {
 - [其他回答:](https://blog.csdn.net/panchang199266/article/details/103222344)
   - 当第一次访问类中的静态变量时，会触发类加载，并且**同一个类只加载一次**
   - 静态内部类也是如此，类加载过程由类加载器负责加锁，从而保证线程安全。此种单例模式更加简洁明了，不容易出错
-- 拓展: 反射可以破坏单例! 怎么解决?
-  - 可以看下载的视频, 找思路;
-  - flag, 枚举...
-  - 未完待续...
 
 懒加载方式在平时非常常见，比如打开我们常用的美团、饿了么、支付宝 app，应用首页会立刻刷新出来，但其他标签页在我们点击到时才会刷新。这样就减少了流量消耗，并缩短了程序启动时间。
 
@@ -238,6 +233,15 @@ public class Singleton {
 3、在这个过程中，如果第二条指令和第三条指令发生了重排序，可能导致 instance 还未初始化时，其他线程提前通过双检锁外层的 null 检查，获取到`不为 null，但还没有执行初始化`的 instance 对象，发生空指针异常。
 
 
+
+# 拓展: 
+
+> 反射可以破坏单例! 怎么解决?
+
+- 可以看下载的视频, 找思路;
+- [flag](https://blog.csdn.net/maxiaokundage/article/details/38363649)
+- [枚举](https://snailclimb.gitee.io/javaguide/#/docs/java/basis/%E7%94%A8%E5%A5%BDJava%E4%B8%AD%E7%9A%84%E6%9E%9A%E4%B8%BE%E7%9C%9F%E7%9A%84%E6%B2%A1%E6%9C%89%E9%82%A3%E4%B9%88%E7%AE%80%E5%8D%95)
+- 未完待续...
 
 ------
 

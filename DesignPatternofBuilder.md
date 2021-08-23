@@ -4,7 +4,6 @@ categories:
   - 后端
   - 设计模式
 tags:
-  - 设计模式
   - 建造者模式
 author:
   - jungle

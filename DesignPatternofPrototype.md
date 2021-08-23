@@ -4,7 +4,7 @@ categories:
   - 后端
   - 设计模式
 tags:
-  - 设计模式
+  - 原型模式
 author:
   - Jungle
 date: 2021-04-2
