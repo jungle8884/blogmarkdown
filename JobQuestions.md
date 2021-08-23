@@ -243,28 +243,53 @@ G1适用于服务器端.
 
 ## 多线程
 
-### ReentrantLock 和 synchronized的区别
+### ReentrantLock(或者Lock) 和 synchronized的区别
 
 > 看文章: https://blog.csdn.net/wangnanwlw/article/details/109243637
 
-
+---
 
 ### AQS和lock的比较
 
 
 
+---
+
 ### CAS原理，ABA问题如何解决
 
 
+
+---
 
 ### 线程的状态, 状态转移条件, 创建方式, 和进程的区别
 
 
 
-### volatile的作用是什么
+---
 
-- 禁止JVM的指令重排
-- 保证变量的可见性 (把变量声明为 **`volatile`** ，这就指示 JVM，这个变量是共享且不稳定的，每次使用它都到主存中进行读取)
+### volatile的作用是什么?
+
+**Volatile 是 Java虚拟机提供的轻量级同步机制**
+
+> Volatile 是可以保证可见性的, 但是不能保证原子性, 由于内存屏障, 可以保证避免指令重排的现象产生. 
+>
+>  (具体应用见设计模式问题)
+
+1. 保证可见性  (把变量声明为 **`volatile`** ，这就指示 JVM，这个变量是共享且不稳定的，每次使用它都到主存中进行读取)
+
+2. 不保证原子性 (若要保证原子性, 可以使用Atomic类)
+
+3. 禁止JVM的指令重排 (你写的程序, 计算机不一定时按照你写的那样去执行的)
+
+![image-20210823142913281](JobQuestions/image-20210823142913281.png)
+
+### 并发编程的三个重要特性
+
+1. **原子性** : 一个的操作或者多次操作，要么所有的操作全部都得到执行并且不会收到任何因素的干扰而中断，**要么所有的操作都执行，要么都不执行**。`synchronized` 可以保证代码片段的原子性。
+2. **可见性** ：当一个变量对共享变量进行了修改，那么另外的线程都是立即可以看到修改后的最新值。`volatile` 关键字可以**保证共享变量的可见性**。
+3. **有序性** ：代码在执行的过程中的先后顺序，Java 在编译器以及运行期间的优化，代码的执行顺序未必就是编写代码时候的顺序。`volatile` 关键字可以**禁止指令进行重排序优化**。
+
+### 说说 synchronized 关键字和 volatile 关键字的区别
 
 `synchronized` 关键字和 `volatile` 关键字是两个互补的存在，而不是对立的存在！
 
@@ -272,7 +297,51 @@ G1适用于服务器端.
 - **`volatile` 关键字能保证数据的可见性，但不能保证数据的原子性。`synchronized` 关键字两者都能保证。**
 - **`volatile`关键字主要用于解决变量在多个线程之间的可见性，而 `synchronized` 关键字解决的是多个线程之间访问资源的同步性。**
 
+### JMM
 
+> [Java 内存模型](https://snailclimb.gitee.io/javaguide/#/docs/java/multi-thread/2020%E6%9C%80%E6%96%B0Java%E5%B9%B6%E5%8F%91%E8%BF%9B%E9%98%B6%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93?id=_22-%e8%ae%b2%e4%b8%80%e4%b8%8b-jmmjava-%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b)
+>
+> [java内存模型JMM理解整理](https://www.cnblogs.com/null-qige/p/9481900.html)
+
+#### 详细理解:
+
+![image-20210823134251344](JobQuestions/image-20210823134251344.png)
+
+> **内存交互操作有8种，虚拟机实现必须保证每一个操作都是原子的，不可在分的（对于double和long类型的变量来说，load、store、read和write操作在某些平台上允许例外）**
+
+- - lock   （锁定）：作用于主内存的变量，把一个变量标识为线程独占状态
+  - unlock （解锁）：作用于主内存的变量，它把一个处于锁定状态的变量释放出来，释放后的变量才可以被其他线程锁定
+  - read  （读取）：作用于主内存变量，它把一个变量的值从主内存传输到线程的工作内存中，以便随后的load动作使用
+  - load   （载入）：作用于工作内存的变量，它把read操作从主存中变量放入工作内存中
+  - use   （使用）：作用于工作内存中的变量，它把工作内存中的变量传输给执行引擎，每当虚拟机遇到一个需要使用到变量的值，就会使用到这个指令
+  - assign （赋值）：作用于工作内存中的变量，它把一个从执行引擎中接受到的值放入工作内存的变量副本中
+  - store  （存储）：作用于主内存中的变量，它把一个从工作内存中一个变量的值传送到主内存中，以便后续的write使用
+  - write 　（写入）：作用于主内存中的变量，它把store操作从工作内存中得到的变量的值放入主内存的变量中
+
+　　JMM对这八种指令的使用，制定了如下规则：
+
+- - 不允许read和load、store和write操作之一单独出现。即使用了read必须load，使用了store必须write
+  - 不允许线程丢弃他最近的assign操作，即工作变量的数据改变了之后，必须告知主存
+  - 不允许一个线程将没有assign的数据从工作内存同步回主内存
+  - 一个新的变量必须在主内存中诞生，不允许工作内存直接使用一个未被初始化的变量。就是对变量实施use、store操作之前，必须经过assign和load操作
+  - 一个变量同一时间只有一个线程能对其进行lock。多次lock后，必须执行相同次数的unlock才能解锁
+  - 如果对一个变量进行lock操作，会清空所有工作内存中此变量的值，在执行引擎使用这个变量前，必须重新load或assign操作初始化变量的值
+  - 如果一个变量没有被lock，就不能对其进行unlock操作。也不能unlock一个被其他线程锁住的变量
+  - 对一个变量进行unlock操作之前，必须把此变量同步回主内存
+
+> JMM对这八种操作规则和对[volatile的一些特殊规则](https://www.cnblogs.com/null-qige/p/8569131.html)就能确定哪里操作是线程安全，哪些操作是线程不安全的了。但是这些规则实在复杂，很难在实践中直接分析。所以一般我们也不会通过上述规则进行分析。
+>
+> **更多的时候，使用java的happen-before规则来进行分析。**
+
+#### [面试回答:](https://snailclimb.gitee.io/javaguide/#/docs/java/multi-thread/2020%E6%9C%80%E6%96%B0Java%E5%B9%B6%E5%8F%91%E8%BF%9B%E9%98%B6%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93?id=_22-%e8%ae%b2%e4%b8%80%e4%b8%8b-jmmjava-%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b)
+
+![image-20210823134423346](JobQuestions/image-20210823134423346.png)
+
+![image-20210823134446710](JobQuestions/image-20210823134446710.png)
+
+
+
+---
 
 ### 介绍一下synchronized的实现
 
@@ -288,7 +357,9 @@ G1适用于服务器端.
 
 
 
-### 线程池参数有哪些, 具体应该怎么配置 
+---
+
+### 线程池参数有哪些, 具体应该怎么配置
 
 > [三大方法, 七大参数 和 四大策略](https://blog.csdn.net/kongsanjin/article/details/111218612)
 >
@@ -345,6 +416,8 @@ G1适用于服务器端.
 ### 经典线程池有哪些？每个的底层原理是什么？
 
 jdbc连接池?
+
+
 
 ---
 
@@ -453,6 +526,55 @@ jdbc连接池?
 # 设计模式
 
 > 设计模式知道哪些, 手写单例模式
+
+[**双重校验锁实现对象单例（线程安全）**](https://snailclimb.gitee.io/javaguide/#/docs/java/multi-thread/2020%E6%9C%80%E6%96%B0Java%E5%B9%B6%E5%8F%91%E8%BF%9B%E9%98%B6%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93?id=_12-%e8%af%b4%e8%af%b4%e8%87%aa%e5%b7%b1%e6%98%af%e6%80%8e%e4%b9%88%e4%bd%bf%e7%94%a8-synchronized-%e5%85%b3%e9%94%ae%e5%ad%97)
+
+具体分析过程见: [设计模式之单例模式](https://jungle8884.icu/2021/04/10/DesignPatternofSingleton/)
+
+> 懒汉式-线程安全
+
+```java
+public class Singleton {
+
+    private volatile static Singleton uniqueInstance;
+
+    private Singleton() {
+    }
+
+    public static Singleton getUniqueInstance() {
+       //先判断对象是否已经实例过，没有实例化过才进入加锁代码
+        if (uniqueInstance == null) {
+            //类对象加锁
+            synchronized (Singleton.class) {
+                if (uniqueInstance == null) {
+                    uniqueInstance = new Singleton();
+                }
+            }
+        }
+        return uniqueInstance;
+    }
+}
+```
+
+> 内部类 (常用)
+
+```java
+public class Singleton {
+
+    private static class SingletonHolder {
+    	public static Singleton instance = new Singleton();
+    }
+
+    private Singleton() {
+    }
+
+    public static Singleton getInstance() {
+        return SingletonHolder.instance;
+    }
+}
+```
+
+
 
 
 
