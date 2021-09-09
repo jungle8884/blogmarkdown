@@ -1718,7 +1718,7 @@ protected void rehash() {
 
 
 
-### Properties
+## Properties
 
 > Properties 继承自Hashtable类并实现了Map接口, 也是一种键值对形式来保存数据, 它的特点和Hashtable类似
 >
