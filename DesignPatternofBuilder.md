@@ -5,6 +5,7 @@ categories:
   - 设计模式
 tags:
   - 建造者模式
+  - 构建型模式
 author:
   - jungle
 date: 2021-04-14 

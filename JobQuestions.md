@@ -12,33 +12,176 @@ date: 2021-08-16 15:26:09
 
 # Java
 
+## 基础
+
+### == 和 equals
+
+> 对于基本数据类型来说，==比较的是值。对于引用数据类型来说，==比较的是对象的内存地址
+
+因为 Java 只有值传递，所以，对于 == 来说，不管是比较基本数据类型，还是引用数据类型的变量，其本质比较的都是值，只是引用类型变量存的值是对象的地址。
+
+>  equals不重写比较的是引用
+
+![image-20210915104435123](JobQuestions/image-20210915104435123.png)
+
+> **为什么重写 `equals` 时必须重写 `hashCode` 方法？**
+
+- hashCode: `hashCode()` 的作用是获取哈希码，也称为散列码.
+  - 它实际上是返回一个 int 整数哈希码的作用是确定该对象在哈希表中的索引位置;
+  - 另外需要注意的是： `Object` 的 hashcode 方法是本地方法，也就是用 c 语言或 c++ 实现的，该方法通常用来将对象的 内存地址 转换为整数之后返回。
+- 散列表存储的是键值对(key-value)，它的特点是：能根据“键”快速的检索出对应的“值”。这其中就利用到了散列码！（可以快速找到所需要的对象）
+
+**回答:**
+
+- 如果两个对象相等，则 hashcode 一定也是相同的。
+
+- 两个对象相等, 对两个对象分别调用 equals 方法都返回 true。
+- 但是，**两个对象有相同的 hashcode 值，它们也不一定是相等的 。**
+- **因此，equals 方法被覆盖过，则 `hashCode` 方法也必须被覆盖。**
+
+> **为什么两个对象有相同的 hashcode 值，它们也不一定是相等的？**
+
+- 因为 `hashCode()` 所使用的哈希算法也许刚好会让多个对象传回相同的哈希值。
+- 越糟糕的哈希算法越容易碰撞，但这也与数据值域分布的特性有关（所谓碰撞也就是指的是不同的对象得到相同的 `hashCode`。
+
+- `HashSet` 在对比的时候，同样的 hashcode 有多个对象，它会使用 `equals()` 来判断是否真的相同。也就是说 `hashcode` 只是用来缩小查找成本。
+
+### 重载与重写
+
+> 重载就是同样的一个方法能够根据输入数据的不同，做出不同的处理
+>
+> 重写就是当子类继承自父类的相同方法，输入数据一样，但要做出有别于父类的响应时，你就要覆盖父类方法
+
+- 重载: 
+  - 在同一个类里有2个或2个以上方法名相同，而方法签名不同的方法，
+  - 方法签名就是**参数列表的不同**，包括**参数个数，顺序，类型**等，而**返回类型不包括在方法签名里**
+  - 参数顺序不同不一定叫做重载, 关键是参数类型, 参数类型不同的情况下, 参数顺序不一样才叫重载
+  - 重载就是**同一个类中多个同名方法根据不同的传参来执行不同的逻辑处理**
+- 重写: 
+  - 也就是覆盖的意思，是跟继承挂钩的，是指子类的方法与超类的方法看上去一样，即方法名，返回类型，参数列表都一样
+  - **重写就是子类对父类方法的重新改造，外部样子不能改变，内部逻辑可以改变**
+
+### 深拷贝和浅拷贝
+
+![image-20210915124402189](JobQuestions/image-20210915124402189.png)
+
+### [String StringBuffer 和 StringBuilder 的区别是什么? String 为什么是不可变的?](https://snailclimb.gitee.io/javaguide/#/docs/java/basis/Java基础知识?id=string-stringbuffer-和-stringbuilder-的区别是什么-string-为什么是不可变的)
+
+> 可变性
+
+![image-20210915124738706](JobQuestions/image-20210915124738706.png)
+
+![image-20210915124757328](JobQuestions/image-20210915124757328.png)
+
+> 线程安全性
+>
+> 线程安全。`AbstractStringBuilder` 是 `StringBuilder` 与 `StringBuffer` 的公共父类，定义了一些字符串的基本操作，如 `expandCapacity`、`append`、`insert`、`indexOf` 等公共方法。
+
+-  `String` 中的对象是不可变的，也就可以理解为常量，线程安全。
+- `StringBuffer` 对方法加了同步锁或者对调用的方法加了同步锁，所以是线程安全的。
+- `StringBuilder` 并没有对方法进行加同步锁，所以是非线程安全的。
+
+> 性能
+
+- 每次对 `String` 类型进行改变的时候，都会生成一个新的 `String` 对象，然后将指针指向新的 `String` 对象。
+- `StringBuffer` 每次都会对 `StringBuffer` 对象本身进行操作，而不是生成新的对象并改变对象引用。
+- 相同情况下使用 `StringBuilder` 相比使用 `StringBuffer` 仅能获得 10%~15% 左右的性能提升，但却要冒多线程不安全的风险。
+
+**使用总结:**
+
+1. 操作少量的数据: 适用 `String`
+2. 单线程操作字符串缓冲区下操作大量数据: 适用 `StringBuilder`
+3. 多线程操作字符串缓冲区下操作大量数据: 适用 `StringBuffer`
+
+### [Object 类的常见方法总结](https://snailclimb.gitee.io/javaguide/#/docs/java/basis/Java基础知识?id=object-类的常见方法总结)
+
+> Object 类是一个特殊的类，是所有类的父类。它主要提供了以下 11 个方法：
+
+```java
+public final native Class<?> getClass()//native方法，用于返回当前运行时对象的Class对象，使用了final关键字修饰，故不允许子类重写。
+
+public native int hashCode() //native方法，用于返回对象的哈希码，主要使用在哈希表中，比如JDK中的HashMap。
+public boolean equals(Object obj)//用于比较2个对象的内存地址是否相等，String类对该方法进行了重写用户比较字符串的值是否相等。
+
+protected native Object clone() throws CloneNotSupportedException//naitive方法，用于创建并返回当前对象的一份拷贝。一般情况下，对于任何对象 x，表达式 x.clone() != x 为true，x.clone().getClass() == x.getClass() 为true。Object本身没有实现Cloneable接口，所以不重写clone方法并且进行调用的话会发生CloneNotSupportedException异常。
+
+public String toString()//返回类的名字@实例的哈希码的16进制的字符串。建议Object所有的子类都重写这个方法。
+
+public final native void notify()//native方法，并且不能重写。唤醒一个在此对象监视器上等待的线程(监视器相当于就是锁的概念)。如果有多个线程在等待只会任意唤醒一个。
+
+public final native void notifyAll()//native方法，并且不能重写。跟notify一样，唯一的区别就是会唤醒在此对象监视器上等待的所有线程，而不是一个线程。
+
+public final native void wait(long timeout) throws InterruptedException//native方法，并且不能重写。暂停线程的执行。注意：sleep方法没有释放锁，而wait方法释放了锁 。timeout是等待时间。
+
+public final void wait(long timeout, int nanos) throws InterruptedException//多了nanos参数，这个参数表示额外时间（以毫微秒为单位，范围是 0-999999）。 所以超时的时间还需要加上nanos毫秒。
+
+public final void wait() throws InterruptedException//跟之前的2个wait方法一样，只不过该方法一直等待，没有超时时间这个概念
+
+protected void finalize() throws Throwable { }//实例被垃圾回收器回收的时候触发的操作
+```
+
+### [异常](https://snailclimb.gitee.io/javaguide/#/docs/java/basis/Java基础知识?id=异常)
+
+> Java异常类结构图
+
+![结构图](JobQuestions/Java%E5%BC%82%E5%B8%B8%E7%B1%BB%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84%E5%9B%BE.png)
+
+在 Java 中，所有的异常都有一个共同的祖先 `java.lang` 包中的 `Throwable` 类。`Throwable` 类有两个重要的子类 `Exception`（异常）和 `Error`（错误）。`Exception` 能被程序本身处理(`try-catch`)， `Error` 是无法处理的(只能尽量避免)。
+
+`Exception` 和 `Error` 二者都是 Java 异常处理的重要子类，各自都包含大量子类。
+
+- **`Exception`** :程序本身可以处理的异常，可以通过 `catch` 来进行捕获。`Exception` 又可以分为 受检查异常(必须处理) 和 不受检查异常(可以不处理)。
+- **`Error`** ：`Error` 属于程序无法处理的错误 ，我们没办法通过 `catch` 来进行捕获 。例如，Java 虚拟机运行错误（`Virtual MachineError`）、虚拟机内存不够错误(`OutOfMemoryError`)、类定义错误（`NoClassDefFoundError`）等 。这些异常发生时，Java 虚拟机（JVM）一般会选择线程终止。
+
+
+
+![image-20210915133645685](JobQuestions/image-20210915133645685.png)
+
+
+
+---
+
+
+
 ## 集合
 
-### 介绍一下concurrentHashMap
+Java 集合， 也叫作容器，主要是由两大接口派生而来：一个是 `Collecton`接口，主要用于存放单一元素；另一个是 `Map` 接口，主要用于存放键值对。对于`Collection` 接口，下面又有三个主要的子接口：`List`、`Set` 和 `Queue`。
 
-> ConcurrentHashMap实现原理
+Java 集合框架如下图所示：
 
-- 底层数据结构: jdk1.7 之前底层采用分段数组+链表实现, jdk1.8之后采用的数据结构则是数组+链表/红黑二叉树实现.
+![Java 集合框架](JobQuestions/java-collection-hierarchy.png)
 
-- 实现线程安全的方式: 
-
-  - jdk1.7 : 分段锁, 将数据分割分段, 每一段数据分配一把锁, 当一个线程占用了其中一段数据时, 不影响其他数据段被其他线程的访问.
-
-  ![image-20210817153941602](JobQuestions/image-20210817153941602.png)
-
-  - jdk1.8:  **JDK1.8 的时候已经，而取消了分段锁, 采用 `synchronized` 和 CAS 来保证并发安全**, `synchronized`只锁定当前链表或红黑二叉树的首节点, 只要hash不冲突, 就不会产生并发, 效率提升N倍.
-
-    > [CAS](https://www.jianshu.com/p/34a10da2c0d5): compare and swap, 比较并变换.
-    >
-    > CAS(V, E, N): 若V值等于E值，则将V的值设为N; 若V值和E值不同, 则说明已经有其他线程做了更新, 则当前线程什么都不做.
-
-  ![image-20210817154032680](JobQuestions/image-20210817154032680.png)
-
-### ConcurrentHashmap底层原理和hashmap的区别
+注：图中只列举了主要的继承派生关系，并没有列举所有关系。比方省略了`AbstractList`, `NavigableSet`等抽象类以及其他的一些辅助类，如想深入了解，可自行查看源码。
 
 
 
-### hashmap 1.8删除节点，[红黑树](https://www.nowcoder.com/jump/super-jump/word?word=红黑树)会不会退化为[链表](https://www.nowcoder.com/jump/super-jump/word?word=链表)？
+### LinkedList 和 ArrayList
+
+![image-20210910141241224](JobQuestions/image-20210910141241224.png)
+
+### [ArrayDeque 与 LinkedList 的区别](https://snailclimb.gitee.io/javaguide/#/docs/java/collection/Java集合框架常见面试题?id=_142-arraydeque-与-linkedlist-的区别)
+
+`ArrayDeque` 和 `LinkedList` 都实现了 `Deque` 接口，两者都具有队列的功能，但两者有什么区别呢？
+
+- `ArrayDeque` 是基于可变长的数组和双指针来实现，而 `LinkedList` 则通过链表来实现。
+- `ArrayDeque` 不支持存储 `NULL` 数据，但 `LinkedList` 支持。
+- `ArrayDeque` 是在 JDK1.6 才被引入的，而`LinkedList` 早在 JDK1.2 时就已经存在。
+- `ArrayDeque` 插入时可能存在扩容过程, 不过均摊后的插入操作依然为 O(1)。虽然 `LinkedList` 不需要扩容，但是每次插入数据时均需要申请新的堆空间，均摊性能相比更慢。
+
+从性能的角度上，选用 `ArrayDeque` 来实现队列要比 `LinkedList` 更好。此外，`ArrayDeque` 也可以用于实现栈。
+
+### [说一说 PriorityQueue](https://snailclimb.gitee.io/javaguide/#/docs/java/collection/Java集合框架常见面试题?id=_143-说一说-priorityqueue)
+
+`PriorityQueue` 是在 JDK1.5 中被引入的, 其与 `Queue` 的区别在于元素出队顺序是与优先级相关的，即总是优先级最高的元素先出队。
+
+这里列举其相关的一些要点：
+
+- `PriorityQueue` 利用了二叉堆的数据结构来实现的，底层使用可变长的数组来存储数据
+- `PriorityQueue` 通过堆元素的上浮和下沉，实现了在 O(logn) 的时间复杂度内插入元素和删除堆顶元素。
+- `PriorityQueue` 是非线程安全的，且不支持存储 `NULL` 和 `non-comparable` 的对象。
+- `PriorityQueue` 默认是小顶堆，但可以接收一个 `Comparator` 作为构造参数，从而来自定义元素优先级的先后。
+
+`PriorityQueue` 在面试中可能更多的会出现在手撕算法的时候，典型例题包括堆排序、求第K大的数、带权图的遍历等，所以需要会熟练使用才行。
 
 
 
@@ -47,8 +190,25 @@ date: 2021-08-16 15:26:09
 1. **线程是否安全：** `HashMap` 是非线程安全的，`HashTable` 是线程安全的,因为 `HashTable` 内部的方法基本都经过`synchronized` 修饰。（如果你要保证线程安全的话就使用 `ConcurrentHashMap` 吧！）；
 2. **效率：** 因为线程安全的问题，`HashMap` 要比 `HashTable` 效率高一点。另外，`HashTable` 基本被淘汰，不要在代码中使用它；
 3. **对 Null key 和 Null value 的支持：** `HashMap` 可以存储 null 的 key 和 value，但 null 作为键只能有一个，null 作为值可以有多个；HashTable 不允许有 null 键和 null 值，否则会抛出 `NullPointerException`。
-4. **初始容量大小和每次扩充容量大小的不同 ：** ① 创建时如果不指定容量初始值，`Hashtable` 默认的初始大小为 11，之后每次扩充，容量变为原来的 2n+1。`HashMap` 默认的初始化大小为 16。之后每次扩充，容量变为原来的 2 倍。② 创建时如果给定了容量初始值，那么 Hashtable 会直接使用你给定的大小，而 `HashMap` 会将其扩充为 2 的幂次方大小（`HashMap` 中的`tableSizeFor()`方法保证，下面给出了源代码）。也就是说 `HashMap` 总是使用 2 的幂作为哈希表的大小,后面会介绍到为什么是 2 的幂次方。
-5. **底层数据结构：** JDK1.8 以后的 `HashMap` 在解决哈希冲突时有了较大的变化，当链表长度大于阈值（默认为 8）（将链表转换成红黑树前会判断，如果当前数组的长度小于 64，那么会选择先进行数组扩容，而不是转换为红黑树）时，将链表转化为红黑树，以减少搜索时间。Hashtable 没有这样的机制。
+4. **初始容量大小和每次扩充容量大小的不同 ：** ① 创建时如果不指定容量初始值，`Hashtable` 默认的初始大小为 **11**，之后每次扩充，容量变为原来的 **2n+1**。`HashMap` 默认的初始化大小为 **16**，之后每次扩充，容量变为原来的 2 倍。② 创建时如果给定了容量初始值，那么 **Hashtable 会直接使用你给定的大小**，而 **`HashMap` 会将其扩充为 2 的幂次方大小**（`HashMap` 中的`tableSizeFor()`方法保证，下面给出了源代码）。也就是说 `HashMap` 总是使用 2 的幂作为哈希表的大小,后面会介绍到为什么是 2 的幂次方。
+5. **底层数据结构：** JDK1.8 以后的 `HashMap` 在解决哈希冲突时有了较大的变化，当链表长度大于阈值（默认为 8）（将链表转换成红黑树前会判断，如果当前数组的长度小于 64，那么会选择先进行数组扩容，而不是转换为红黑树）时，将链表转化为红黑树，以减少搜索时间。Hashtable 没有这样的机制。[**即链表长度大于8且数组长度大于64才转换成红黑树**]
+
+> tableSizeFor
+
+```java
+/**
+ * Returns a power of two size for the given target capacity.
+ */
+static final int tableSizeFor(int cap) {
+    int n = cap - 1;
+    n |= n >>> 1;
+    n |= n >>> 2;
+    n |= n >>> 4;
+    n |= n >>> 8;
+    n |= n >>> 16;
+    return (n < 0) ? 1 : (n >= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + 1;
+}
+```
 
 
 
@@ -62,19 +222,61 @@ JDK1.8的`HashMap`底层是**数组+链表/红黑树**
 
 HashMap在解决哈希冲突有了较大的变化，**当链表长度大于8且数组的长度大于等于64时，将链表转化为红黑树，以减少搜索时间**(链表转换为红黑树前会判断，如果当前数组的长度小于64，那么会选择先进行数组扩容，而不是转换为红黑树)
 
+![image-20210915145022793](JobQuestions/image-20210915145022793.png)
+
+### [HashMap 的长度为什么是 2 的幂次方](https://snailclimb.gitee.io/javaguide/#/docs/java/collection/Java集合框架常见面试题?id=_156-hashmap-的长度为什么是-2-的幂次方)
+
+为了能让 HashMap 存取高效，尽量较少碰撞，也就是要尽量把数据分配均匀。我们上面也讲到了过了，Hash 值的范围值-2147483648 到 2147483647，前后加起来大概 40 亿的映射空间，只要哈希函数映射得比较均匀松散，一般应用是很难出现碰撞的。但问题是一个 40 亿长度的数组，内存是放不下的。所以这个散列值是不能直接拿来用的。用之前还要先做对数组的长度取模运算，得到的余数才能用来要存放的位置也就是对应的数组下标。
+
+> 这个数组下标的计算方法是“ `(n - 1) & hash`”。（n 代表数组长度）。这也就解释了 HashMap 的长度为什么是 2 的幂次方。
+
+**这个算法应该如何设计呢？**
+
+我们首先可能会想到采用%取余的操作来实现。但是，重点来了：**“取余(%)操作中如果除数是 2 的幂次则等价于与其除数减一的与(&)操作（也就是说 hash%length==hash&(length-1)的前提是 length 是 2 的 n 次方；）。”** 
+
+> 并且 **采用二进制位操作 &，相对于%能够提高运算效率，这就解释了 HashMap 的长度为什么是 2 的幂次方。**
+
+
+
+### 介绍一下concurrentHashMap
+
+> ConcurrentHashMap实现原理
+
+- 底层数据结构: jdk1.7 之前底层采用**分段数组+链表**实现, jdk1.8之后采用的数据结构则是**数组+链表/红黑二叉树**实现.
+
+- 实现线程安全的方式: 
+
+  - jdk1.7 : 分段锁, 将数据分割分段, 每一段数据分配一把锁, 当一个线程占用了其中一段数据时, 不影响其他数据段被其他线程的访问.
+
+  <img src="JobQuestions/image-20210817153941602.png" alt="image-20210817153941602" style="zoom:80%;" />
+
+  - jdk1.8:  **JDK1.8 的时候已经，而取消了分段锁, 采用 `synchronized` 和 CAS 来保证并发安全**, `synchronized`只锁定当前链表或红黑二叉树的**首节点**, 只要hash不冲突, 就不会产生并发, 效率提升N倍.
+
+    > [CAS](https://www.jianshu.com/p/34a10da2c0d5): compare and swap, 比较并变换.
+    >
+    > CAS(V, E, N): 若V值等于E值，则将V的值设为N; 若V值和E值不同, 则说明已经有其他线程做了更新, 则当前线程什么都不做.
+
+  <img src="JobQuestions/image-20210817154032680.png" alt="image-20210817154032680" style="zoom:80%;" />
+
+
+
+---
+
+
+
 ## JVM
 
 ### Java运行时数据区域, 堆是线程公有还是私有, 堆中有线程私有的区域么?
 
-> ![image-20210817195602415](JobQuestions/image-20210817195602415.png)
+<img src="JobQuestions/image-20210817195602415.png" alt="image-20210817195602415" style="zoom: 80%;" />
 
-jdk 1.8之前: **程序计数器, 虚拟机栈**(在 HotSpot 虚拟机中本地方法栈和 Java 虚拟机栈合二为一), **堆**, **方法区(运行时常量池)**
+> jdk 1.8之前: **程序计数器, 虚拟机栈**(在 HotSpot 虚拟机中本地方法栈和 Java 虚拟机栈合二为一), **堆**, **方法区(运行时常量池)**
 
-![image-20210817194609186](JobQuestions/image-20210817194609186.png)
+<img src="JobQuestions/image-20210817194609186.png" alt="image-20210817194609186" style="zoom:80%;" />
 
-jdk 1.8: **程序计数器, 虚拟机栈**(在 HotSpot 虚拟机中本地方法栈和 Java 虚拟机栈合二为一), **堆(字符串常量池)**, **元空间(运行时常量池)**
+> jdk 1.8: **程序计数器, 虚拟机栈**(在 HotSpot 虚拟机中本地方法栈和 Java 虚拟机栈合二为一), **堆(字符串常量池)**, **元空间(运行时常量池)**
 
-![image-20210817194626708](JobQuestions/image-20210817194626708.png)
+<img src="JobQuestions/image-20210817194626708.png" alt="image-20210817194626708" style="zoom:80%;" />
 
 堆中有线程私有的区域吗? (应该是**没有**的)
 
@@ -96,7 +298,7 @@ jdk 1.8: **程序计数器, 虚拟机栈**(在 HotSpot 虚拟机中本地方法�
 主要是: **程序计数器** 和 **虚拟机栈**(在 HotSpot 虚拟机中 **本地方法栈** 和  **虚拟机栈** 合二为一), 原因如下:
 
 - 程序计数器: 为了线程切换后能恢复到正确的执行位置, 每条线程都需要有一个独立的程序计数器, 各线程之间互不影响, 独立存储.
-- 虚拟机栈: **每次方法调用的数据都是通过栈传递的**, 虚拟机栈由一个个栈帧组成, 每个栈帧包括: **局部变量表**, 操作数栈, 动态链接 和 方法出口信息. (一个方法的执行就是开启了一个线程)
+- 虚拟机栈: **每次方法调用的数据都是通过栈传递的**, 虚拟机栈由一个个栈帧组成, 每个栈帧包括: **局部变量表**, 操作数栈, 动态链接 和 方法出口信息. (**一个方法的执行就是开启了一个线程**)
 
 **局部变量表主要存放了编译期可知的各种数据类型**（boolean、byte、char、short、int、float、long、double）、**对象引用**（reference 类型，它不同于对象本身，可能是一个指向对象起始地址的引用指针，也可能是指向一个代表对象的句柄或其他与此对象相关的位置）。
 
@@ -105,8 +307,8 @@ jdk 1.8: **程序计数器, 虚拟机栈**(在 HotSpot 虚拟机中本地方法�
 - 加载:
 
   - 获取定义此类的二进制字节流
-  - 将字节流所代表的静态存储结构转化为方法区的运行时数据结构
-  - 在内存中生成一个代表该类的Class对象
+  - 将字节流所代表的静态存储结构**转化为方法区的运行时数据结构**
+  - **在内存中生成一个代表该类的Class对象**
 
 - 验证: 
 
@@ -114,27 +316,27 @@ jdk 1.8: **程序计数器, 虚拟机栈**(在 HotSpot 虚拟机中本地方法�
 
   - 元数据验证: 对字节码描述的信息进行语义分析
 
-  - 字节码验证: 确定程序语义是合法的, 符合逻辑的
+  - 字节码验证: **确定程序语义是合法的, 符合逻辑的**
 
-  - [符号引用验证](https://snailclimb.gitee.io/javaguide/#/docs/java/jvm/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84?id=_23-%e5%b8%b8%e9%87%8f%e6%b1%a0%ef%bc%88constant-pool%ef%bc%89): 确保解析动作能正确执行
+  - [符号引用验证](https://snailclimb.gitee.io/javaguide/#/docs/java/jvm/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84?id=_23-%e5%b8%b8%e9%87%8f%e6%b1%a0%ef%bc%88constant-pool%ef%bc%89): **确保解析动作能正确执行**
 
-    ![运行时常量池](JobQuestions/image-20210817205618092.png)
+    <img src="JobQuestions/image-20210817205618092.png" alt="运行时常量池" style="zoom:80%;" />
 
 - 准备: **正式为类变量分配内存并设置类变量初始值的阶段**，这些内存都将在方法区中分配.
   - 这里所设置的初始值"通常情况"下是数据类型默认的零值（如 0、0L、null、false 等），
   - 比如我们定义了`public static int value=111` ，那么 value 变量在**准备阶段**的初始值就是 0 而不是 111（初始化阶段才会赋值）。
   - 特殊情况：比如给 value 变量**加上了 final 关键字**`public static final int value=111` ，那么准备阶段 value 的值就被赋值为 111。
 
-- 解析: 虚拟机将常量池内的符号引用替换为直接引用的过程。
+- 解析: 虚拟机**将常量池内的符号引用替换为直接引用**的过程。
 
   - 解析动作主要针对类或接口、
   - 字段、类方法、接口方法、方法类型、方法句柄和调用限定符 7 类符号引用进行。
 
-  ![image-20210817210852474](JobQuestions/image-20210817210852474.png)
+  <img src="JobQuestions/image-20210817210852474.png" alt="image-20210817210852474" style="zoom:80%;" />
 
 - 初始化: 初始化阶段是执行初始化方法 `<clinit> ()`方法的过程，是类加载的最后一步，这一步 JVM 才开始真正执行类中定义的 Java 程序代码(字节码)。
 
-  ![image-20210817211051125](JobQuestions/image-20210817211051125.png)
+  <img src="JobQuestions/image-20210817211051125.png" alt="image-20210817211051125" style="zoom:80%;" />
 
 - 解释: 
 
@@ -149,7 +351,7 @@ jdk 1.8: **程序计数器, 虚拟机栈**(在 HotSpot 虚拟机中本地方法�
     - 3 父类的成员变量和块赋值 (按声明顺序)
     - 4 父类构造器赋值
     - 5 自身的成员变量和块赋值 (按声明顺序)
-    - 自身构造器赋值
+    - 6 自身构造器赋值
 
 ### [Java对象的创建过程](https://snailclimb.gitee.io/javaguide/#/docs/java/jvm/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F?id=_31-%e5%af%b9%e8%b1%a1%e7%9a%84%e5%88%9b%e5%bb%ba)
 
@@ -163,7 +365,7 @@ jdk 1.8: **程序计数器, 虚拟机栈**(在 HotSpot 虚拟机中本地方法�
 
 在**类加载检查**通过后，接下来虚拟机将为新生对象**分配内存**。对象所需的内存大小在类加载完成后便可确定，为对象分配空间的任务等同于把一块确定大小的内存从 Java 堆中划分出来。**分配方式**有 **“指针碰撞”** 和 **“空闲列表”** 两种，**选择哪种分配方式由 Java 堆是否规整决定，而 Java 堆是否规整又由所采用的垃圾收集器是否带有压缩整理功能决定**。
 
-![image-20210824194122655](JobQuestions/image-20210824194122655.png)
+<img src="JobQuestions/image-20210824194122655.png" alt="image-20210824194122655"  />
 
 ![image-20210824194914963](JobQuestions/image-20210824194914963.png)[Step3:初始化零值](https://snailclimb.gitee.io/javaguide/#/docs/java/jvm/Java内存区域?id=step3初始化零值)
 
@@ -265,6 +467,50 @@ G1适用于服务器端.
 
 
 
+### 几大引用
+
+> **强引用（StrongReference）**: 绝对不会回收
+
+以前我们使用的大部分引用实际上都是强引用，这是使用最普遍的引用。如果一个对象具有强引用，那就类似于**必不可少的生活用品**，垃圾回收器绝不会回收它。当内存空间不足，Java 虚拟机宁愿抛出 OutOfMemoryError 错误，使程序异常终止，也不会靠随意回收具有强引用的对象来解决内存不足问题。
+
+
+
+> **软引用（SoftReference）**: 如果内存不足就回收
+
+如果一个对象只具有软引用，那就类似于**可有可无的生活用品**。如果内存空间足够，垃圾回收器就不会回收它，如果内存空间不足了，就会回收这些对象的内存。只要垃圾回收器没有回收它，该对象就可以被程序使用。软引用可用来实现内存敏感的高速缓存。
+
+软引用可以和一个引用队列（ReferenceQueue）联合使用，如果软引用所引用的对象被垃圾回收，JAVA 虚拟机就会把这个软引用加入到与之关联的引用队列中。
+
+
+
+> **弱引用（WeakReference）**: 一旦发现就回收
+
+如果一个对象只具有弱引用，那就类似于**可有可无的生活用品**。弱引用与软引用的区别在于：只具有弱引用的对象拥有更短暂的生命周期。在垃圾回收器线程扫描它所管辖的内存区域的过程中，一旦发现了只具有弱引用的对象，不管当前内存空间足够与否，都会回收它的内存。不过，由于垃圾回收器是一个优先级很低的线程， 因此不一定会很快发现那些只具有弱引用的对象。
+
+弱引用可以和一个引用队列（ReferenceQueue）联合使用，如果弱引用所引用的对象被垃圾回收，Java 虚拟机就会把这个弱引用加入到与之关联的引用队列中。
+
+
+
+> **虚引用（PhantomReference）**: 任何时候都可能被回收
+
+"虚引用"顾名思义，就是形同虚设，与其他几种引用都不同，虚引用并不会决定对象的生命周期。如果一个对象仅持有虚引用，那么它就和没有任何引用一样，在任何时候都可能被垃圾回收。
+
+**虚引用主要用来跟踪对象被垃圾回收的活动**。
+
+
+
+> **虚引用与软引用和弱引用的一个区别在于：** 虚引用必须和引用队列（ReferenceQueue）联合使用。
+
+- 当垃圾回收器准备回收一个对象时，如果发现它还有虚引用，就会在回收对象的内存之前，把这个虚引用加入到与之关联的引用队列中。
+
+- 程序可以通过判断引用队列中是否已经加入了虚引用，来了解被引用的对象是否将要被垃圾回收。程序如果发现某个虚引用已经被加入到引用队列，那么就可以在所引用的对象的内存被回收之前采取必要的行动。
+
+**特别注意，在程序设计中一般很少使用弱引用与虚引用，使用软引用的情况较多，这是因为软引用可以加速 JVM 对垃圾内存的回收速度，可以维护系统的运行安全，防止内存溢出（OutOfMemory）等问题的产生。**
+
+
+
+---
+
 ## 多线程
 
 ### [ReentrantLock 和 synchronized的区别](https://snailclimb.gitee.io/javaguide/#/docs/java/multi-thread/2020%E6%9C%80%E6%96%B0Java%E5%B9%B6%E5%8F%91%E8%BF%9B%E9%98%B6%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93?id=_15-%e8%b0%88%e8%b0%88-synchronized-%e5%92%8c-reentrantlock-%e7%9a%84%e5%8c%ba%e5%88%ab)
@@ -362,7 +608,7 @@ jdk bin 目录下有一些工具:
 
 ### CAS原理，ABA问题如何解决
 
-#### [CAS](https://blog.csdn.net/u011506543/article/details/82392338)
+1. [CAS](https://blog.csdn.net/u011506543/article/details/82392338)
 
 **CAS: Compare And Set (比较并交换: 如果expect值和原来的值(内存地址中的值)相同, 则更新为update值)**
 
@@ -406,7 +652,7 @@ public final int getAndAddInt(Object var1, long var2, int var4) {
 
 
 
-#### [ABA](https://www.jianshu.com/p/72d02353dc7e)
+2. [ABA](https://www.jianshu.com/p/72d02353dc7e)
 
 **ABA问题: 狸猫换太子.** 
 
@@ -548,7 +794,7 @@ synchronized有两种形式上锁，一个是对方法上锁，一个是构造�
 >
 > [java内存模型JMM理解整理](https://www.cnblogs.com/null-qige/p/9481900.html)
 
-#### 详细理解:
+1. 详细理解:
 
 ![image-20210823134251344](JobQuestions/image-20210823134251344.png)
 
@@ -578,7 +824,7 @@ synchronized有两种形式上锁，一个是对方法上锁，一个是构造�
 >
 > **更多的时候，使用java的happen-before规则来进行分析。**
 
-#### [面试回答:](https://snailclimb.gitee.io/javaguide/#/docs/java/multi-thread/2020%E6%9C%80%E6%96%B0Java%E5%B9%B6%E5%8F%91%E8%BF%9B%E9%98%B6%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93?id=_22-%e8%ae%b2%e4%b8%80%e4%b8%8b-jmmjava-%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b)
+2. [面试回答:](https://snailclimb.gitee.io/javaguide/#/docs/java/multi-thread/2020%E6%9C%80%E6%96%B0Java%E5%B9%B6%E5%8F%91%E8%BF%9B%E9%98%B6%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93?id=_22-%e8%ae%b2%e4%b8%80%e4%b8%8b-jmmjava-%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b)
 
 ![image-20210823134423346](JobQuestions/image-20210823134423346.png)
 
@@ -904,220 +1150,174 @@ private final class Worker
 
 ![image-20210909123545664](JobQuestions/image-20210909123545664.png)
 
+将对象之间的相互依赖关系交给 IoC 容器来管理，并由 IoC 容器完成对象的注入。这样可以很大程度上简化应用的开发，把应用从复杂的依赖关系中解放出来。 IoC 容器就像是一个工厂一样，**当我们需要创建一个对象的时候，只需要配置好配置文件/注解即可**，完全不用考虑对象是如何被创建出来的。
 
+**怎么回答:**
 
-
-
-### spring AOP底层原理
-
-
-
-### AOP 代理常用的都有哪些
-
-
-
----
-
-# 算法题
-
-> 二叉树距离最远的两个结点的距离
-
-
-
-> 剑指offer04: 二维数组中的查找
-
-
-
->加减乘除求根号2
-
-
-
-> 股票问题 
-
-
-
-> 数据流中的中位数 (剑指offer) --- 并加入并发锁控制
-
-
-
-## 手撕：[链表](https://www.nowcoder.com/jump/super-jump/word?word=链表)的就地逆置问题
-
-
-
-## 手撕：寻找[链表](https://www.nowcoder.com/jump/super-jump/word?word=链表)的循环节点
-
-
-
-## 手撕翻转链表, 括号匹配
-
-
-
-## 二叉树后续遍历展开为链表 (用栈迭代)
-
-> 能不用栈么 (输出链表模拟栈)
+> - IOC是spring的两大核心概念之一，IOC给我们提供了一个**IOC bean容器**，这个容器**会帮我们自动去创建对象**，不需要我们手动创建;
 >
-> 还能更省空间么---morris原地展开二叉树
+> - IOC实现创建的通过 **DI（Dependency Injection 依赖注入）**，我们可以通过写Java**注解**代码或者是XML配置方式，把我们想要注入对象所依赖的一些其他的bean，自动的注入进去，
+>
+> - 它是通过byName或byType类型的方式来帮助我们注入。
+> - 正是因为有了依赖注入，使得IOC有这非常强大的好处，解耦。
 
+**举例:** (还未理解...)
 
-
-> 几个大文件怎么排序 (归并)
-
-
-
-> 给定一个自然数数组, 找出里面所有和为N的组合
-
-
-
-> 给定一个正整数数组, 把奇数排右边, 偶数排左边, 相对顺序不能变
-
-
-
-> 堆排序
-
-
-
-> 最长不重复子串
-
-
-
-## 链表反转
-
-
-
-> 带重复的有序数组找第一个等于目标值的数的下标
-
-
-
-> 摩尔投票
-
-
+> - 可以举个例子，JdbcTemplate  或者 SqlSessionFactory 这种bean，
+> - 如果我们要把他注入到容器里面，他是需要依赖一个数据源的，
+> - 如果我们把JdbcTemplate 或者 Druid 的数据源强耦合在一起，会导致一个问题，
+>   - 当我们想要使用jdbctemplate必须要使用Druid数据源，那么依赖注入能够帮助我们在Jdbc注入的时候，只需要让他依赖一个DataSource接口，不需要去依赖具体的实现，
+>   - 这样的好处就是，将来我们给容器里面注入一个Druid数据源，他就会自动注入到JdbcTemplate如果我们注入一个其他的也是一样的。
+>   - 比如说c3p0也是一样的，这样的话，JdbcTemplate和数据源完全的解耦了，不强依赖与任何一个数据源，在spring启动的时候，就会把所有的bean全部创建好，
+>   - 这样的话，程序在运行的时候就不需要创建bean了，运行速度会更快，
+>   - 还有IOC管理bean的时候默认是单例的，可以节省时间，提高性能，
 
 ---
 
-# 数据结构
+### AOP
 
-> B树和B+树的区别
+> AOP(Aspect-Oriented Programming:面向切面编程)  能够将那些与业务无关，却为业务模块所共同调用的逻辑或责任（例如事务处理、日志管理、权限控制等）封装起来，便于减少系统的重复代码，降低模块间的耦合度，并有利于未来的可拓展性和可维护性。
 
+Spring AOP 就是基于动态代理的，如果要代理的对象，实现了某个接口，那么 Spring AOP 会使用 **JDK Proxy**，去创建代理对象，而对于没有实现接口的对象，就无法使用 JDK Proxy 去进行代理了，这时候 Spring AOP 会使用 **Cglib** 生成一个被代理对象的子类来作为代理，如下图所示：
 
+![image-20210909202545237](JobQuestions/image-20210909202545237.png)
 
-> 了解LSM树么?
+### Bean
 
+> 简单来说，bean 代指的就是那些被 IoC 容器所管理的对象。
 
+我们需要告诉 IoC 容器帮助我们管理哪些对象，这个是通过配置元数据来定义的。
 
----
+配置元数据可以是 XML 文件、注解或者 Java 配置类。
 
-# 设计模式
+![image-20210909203444290](JobQuestions/image-20210909203444290.png)
 
-> 设计模式知道哪些, 手写单例模式
+![image-20210909203627725](JobQuestions/image-20210909203627725.png)
 
-[**双重校验锁实现对象单例（线程安全）**](https://snailclimb.gitee.io/javaguide/#/docs/java/multi-thread/2020%E6%9C%80%E6%96%B0Java%E5%B9%B6%E5%8F%91%E8%BF%9B%E9%98%B6%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93?id=_12-%e8%af%b4%e8%af%b4%e8%87%aa%e5%b7%b1%e6%98%af%e6%80%8e%e4%b9%88%e4%bd%bf%e7%94%a8-synchronized-%e5%85%b3%e9%94%ae%e5%ad%97)
+**如何配置 bean 的作用域呢？**
 
-具体分析过程见: [设计模式之单例模式](https://jungle8884.icu/2021/04/10/DesignPatternofSingleton/)
+xml 方式：
 
-> 懒汉式-线程安全
+```xml
+<bean id="..." class="..." scope="singleton"></bean>
+```
+
+注解方式：
 
 ```java
-public class Singleton {
-
-    private volatile static Singleton uniqueInstance;
-
-    private Singleton() {
-    }
-
-    public static Singleton getUniqueInstance() {
-       //先判断对象是否已经实例过，没有实例化过才进入加锁代码
-        if (uniqueInstance == null) {
-            //类对象加锁
-            synchronized (Singleton.class) {
-                if (uniqueInstance == null) {
-                    uniqueInstance = new Singleton();
-                }
-            }
-        }
-        return uniqueInstance;
-    }
+@Bean
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public Person personPrototype() {
+    return new Person();
 }
 ```
 
-> 内部类 (常用)
+![image-20210909203831215](JobQuestions/image-20210909203831215.png)
 
-```java
-public class Singleton {
+![image-20210909204332740](JobQuestions/image-20210909204332740.png)
 
-    private static class SingletonHolder {
-    	public static Singleton instance = new Singleton();
-    }
+![image-20210909204404538](JobQuestions/image-20210909204404538.png)
 
-    private Singleton() {
-    }
+### Spring MVC
 
-    public static Singleton getInstance() {
-        return SingletonHolder.instance;
-    }
-}
-```
+![image-20210909204627103](JobQuestions/image-20210909204627103.png)
 
+发展史：
 
+![image-20210909205418945](JobQuestions/image-20210909205418945.png)
+
+![image-20210909205442884](JobQuestions/image-20210909205442884.png)
+
+![image-20210909205616207](JobQuestions/image-20210909205616207.png)
+
+![image-20210909205748345](JobQuestions/image-20210909205748345.png)
+
+> 访问页面时 controller, model 和 view 的过程 
 
 
 
 ---
+
+
+
+### [Spring 框架中用到了哪些设计模式？](https://snailclimb.gitee.io/javaguide/#/docs/system-design/framework/spring/Spring常见问题总结?id=spring-框架中用到了哪些设计模式？)
+
+![image-20210909205905196](JobQuestions/image-20210909205905196.png)
+
+链接： [面试官:“谈谈Spring中都用到了那些设计模式?”](https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247485303&idx=1&sn=9e4626a1e3f001f9b0d84a6fa0cff04a&chksm=cea248bcf9d5c1aaf48b67cc52bac74eb29d6037848d6cf213b0e5466f2d1fda970db700ba41&token=255050878&lang=zh_CN#rd)
+
+### [Spring 事务](https://snailclimb.gitee.io/javaguide/#/docs/system-design/framework/spring/Spring常见问题总结?id=spring-事务)
+
+[Spring/SpringBoot 模块下专门有一篇是讲 Spring 事务的，总结的非常详细，通俗易懂。](https://snailclimb.gitee.io/javaguide/#/docs/system-design/framework/spring/Spring%E4%BA%8B%E5%8A%A1%E6%80%BB%E7%BB%93?id=_3-%e8%af%a6%e8%b0%88-spring-%e5%af%b9%e4%ba%8b%e5%8a%a1%e7%9a%84%e6%94%af%e6%8c%81)
+
+![image-20210909210345478](JobQuestions/image-20210909210345478.png)
+
+
+
+---
+
+
 
 # 计算机网络
 
-### 输出一个url发生了什么
+### [输出一个url发生了什么](https://www.cnblogs.com/liutianzeng/p/10456865.html)
+
+​	1、浏览器的地址栏输入URL并按下回车。
+
+　　2、浏览器查找当前URL是否存在缓存，并比较缓存是否过期。
+
+　　3、DNS解析URL对应的IP。
+
+　　4、根据IP建立TCP连接（三次握手）。
+
+　　5、HTTP发起请求。
+
+　　6、服务器处理请求，浏览器接收HTTP响应。
+
+　　7、渲染页面，构建DOM树。
+
+　　8、关闭TCP连接（四次挥手）。
 
 
 
 ### Tcp三次握手，四次挥手，过程及原因
 
+<img src="JobQuestions/image-20210910163238173.png" alt="image-20210910163238173" style="zoom:67%;" />
 
+> 三次握手
 
-### DNS域名解析使用那个传输层协议, 解析后得到的IP地址属于网络模型中的哪一层?
+- 客户端–发送带有 SYN 标志的数据包–一次握手–服务端
+- 服务端–发送带有 SYN/ACK 标志的数据包–二次握手–客户端
+- 客户端–发送带有带有 ACK 标志的数据包–三次握手–服务端
 
+原因:**三次握手的目的是建立可靠的通信信道，说到通讯，简单来说就是数据的发送与接收，而三次握手最主要的目的就是双方确认自己与对方的发送与接收是正常的。**
 
+第一次握手：Client 什么都不能确认；**Server 确认了对方发送正常，自己接收正常**
 
-### http 握手机制, 缓存机制
+第二次握手：**Client 确认了：自己发送、接收正常，对方发送、接收正常；**Server 确认了：对方发送正常，自己接收正常
 
+第三次握手：Client 确认了：自己发送、接收正常，对方发送、接收正常；**Server 确认了：自己发送、接收正常，对方发送、接收正常**
 
+所以三次握手就能确认双发收发功能都正常，缺一不可。
 
-### udp使用场景
+> 四次挥手
 
+<img src="JobQuestions/image-20210910164141374.png" alt="image-20210910164141374" style="zoom:67%;" />
 
+断开一个 TCP 连接则需要“四次挥手”：
 
-### 网络七层模型, 应用层有什么协议, 网络层有什么协议, 传输层有什么协议, TCP/UDP区别
+- 客户端-发送一个 FIN，用来关闭客户端到服务器的数据传送
+- 服务器-收到这个 FIN，它发回一 个 ACK，确认序号为收到的序号加 1 。和 SYN 一样，一个 FIN 将占用一个序号
+- 服务器-关闭与客户端的连接，发送一个 FIN 给客户端
+- 客户端-发回 ACK 报文确认，并将确认序号设置为收到序号加 1
 
+**任何一方都可以在数据传送结束后发出连接释放的通知，待对方确认后进入半关闭状态。当另一方也没有数据再发送的时候，则发出连接释放通知，对方确认后就完全关闭了 TCP 连接。**
 
-
-### HTTP与WebSocket区别
-
-
-
-### TCP流量控制
-
-
-
-### TCP怎么缩小发送方窗口
-
-
-
-### SSL的握手过程
-
-
-
-### SSL为什么要用对称和非对称两种加密, 只用非对称有什么问题
-
-
-
-### SSL数字证书CA有什么用
-
-
+举个例子：A 和 B 打电话，通话即将结束后，A 说“我没啥要说的了”，B 回答“我知道了”，但是 B 可能还会有要说的话，A 不能要求 B 跟着自己的节奏结束通话，于是 B 可能又巴拉巴拉说了一通，最后 B 说“我说完了”，A 回答“知道了”，这样通话才算结束。
 
 ---
 
 # 数据库
-
-
 
 ## [脏读，不可重复读，幻读](https://blog.csdn.net/neverever01/article/details/108237531)
 
@@ -1145,11 +1345,11 @@ public class Singleton {
 
    > 产生的问题：脏读、不可重复读、幻读
 
-2. read committed：读已提交 （Oracle默认）
+2. **read committed：读已提交 （Oracle默认）**
 
    > 产生的问题：不可重复读、幻读
 
-3. repeatable read：可重复读 （MySQL默认）
+3. **repeatable read：可重复读 （MySQL默认）**
 
    > 产生的问题：幻读
 
@@ -1208,14 +1408,14 @@ MySQL的默认隔离级别是**可重复读**，并且实现了所有四种隔�
 
 > **常见的索引结构有: B 树， B+树和 Hash。**
 
-###  [Hash表](https://snailclimb.gitee.io/javaguide/#/docs/database/mysql/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95?id=hash%e8%a1%a8-amp-b%e6%a0%91)
+1. [Hash表](https://snailclimb.gitee.io/javaguide/#/docs/database/mysql/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95?id=hash%e8%a1%a8-amp-b%e6%a0%91)
 
-> 哈希表是键值对的集合，通过键(key)即可快速取出对应的值(value)
->
+哈希表是键值对的集合，通过键(key)即可快速取出对应的值(value)
+
 > **为什么MySQL 没有使用其作为索引的数据结构呢？**
 >
 > 1. **Hash 冲突问题**
-> 2. **Hash 索引不支持顺序和范围查询(Hash 索引不支持顺序和范围查询是它最大的缺点：** 假如我们要对表中的数据进行排序或者进行范围查询，那 Hash 索引可就不行了。
+>2. **Hash 索引不支持顺序和范围查询(Hash 索引不支持顺序和范围查询是它最大的缺点：** 假如我们要对表中的数据进行排序或者进行范围查询，那 Hash 索引可就不行了。
 
 - 优点: 
   - **可以快速检索数据 (接近 O(1) )**
@@ -1224,7 +1424,7 @@ MySQL的默认隔离级别是**可重复读**，并且实现了所有四种隔�
   - Hash 冲突问题
   - 不适合范围查询
 
-### [B树 & B+树](https://snailclimb.gitee.io/javaguide/#/docs/database/mysql/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95?id=b-%e6%a0%91amp-b%e6%a0%91)
+2. [B树 & B+树](https://snailclimb.gitee.io/javaguide/#/docs/database/mysql/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95?id=b-%e6%a0%91amp-b%e6%a0%91)
 
 > B 树也称 B-树,全称为 **多路平衡查找树** ，B+ 树是 B 树的一种变体。
 >
@@ -1232,7 +1432,7 @@ MySQL的默认隔离级别是**可重复读**，并且实现了所有四种隔�
 >
 > **目前大部分数据库系统及文件系统都采用 B-Tree 或其变种 B+Tree 作为索引结构。** 
 
-![image-20210825195012334](JobQuestions/image-20210825195012334.png)
+<img src="JobQuestions/image-20210825195012334.png" alt="image-20210825195012334" style="zoom:80%;" />
 
 **B 树& B+树两者有何异同呢？**
 
@@ -1240,7 +1440,7 @@ MySQL的默认隔离级别是**可重复读**，并且实现了所有四种隔�
 - B 树的叶子节点都是独立的; B+树的叶子节点有一条引用链指向与它相邻的叶子节点。
 - B 树的检索的过程相当于对范围内的每个节点的关键字做二分查找，可能还没有到达叶子节点，检索就结束了。而 B+树的检索效率就很稳定了，任何查找都是从根节点到叶子节点的过程，叶子节点的顺序检索很明显。
 
-![image-20210825200106432](JobQuestions/image-20210825200106432.png)
+<img src="JobQuestions/image-20210825200106432.png" alt="image-20210825200106432" style="zoom: 67%;" />
 
 在 MySQL 中，MyISAM 引擎和 InnoDB 引擎都是使用 B+Tree 作为索引结构，但是，两者的实现方式不太一样。（下面的内容整理自《Java 工程师修炼之道》）
 
@@ -1288,54 +1488,225 @@ MySQL的默认隔离级别是**可重复读**，并且实现了所有四种隔�
 
 
 
-## MySQL语句调优
 
 
+## Redis的数据结构即使用场景
 
-## mysql中行锁，表锁，及使用情况
+> 这里的数据类型指的是 数据的 key 对应的 value 的数据类型
+>
+> - set/get
+> - hset/hget
+> - lpush/rpop
+> - sadd/spop (随机弹出元素)
+> - zadd (排行榜)
 
-
-
----
-
-# Linux常用命令
-
-
-
----
-
-# Docker常用命令
+![image-20210910150026434](JobQuestions/image-20210910150026434.png)
 
 
 
 ---
 
-# 操作系统
 
-> 页面置换算法
-
-
-
----
-
-# 项目
-
-> 说一下你对rpc和api的理解, 讲讲区别
-
-
-
-> 谈谈ioc与aop并说明一下两者都有哪些使用场景
-
-
-
-> 介绍一下项目的事务一致性, 是实现PRC调用的, 有没有做主从服务, 容灾
-
-
-
----
 
 # 其他
 
+## [什么是序列化?什么是反序列化?](https://snailclimb.gitee.io/javaguide/#/docs/java/basis/Java基础知识?id=什么是序列化什么是反序列化)
+
+> 如果我们需要持久化 Java 对象比如将 Java 对象保存在文件中，或者在网络传输 Java 对象，这些场景都需要用到序列化。
+
+简单来说：
+
+- **序列化**： 将数据结构或对象**转换成二进制字节流**的过程
+- **反序列化**：将在序列化过程中所生成的二进制字节流的过程**转换成数据结构或者对象**的过程
+
+对于 Java 这种面向对象编程语言来说，我们序列化的都是对象（Object）也就是实例化后的类(Class)，但是在 C++这种半面向对象的语言中，struct(结构体)定义的是数据结构类型，而 class 对应的是对象类型。
+
+![image-20210915132722519](JobQuestions/image-20210915132722519.png)
+
+## [Java 序列化中如果有些字段不想进行序列化，怎么办？](https://snailclimb.gitee.io/javaguide/#/docs/java/basis/Java基础知识?id=java-序列化中如果有些字段不想进行序列化，怎么办？)
+
+> 对于不想进行序列化的变量，使用 `transient` 关键字修饰。
+
+`transient` 关键字的作用是：阻止实例中那些用此关键字修饰的的变量序列化；当对象被反序列化时，被 `transient` 修饰的变量值不会被持久化和恢复。
+
+关于 `transient` 还有几点注意：
+
+- `transient` 只能修饰变量，不能修饰类和方法。
+- `transient` 修饰的变量，在反序列化后变量值将会被置成类型的默认值。例如，如果是修饰 `int` 类型，那么反序列后结果就是 `0`。
+- `static` 变量因为不属于任何对象(Object)，所以无论有没有 `transient` 关键字修饰，均不会被序列化。
 
 
-> 单例模式, 排序算法, 生产者和消费者, 死锁
+
+## [Java 中 IO 流分为几种?](https://snailclimb.gitee.io/javaguide/#/docs/java/basis/Java基础知识?id=java-中-io-流分为几种)
+
+- 按照流的流向分，可以分为输入流和输出流；
+- 按照操作单元划分，可以划分为字节流和字符流；
+- 按照流的角色划分为节点流和处理流。
+
+**Java IO 流共涉及 40 多个类，这些类看上去很杂乱，但实际上很有规则，而且彼此之间存在非常紧密的联系， Java IO 流的 40 多个类都是从如下 4 个抽象类基类中派生出来的。**
+
+- InputStream/Reader: 所有的输入流的基类，前者是字节输入流，后者是字符输入流。
+- OutputStream/Writer: 所有输出流的基类，前者是字节输出流，后者是字符输出流。
+
+**按操作方式分类结构图**：
+
+![按操作方式分类结构图](JobQuestions/IO-%E6%93%8D%E4%BD%9C%E6%96%B9%E5%BC%8F%E5%88%86%E7%B1%BB.png)
+
+
+
+
+
+
+
+
+
+
+
+**按操作对象分类结构图：**
+
+![按操作对象分类结构图](JobQuestions/IO-%E6%93%8D%E4%BD%9C%E5%AF%B9%E8%B1%A1%E5%88%86%E7%B1%BB.png)
+
+
+
+> **既然有了字节流为什么还要有字符流**
+
+问题本质想问：**不管是文件读写还是网络发送接收，信息的最小存储单元都是字节，那为什么 I/O 流操作要分为字节流操作和字符流操作呢？**
+
+回答：
+
+- 字符流是由 Java 虚拟机将字节转换得到的，问题就出在这个过程还算是非常耗时，并且，如果我们不知道编码类型就很容易出现乱码问题。
+- 所以， I/O 流就干脆提供了一个直接操作字符的接口，方便我们平时对字符进行流操作。
+
+- 如果音频文件、图片等媒体文件用字节流比较好，如果涉及到字符的话使用字符流比较好。
+
+
+
+## [Comparable 和 Comparator 的区别](https://snailclimb.gitee.io/javaguide/#/docs/java/collection/Java集合框架常见面试题?id=_131-comparable-和-comparator-的区别)
+
+- `comparable` 接口实际上是出自`java.lang`包 它有一个 `compareTo(Object obj)`方法用来排序
+- `comparator`接口实际上是出自 java.util 包它有一个`compare(Object obj1, Object obj2)`方法用来排序
+
+```java
+public interface Comparable<T> { // 放在某个类里面实现
+    /**
+     * Compares this object with the specified object for order.  Returns a
+     * negative integer, zero, or a positive integer as this object is less
+     * than, equal to, or greater than the specified object.
+     *
+     * @param   o the object to be compared.
+     * @return  a negative integer, zero, or a positive integer as this object
+     *          is less than, equal to, or greater than the specified object.
+     *
+     * @throws NullPointerException if the specified object is null
+     * @throws ClassCastException if the specified object's type prevents it
+     *         from being compared to this object.
+     */
+    public int compareTo(T o);
+}
+```
+
+```java
+@FunctionalInterface
+public interface Comparator<T> { // 定制排序 : Collections.sort(arrayList, new Comparator<Integer>() {...}
+    /**
+     * Compares its two arguments for order.  Returns a negative integer,
+     * zero, or a positive integer as the first argument is less than, equal
+     * to, or greater than the second.<p>
+     * 
+     * @param o1 the first object to be compared.
+     * @param o2 the second object to be compared.
+     * @return a negative integer, zero, or a positive integer as the
+     *         first argument is less than, equal to, or greater than the
+     *         second.
+     * @throws NullPointerException if an argument is null and this
+     *         comparator does not permit null arguments
+     * @throws ClassCastException if the arguments' types prevent them from
+     *         being compared by this comparator.
+     */
+    int compare(T o1, T o2);
+    
+...
+    
+}
+```
+
+> 一般我们需要对一个集合使用自定义排序时，我们就要重写`compareTo()`方法或`compare()`方法，
+
+- 当我们需要对某一个集合实现两种排序方式，比如一个 song 对象中的歌名和歌手名分别采用一种排序方法的话，
+- 我们可以重写`compareTo()`方法和使用自制的`Comparator`方法
+- 或者 以两个 Comparator 来实现歌名排序和歌星名排序，第二种代表我们只能使用两个参数版的 `Collections.sort()`.
+
+## [Collections 工具类](https://snailclimb.gitee.io/javaguide/#/docs/java/collection/Java集合框架常见面试题?id=_16-collections-工具类)
+
+1. 排序
+2. 查找,替换操作
+
+> 排序
+
+```java
+void reverse(List list)					//反转
+void shuffle(List list)					//随机排序
+void sort(List list) 					//按自然排序的升序排序
+void sort(List list, Comparator c) 		//定制排序，由Comparator控制排序逻辑
+void swap(List list, int i , int j) 	//交换两个索引位置的元素
+void rotate(List list, int distance) 	//旋转。
+// 1 当distance为正数时，将 list 后distance个元素 整体移到前面
+// 2 当distance为负数时，将 list 前distance个元素 整体移到后面
+```
+
+> 查找, 替换操作
+
+```java
+int binarySearch(List list, Object key)//对List进行二分查找，返回索引，注意List必须是有序的
+int max(Collection coll)//根据元素的自然顺序，返回最大的元素。 类比int min(Collection coll)
+int max(Collection coll, Comparator c)//根据定制排序，返回最大元素，排序规则由Comparatator类控制。类比int min(Collection coll, Comparator c)
+void fill(List list, Object obj)//用指定的元素代替指定list中的所有元素
+int frequency(Collection c, Object o)//统计元素出现次数
+int indexOfSubList(List list, List target)//统计target在list中第一次出现的索引，找不到则返回-1，类比int lastIndexOfSubList(List source, list target)
+boolean replaceAll(List list, Object oldVal, Object newVal)//用新元素替换旧元素
+```
+
+## Arrays.sort() 源码分析
+
+> 来源: https://leetcode-cn.com/leetbook/read/sort-algorithms/evzgrc/
+
+Java 源码中的 Arrays.sort() 函数是由 Java 语言的几位设计者所编写的，它并没有采用某种单一的排序算法，而是通过分析所输入数据的规模、特点，对不同的输入数据采用不同的排序算法。
+
+Arrays 类中有很多个 sort 函数：
+
+```java
+void sort (int[])
+void sort (int[], int, int)
+void sort (long[])
+void sort (long[], int, int)
+void sort (short)
+void sort (short[], int, int)
+void sort (char[])
+void sort (char[], int, int)
+void sort (byte[])
+void sort (byte[], int, int)
+void sort (float[])
+void sort (float[], int, int)
+void sort (double[])
+void sort (double[], int, int)
+void sort (Object[])
+void sort (Object[], int, int)
+void sort (T[], Comparator)
+void sort (T[], int, int, Comparator)
+```
+
+这些 sort 函数可以分为两类：
+
+- 对基本类型的排序（int、long、short、char、byte、float、double）
+- 对非基本类型的排序（Object、T）
+
+对基本类型的排序是通过调用对应的 DualPivotQuicksort.sort() 函数完成的。
+
+对非基本类型的排序采用的是 TimSort 或者归并排序，在 JDK 1.7 之前，默认采用归并排序，JDK 1.7 及之后，默认采用 TimSort，但可以通过设置 JVM 参数 -Djava.util.Arrays.useLegacyMergeSort=true 继续使用归并排序。
+
+
+
+
+
+---
+

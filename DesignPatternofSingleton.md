@@ -5,6 +5,7 @@ categories:
   - 设计模式
 tags:
   - 单例模式
+  - 构建型模式
 author:
   - Jungle
 date: 2021-04-10 

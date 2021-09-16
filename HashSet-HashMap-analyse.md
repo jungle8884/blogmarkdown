@@ -691,7 +691,7 @@ public HashMap(int initialCapacity) {
 
 ### 重点方法: `put` 和 `putVal`
 
-![image-20210814004553707](HashSet-HashMap-analyse/image-20210814004553707.png)
+<img src="HashSet-HashMap-analyse/image-20210814004553707.png" alt="image-20210814004553707" style="zoom:67%;" />
 
 ```java
 public V put(K key, V value) {
