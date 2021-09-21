@@ -15,7 +15,9 @@ date: 2021-09-15 20:30:32
 
 ## 静态代理
 
-> 主要用于对某个对象加以控制
+**主要用于对某个对象加以控制**
+
+> 视频链接: https://www.bilibili.com/video/BV1WE411d7Dv?p=17
 
 **静态代理角色分析**
 
@@ -117,6 +119,8 @@ public class Client {
 我们想要静态代理的好处，又不想要静态代理的缺点，所以 , 就有了动态代理 !
 
 ## [动态代理](https://mp.weixin.qq.com/s?__biz=Mzg2NTAzMTExNg%3D%3D&chksm=ce610441f9168d57265a3b4216b0a63c1d970457896c6b94949fe6dda8d98d04f4381cd059da&idx=1&mid=2247484130&scene=21&sn=73741a404f7736c02bcdf69f565fe094#wechat_redirect)
+
+> 视频链接: https://www.bilibili.com/video/BV1WE411d7Dv?p=19
 
 - 动态代理的角色和静态代理的一样 .
 

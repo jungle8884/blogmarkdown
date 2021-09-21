@@ -1146,11 +1146,20 @@ private final class Worker
 >**为什么叫控制反转？**
 >
 >- **控制** ：指的是对象创建（实例化、管理）的权力
->- **反转** ：控制权交给外部环境（Spring 框架、IoC 容器
+>- **反转** ：控制权交给外部环境（Spring 框架、IoC 容器)
 
 ![image-20210909123545664](JobQuestions/image-20210909123545664.png)
 
 将对象之间的相互依赖关系交给 IoC 容器来管理，并由 IoC 容器完成对象的注入。这样可以很大程度上简化应用的开发，把应用从复杂的依赖关系中解放出来。 IoC 容器就像是一个工厂一样，**当我们需要创建一个对象的时候，只需要配置好配置文件/注解即可**，完全不用考虑对象是如何被创建出来的。
+
+
+
+[**DI:  依赖注入**](https://mp.weixin.qq.com/s?__biz=Mzg2NTAzMTExNg%3D%3D&chksm=ce61046ef9168d78c02be9a0edcc44f1f6ea17fb16e04b733052385a700f381b0e6bb243d47b&idx=1&mid=2247484109&scene=21&sn=a3bc263536e84c93b9eb862cfa4da319#wechat_redirect)
+
+- 依赖: Bean 对象的创建依赖于容器
+- 注入: Bean 对象中的所有属性, 由容器来注入
+
+
 
 **怎么回答:**
 
@@ -1172,6 +1181,10 @@ private final class Worker
 >   - 这样的话，程序在运行的时候就不需要创建bean了，运行速度会更快，
 >   - 还有IOC管理bean的时候默认是单例的，可以节省时间，提高性能，
 
+
+
+
+
 ---
 
 ### AOP
@@ -1181,6 +1194,10 @@ private final class Worker
 Spring AOP 就是基于动态代理的，如果要代理的对象，实现了某个接口，那么 Spring AOP 会使用 **JDK Proxy**，去创建代理对象，而对于没有实现接口的对象，就无法使用 JDK Proxy 去进行代理了，这时候 Spring AOP 会使用 **Cglib** 生成一个被代理对象的子类来作为代理，如下图所示：
 
 ![image-20210909202545237](JobQuestions/image-20210909202545237.png)
+
+
+
+---
 
 ### Bean
 
@@ -1218,7 +1235,11 @@ public Person personPrototype() {
 
 ![image-20210909204404538](JobQuestions/image-20210909204404538.png)
 
-### Spring MVC
+
+
+---
+
+### [Spring MVC](https://www.cnblogs.com/cielosun/articles/5752272.html)
 
 ![image-20210909204627103](JobQuestions/image-20210909204627103.png)
 
@@ -1238,13 +1259,15 @@ public Person personPrototype() {
 
 ---
 
-
-
 ### [Spring 框架中用到了哪些设计模式？](https://snailclimb.gitee.io/javaguide/#/docs/system-design/framework/spring/Spring常见问题总结?id=spring-框架中用到了哪些设计模式？)
 
 ![image-20210909205905196](JobQuestions/image-20210909205905196.png)
 
 链接： [面试官:“谈谈Spring中都用到了那些设计模式?”](https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247485303&idx=1&sn=9e4626a1e3f001f9b0d84a6fa0cff04a&chksm=cea248bcf9d5c1aaf48b67cc52bac74eb29d6037848d6cf213b0e5466f2d1fda970db700ba41&token=255050878&lang=zh_CN#rd)
+
+
+
+---
 
 ### [Spring 事务](https://snailclimb.gitee.io/javaguide/#/docs/system-design/framework/spring/Spring常见问题总结?id=spring-事务)
 
@@ -1260,7 +1283,7 @@ public Person personPrototype() {
 
 # 计算机网络
 
-### [输出一个url发生了什么](https://www.cnblogs.com/liutianzeng/p/10456865.html)
+## [输出一个url发生了什么](https://www.cnblogs.com/liutianzeng/p/10456865.html)
 
 ​	1、浏览器的地址栏输入URL并按下回车。
 
@@ -1280,7 +1303,7 @@ public Person personPrototype() {
 
 
 
-### Tcp三次握手，四次挥手，过程及原因
+## Tcp三次握手，四次挥手，过程及原因
 
 <img src="JobQuestions/image-20210910163238173.png" alt="image-20210910163238173" style="zoom:67%;" />
 
@@ -1315,7 +1338,11 @@ public Person personPrototype() {
 
 举个例子：A 和 B 打电话，通话即将结束后，A 说“我没啥要说的了”，B 回答“我知道了”，但是 B 可能还会有要说的话，A 不能要求 B 跟着自己的节奏结束通话，于是 B 可能又巴拉巴拉说了一通，最后 B 说“我说完了”，A 回答“知道了”，这样通话才算结束。
 
+
+
 ---
+
+
 
 # 数据库
 
