@@ -955,6 +955,97 @@ class Consumer implements Runnable {
 Process finished with exit code 0
 ```
 
+
+
+> 使用 `BlockQueue` 的写法
+>
+> 概念参考: https://www.jianshu.com/p/b1408e3e3bb4
+
+![image-20211026151534955](Java-JUC/image-20211026151534955.png)
+
+![image-20211026151707203](Java-JUC/image-20211026151707203.png)
+
+生产线程将持续生产新对象并将它们插入队列，直到队列达到它可以包含的上限。换句话说，这是极限。如果阻塞队列达到其上限，则会在尝试插入新对象时阻塞生产线程。在消耗线程将对象带出队列之前，它一直处于阻塞状态。
+
+消费线程不断将对象从阻塞队列中取出，并对其进行处理。如果消费线程试图将对象从空队列中取出，则消费线程将被阻塞，直到生成的线程将对象放入队列。
+
+```java
+package com.nowcoder.community;
+
+import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+public class BlockingQueueTests {
+    public static void main(String[] args) {
+        BlockingQueue queue = new ArrayBlockingQueue(10);
+        try {
+            new Thread(new Producer(queue)).start();
+            new Thread(new Consumer(queue)).start();
+            new Thread(new Consumer(queue)).start();
+            new Thread(new Consumer(queue)).start();
+        } finally {
+            System.out.println("------结束-----------");
+        }
+    }
+}
+
+/**
+ * 生产者
+ * */
+class Producer implements Runnable {
+
+    private BlockingQueue<Integer> queue;
+
+    public Producer(BlockingQueue<Integer> queue) {
+        this.queue = queue;
+    }
+
+    @Override
+    public void run() {
+        try {
+            for (int i = 0; i < 100; i++) {
+                Thread.sleep(20);
+//                queue.put(i);
+                queue.offer(i, 10, TimeUnit.SECONDS);
+                System.out.println(Thread.currentThread().getName() + "生产:" + queue.size());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+/**
+ * 消费者
+ * */
+class Consumer implements Runnable {
+
+    private BlockingQueue<Integer> queue;
+
+    public Consumer(BlockingQueue<Integer> queue) {
+        this.queue = queue;
+    }
+
+    @Override
+    public void run() {
+        try {
+            do{
+                Thread.sleep(new Random().nextInt(1000));
+//                queue.take();
+                queue.poll(10, TimeUnit.SECONDS);
+                System.out.println(Thread.currentThread().getName() + "消费:" + queue.size());
+            } while (queue.size() > 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+
+
 ## 信号灯法
 
 <img src="Java-JUC/image-20210811214008128.png" alt="image-20210811214008128" style="zoom:67%;" />
