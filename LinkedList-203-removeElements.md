@@ -1,5 +1,5 @@
 ---
-title: LinkedList_203_removeElements
+title: 移除链表元素
 categories:
   - 算法
   - 链表

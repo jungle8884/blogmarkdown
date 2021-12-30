@@ -1,20 +1,20 @@
 ---
-title: linux 基本命令
+title: Linux 与 Shell
 categories:
   - 运维
-  - linux
 tags:
-  - linux
+  - Linux
+  - Shell
 author:
   - Jungle
-date: 2021-10-02 17:17:40
+date: 2021-05-27 
 ---
+
+
 
 # Linux 
 
 ## 简介
-
-> Linux内核最初只是由芬兰人**李纳斯·托瓦兹（Linus Torvalds）**在赫尔辛基大学上学时出于个人爱好而编写的。
 
 **Linux 本质是指 Linux 内核** ： 严格来讲，Linux 这个词本身只表示 Linux 内核，单独的 Linux 内核并不能成为一个可以正常工作的操作系统。所以，就有了各种 Linux 发行版。
 
@@ -1458,7 +1458,387 @@ ftpuser:x:1001:1001::/home/ftpuser:/bin/bash
 555 666
 ```
 
+---
+
+
+
+# Bash
+
+
+
+## 变量
+
+
+
+> **设置只读变量**
+
+**readonly** variable_name
+
+
+
+> **删除变量**
+>
+
+**unset** variable_name
+
+
+
+> 变量类型
+
+<img src="linuxLearningNote/image-20211117193559732.png" alt="image-20211117193559732" style="zoom:80%; margin:10px;" />
+
+
+
+**示例1:**
+
+> <img src="linuxLearningNote/image-20211117194108313.png" alt="image-20211117194108313" style="zoom:80%;margin:10px;" />
+
+```bash
+[root@VM-12-17-centos ~]# my_array=(A B "C" D)
+[root@VM-12-17-centos ~]# echo ${my_array[0]}
+A
+```
+
+
+
+**示例2:**
+
+> <img src="linuxLearningNote/image-20211117194741777.png" alt="image-20211117194741777" style="zoom:80%;margin:10px;" />
+
+```bash
+[root@VM-12-17-centos ~]# my_array[0]=A
+[root@VM-12-17-centos ~]# my_array[3]=D
+[root@VM-12-17-centos ~]# echo ${my_array[*]}
+A D
+[root@VM-12-17-centos ~]# echo ${my_array[@]}
+A D
+```
+
+---
+
+
+
+## 控制语句
+
+
+
+**if定义**
+
+> <img src="linuxLearningNote/image-20211117195505637.png" alt="image-20211117195505637" style="zoom:80%;margin:10px;" />
+>
+> - `==` : `-eq`
+> - `<` : `-lt`
+> - `>` : `-gt` 
+
+
+
+**例子:**
+
+> `>` 和 `<` 要两个 `[[]]`
+>
+> 为了统一使用一个 `[]`, 使用 `-gt` 和 `-lt` 替换!
+
+```bash
+[root@VM-12-17-centos ~]# if [ 2==2 ]; then echo "true"; else echo "false"; fi
+true
+
+[root@VM-12-17-centos ~]# if [[ 2 > 1 ]]; then echo "true"; else echo "false"; fi
+true
+
+[root@VM-12-17-centos ~]# if [ $a -eq $b ]; then echo "equal"; elif [ $a -lt $b ]; then echo "small"; elif [ $a -gt $b ]; then echo "big"; fi
+small
+```
+
+**注意: 空格要求很严格!**
+
+---
+
+
+
+**for 定义**
+
+> <img src="linuxLearningNote/image-20211117202153563.png" alt="image-20211117202153563" style="zoom:80%;margin:10px;" />
+
+```bash
+[root@VM-12-17-centos ~]# for loop in 1 2 3 4 5
+> do
+> echo "hello"
+> done
+hello
+hello
+hello
+hello
+hello
+
+# 循环读取文件内容并输出
+[root@VM-12-17-centos TestCommand]# for line in $(cat test.txt); do echo $line; done
+helloboot
+hello
+hello
+hello
+hello
+hellos
+hello
+1023
+1024
+james
+jungle
+hello1234
+hello666
+slam
+stupid
+ssr
+s1234n
+sacrfice
+dsadn
+csdn
+```
+
+---
+
+
+
+**while定义**
+
+> <img src="linuxLearningNote/image-20211117203013610.png" alt="image-20211117203013610" style="zoom:80%;margin:10px;" />
+
+```bash
+[root@VM-12-17-centos TestCommand]# int=1
+[root@VM-12-17-centos TestCommand]# while(($int<=5))
+> do
+> echo $int
+> let "int++"
+> done
+1
+2
+3
+4
+5
+
+# 循环读取文件内容并输出
+[root@VM-12-17-centos TestCommand]# while read line; do echo $line; done<test.txt
+helloboot hello hello hello hello
+hellos
+hello
+1023
+1024
+james
+jungle
+hello1234
+hello666
+slam
+stupid
+ssr
+s1234n
+sacrfice
+dsadn
+csdn
+```
+
+---
+
+
+
+## read命令
+
+**用途**
+
+<img src="linuxLearningNote/image-20211117203915506.png" alt="image-20211117203915506" style="zoom:80%;margin:10px;" />
+
+**使用**
+
+<img src="linuxLearningNote/image-20211117204121603.png" alt="image-20211117204121603" style="zoom:80%;margin:10px;" />
+
+---
+
+
+
+## 参数传递
+
+<img src="linuxLearningNote/image-20211117204422431.png" alt="image-20211117204422431" style="zoom:80%;margin:10px;" />
+
+---
+
+
+
+## 基本运算
+
+
+
+**算数运算1**
+
+> <img src="linuxLearningNote/image-20211117204752703.png" alt="image-20211117204752703" style="zoom:80%;margin:10px;" />
+
+**注意:**
+
+- 符号 是 ``
+- expr 和 变量 和 运算符之间都有 空格
+- `*` 乘法有 `\` 转义字符
+
+
+
+
+
+**算数运算2**
+
+> <img src="linuxLearningNote/image-20211117205424048.png" alt="image-20211117205424048" style="zoom:80%;margin:10px;" />
+
+
+
+
+
+**算数运算3**
+
+> <img src="linuxLearningNote/image-20211117205157579.png" alt="image-20211117205157579" style="zoom:80%;margin:10px;" />
+
+---
+
+
+
+# Bash 与 linux 命令结合
+
+
+
+## read
+
+```bash
+[root@VM-12-17-centos test]# read a
+123
+[root@VM-12-17-centos test]# echo $a
+123
+
+[root@VM-12-17-centos test]# read a b c 
+123 456 789
+[root@VM-12-17-centos test]# echo $a
+123
+[root@VM-12-17-centos test]# echo $b
+456
+[root@VM-12-17-centos test]# echo $c
+789
+
+[root@VM-12-17-centos test]# read 
+456
+[root@VM-12-17-centos test]# echo $REPLY
+456
+
+```
+
+---
+
+
+
+## 参数
+
+```bash
+[root@VM-12-17-centos test]# vim test.sh
+#!/bin/bash
+echo $1,$2,$3
+echo "文件名 "$0
+echo "参数数量 "$#
+echo "all "$*
+echo "return "$? 
+
+[root@VM-12-17-centos test]# bash test.sh 1 2 3
+1,2,3
+文件名 test.sh
+参数数量 3
+all 1 2 3
+return 0
+```
+
+
+
+## 运算
+
+
+
+**实例1:**
+
+```bash
+[root@VM-12-17-centos test]# vim test.sh
+#!/bin/bash
+a=10
+b=20
+echo `expr $a + $b`
+[root@VM-12-17-centos test]# bash test.sh
+30
+
+[root@VM-12-17-centos test]# vim test.sh
+#!/bin/bash
+a=10
+b=20
+echo `expr $a + $b`
+echo `expr $a - $b`
+echo `expr $a \* $b`
+echo `expr $a / $b`
+echo `expr $a % $b`
+[root@VM-12-17-centos test]# bash test.sh
+30
+-10
+200
+0
+10
+```
+
+
+
+**实例2:**
+
+```bash
+[root@VM-12-17-centos test]# vim test.sh
+#!/bin/bash
+a=10
+b=20
+if [ $a -lt $b  ]
+then
+     echo "equal"
+fi
+
+[root@VM-12-17-centos test]# bash test.sh
+equal
+```
+
+
+
+**实例3:**
+
+```bash
+[root@VM-12-17-centos test]# vim test.sh
+#!/bin/bash
+mkdir test
+cd test
+echo "hello" > test.txt
+cat test.txt
+
+[root@VM-12-17-centos test]# bash test.sh
+hello
+```
+
 
 
 ---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
