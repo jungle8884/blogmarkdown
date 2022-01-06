@@ -1,10 +1,11 @@
 ---
-title: Trie
+title: 过滤敏感词
 categories:
   - 算法
   - 树
 tags:
   - 前缀树
+  - N叉树
 author:
   - Jungle
 date: 2021-07-09 
