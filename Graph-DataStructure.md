@@ -44,16 +44,15 @@ class Vertex {
 > 邻接表和邻接矩阵
 >
 > - 邻接表很直观，我把每个节点 `x` 的邻居都存到一个列表里，然后把 `x` 和这个列表关联起来，这样就可以通过一个节点 `x` 找到它的所有相邻节点。
->
-> - 邻接矩阵则是一个二维布尔数组，我们权且称为 `matrix`，如果节点 `x` 和 `y` 是相连的，那么就把 `matrix[x][y]` 设为 `true`（上图中绿色的方格代表 `true`）。如果想找节点 `x` 的邻居，去扫一圈 `matrix[x][..]` 就行了。
+>- 邻接矩阵则是一个二维布尔数组，我们权且称为 `matrix`，如果节点 `x` 和 `y` 是相连的，那么就把 `matrix[x][y]` 设为 `true`（上图中绿色的方格代表 `true`）。如果想找节点 `x` 的邻居，去扫一圈 `matrix[x][..]` 就行了。
 
-![img](D:\Data\Blog\hexo\source\_posts\Graph-DataStructure\0.jpg)
+<img src="https://labuladong.github.io/algo/images/%e5%9b%be/0.jpg" alt="img" style="zoom:100%;" />
 
 
 
 用邻接表和邻接矩阵的存储方式如下：
 
-<img src="D:\Data\Blog\hexo\source\_posts\Graph-DataStructure\2.jpeg" alt="img" style="zoom:67%;margin:a50%;" />
+<img src="https://labuladong.github.io/algo/images/%e5%9b%be/2.jpeg" alt="img" style="zoom:67%;margin:a50%;" />
 
 代码的表现形式:
 
