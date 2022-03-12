@@ -1,7 +1,7 @@
 ---
 title: DockerPractice
 categories:
-  - 运维
+  - DL
   - Docker
 tags:
   - Docker 
@@ -60,47 +60,48 @@ python test.py -net vgg16 -weights checkpoint/vgg16/Thursday_06_May_2021_05h_56m
 
 ## 部署服务
 
-> 生成 .mar 文件
+> ① 生成 .mar 文件
 
 ```shell
 torch-model-archiver --model-name resnet50 --version 1.0 --model-file /home/vr/jungle_data/model.py --serialized-file /home/vr/jungle_data/resNet50.pth --extra-files /home/vr/jungle_data/index_to_name.json --handler /home/vr/jungle_data/model_handler.py --export-path model-store
 ```
 
-> 启动服务
+> ② 启动 torchserve
+>
+> -v 主机目录：容器目录
 
 ```shell
-torchserve --start --model-store model-store --models resnet50=resnet50.mar --no-config-snapshots
+docker run --rm -it --gpus all -p 8080:8080 -p 8081:8081 --name mar-gpu -v $(pwd)/model-store:/home/model-server/model-store torchserve/torchserve:latest-gpu
 ```
 
-> 测试服务
+> ③ 进入容器
 
 ```shell
-curl -X POST http://127.0.0.1:8080/predictions/resnet50 -T jungle_data/1.jpg
+docker exec -it mar-gpu /bin/bash 
 ```
 
-> 容器化：
+> ④ 停止 torchserve
 
 ```shell
-docker run --rm -it --gpus all -p 8080:8080 -p 8081:8081 --name mar-gpu -v $(pwd)/model-store:/home/model-server/model-store vr/torchserve:latest-gpu
-
 torchserve --stop
+```
 
+>⑤ 开启预测服务
+
+```shell
 torchserve --start --model-store model-store --models resnet50=resnet50.mar --no-config-snapshots
 ```
 
-本地测试：
 
-![image-20210526212110162](DockerPractice/image-20210526212110162.png)
+
+> 本地测试：先进入本机目录（包括对应的预测图片）
 
 ```shell
-Jungle@Jungle8884 MINGW64 ~/Desktop/resnet_50
-$ curl -X POST http://192.168.94.112:8080/predictions/resnet50 -T 1.jpg
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100 70614  100    61  100 70553    782   883k --:--:-- --:--:-- --:--:--  884k{
-  "label": "\u5de5\u4e1a\u673a\u5668\u4eba",
-  "index": 3
-}
+~/jungle_data ▓▒░ curl -X POST http://192.168.94.112:8080/predictions/resnet50 -T 1.jpg
+{
+  "label": "Industrial_robot",
+  "index": 0
+}%
 ```
 
 
