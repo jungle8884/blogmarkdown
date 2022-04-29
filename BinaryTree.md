@@ -433,7 +433,202 @@ public class buildTree_106 {
 
 ---
 
+## 104-[二叉树的最大深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/description/)
 
+给定一个二叉树，找出其最大深度。
+
+二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
+
+**说明:** 叶子节点是指没有子节点的节点。
+
+**示例：**
+给定二叉树 `[3,9,20,null,null,15,7]`，
+
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+返回它的最大深度 3 。
+
+
+
+**代码格式:**
+
+```java
+//leetcode submit region begin(Prohibit modification and deletion)
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int maxDepth(TreeNode root) {
+        
+    }
+}
+//leetcode submit region end(Prohibit modification and deletion)
+```
+
+
+
+> 遇到一道二叉树的题目时的通用思考过程是：
+>
+> **1、是否可以通过遍历一遍二叉树得到答案**？如果可以，用一个 `traverse` 函数配合外部变量来实现。
+>
+> **2、是否可以定义一个递归函数，通过子问题（子树）的答案推导出原问题的答案**？如果可以，写出这个递归函数的定义，并充分利用这个函数的返回值。
+>
+> **3、无论使用哪一种思维模式，你都要明白二叉树的每一个节点需要做什么，需要在什么时候（前中后序）做**。
+
+**解法一:** 分解问题
+
+~~~java
+class Solution {
+    public int maxDepth(TreeNode root) {
+        if (root == null) {
+           return 0;
+        }
+
+        int leftMax = maxDepth(root.left);
+        int rightMax = maxDepth(root.right);
+        return Math.max(leftMax, rightMax) + 1;
+    }
+}
+~~~
+
+**解法二:** 遍历二叉树
+
+```java
+class Solution {
+    int depth = 0;
+    int res = 0;
+
+    public int maxDepth(TreeNode root) {
+        traverse(root);
+        return res;
+    }
+
+    void traverse(TreeNode root) {
+        if (root == null) {
+            // 到达叶子结点, 更新最大深度
+            res = Math.max(res, depth);
+            return;
+        }
+
+        depth++;
+        traverse(root.left);
+        traverse(root.right);
+        depth--;
+    }
+}
+```
+
+---
+
+## 543-[二叉树的直径](https://leetcode-cn.com/problems/diameter-of-binary-tree/description/)
+
+给定一棵二叉树，你需要计算它的直径长度。一棵二叉树的直径长度是任意两个结点路径长度中的最大值。这条路径可能穿过也可能不穿过根结点。
+
+ 
+
+**示例 :**
+给定二叉树
+
+```
+          1
+         / \
+        2   3
+       / \     
+      4   5    
+```
+
+返回 **3**, 它的长度是路径 [4,2,1,3] 或者 [5,2,1,3]。
+
+ 
+
+**注意：**两结点之间的路径长度是以它们之间边的数目表示。
+
+
+
+**代码格式:**
+
+```java
+//leetcode submit region begin(Prohibit modification and deletion)
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int diameterOfBinaryTree(TreeNode root) {
+
+    }
+}
+//leetcode submit region end(Prohibit modification and deletion)
+```
+
+
+
+> 思路:
+>
+> 所谓二叉树的直径，就是左右子树的最大深度之和，那么直接的想法是对每个节点计算左右子树的最大高度，得出每个节点的直径，从而得出最大的那个直径。
+>
+> 灵活运用二叉树的后序遍历，在 `maxDepth` 的后序遍历位置顺便计算最大直径。
+
+**解题:**
+
+```java
+class Solution {
+
+    int maxDiameter = 0;
+
+    public int diameterOfBinaryTree(TreeNode root) {
+        maxDepth(root);
+        return maxDiameter;
+    }
+
+    int maxDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        int leftMax = maxDepth(root.left);
+        int rightMax = maxDepth(root.right);
+        maxDiameter = Math.max(maxDiameter, leftMax+rightMax);
+
+        return 1 + Math.max(leftMax, rightMax);
+    }
+}
+```
+
+时间复杂度: O(N)
+
+
+
+---
 
 # 二叉搜索树
 
