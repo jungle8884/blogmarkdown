@@ -257,3 +257,180 @@ public class Client {
 - 公共业务发生扩展时变得更加集中和方便 .
 - 一个动态代理 , 一般代理某一类业务
 - 一个动态代理可以代理多个类，代理的是接口！
+
+## 其他案例
+
+### 静态代理实现
+
+> UserService
+
+```java
+public interface UserService {
+    public void add();
+    public void delete();
+    public void update();
+    public void query();
+}
+```
+
+> UserServiceImpl
+
+```java
+public class UserServiceImpl implements UserService{
+    @Override
+    public void add() {
+        System.out.println("增加用户");
+    }
+
+    @Override
+    public void delete() {
+        System.out.println("删除用户");
+    }
+
+    @Override
+    public void update() {
+        System.out.println("更新数据");
+    }
+
+    @Override
+    public void query() {
+        System.out.println("查询数据");
+    }
+}
+```
+
+> UserServiceProxy
+
+```java
+public class UserServiceProxy implements UserService{
+
+    private UserService userService;
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Override
+    public void add() {
+        log("add");
+        userService.add();
+    }
+
+    @Override
+    public void delete() {
+        log("delete");
+        userService.delete();
+    }
+
+    @Override
+    public void update() {
+        log("update");
+        userService.update();
+    }
+
+    @Override
+    public void query() {
+        log("query");
+        userService.query();
+    }
+
+    public void log(String msg) {
+        System.out.println("使用了"+ msg + "方法");
+    }
+}
+```
+
+> Client
+
+```java
+public class Client {
+    public static void main(String[] args) {
+        UserService userService = new UserServiceImpl();
+        UserServiceProxy proxy = new UserServiceProxy();
+        // 代理 -- 传递代理对象
+        proxy.setUserService(userService);
+        proxy.add();
+        proxy.delete();
+        proxy.update();
+        proxy.query();
+    }
+}
+```
+
+### 动态代理实现
+
+> ProxyInvocationHandler
+
+```java
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+/**
+ * @author Jungle
+ */
+public class ProxyInvocationHandler implements InvocationHandler {
+
+    /**
+     * proxied object
+     * */
+    private Object target;
+
+    public void setTarget(Object target) {
+        this.target = target;
+    }
+
+    /**
+     * get the proxy instance
+     * */
+    public Object getProxy() {
+        return Proxy.newProxyInstance(this.getClass().getClassLoader(), target.getClass().getInterfaces(), this);
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        log(method.getName());
+        return method.invoke(target, args);
+    }
+
+    private void log(String msg) {
+        System.out.println("执行了" + msg + "方法");
+    }
+}
+```
+
+> Client
+
+```java
+import com.jungle.demo2.UserService;
+import com.jungle.demo2.UserServiceImpl;
+
+import java.lang.reflect.InvocationHandler;
+
+/**
+ * @author Jungle
+ */
+public class Client {
+    public static void main(String[] args) {
+        // real object
+        UserService userService = new UserServiceImpl();
+        // proxy object, not existence
+        ProxyInvocationHandler pih = new ProxyInvocationHandler();
+        // set proxied object
+        pih.setTarget(userService);
+        // dynamic generate proxy class
+        UserService proxy = (UserService) pih.getProxy();
+        proxy.add();
+        proxy.delete();
+        proxy.update();
+        proxy.query();
+    }
+}
+```
+
+
+
+
+
+
+
