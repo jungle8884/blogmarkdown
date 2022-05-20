@@ -360,6 +360,8 @@ public class Client {
 ### 动态代理实现
 
 > ProxyInvocationHandler
+>
+> **AOP 底层实现原理**: 代理的是**接口**, 即某一类 !
 
 ```java
 import java.lang.reflect.InvocationHandler;
@@ -427,6 +429,404 @@ public class Client {
     }
 }
 ```
+
+---
+
+# AOP
+
+> **在运行时，动态的将代码切入到类的指定方法、指定位置上的编程思想就是面向切面的编程。**
+>
+> **AOP即面向切面编程。**
+>
+> 使用切面编程，可以将一些系统性的代码提取出来，独立实现，与核心业务代码剥离，比如权限管理、事务管理、日志记录等等。
+>
+> AOP是spring提供的关键特性之一。
+
+<img src="D:\Data\Blog\hexo\source\_posts\DesignPatternofProxy\Image1.png" style="zoom:100%;margin:0px;" />
+
+> AOP的作用
+
+<img src="D:\Data\Blog\hexo\source\_posts\DesignPatternofProxy\Image2.png" style="zoom:120%;margin:0px;" />
+
+<img src="D:\Data\Blog\hexo\source\_posts\DesignPatternofProxy\Image3.png" style="zoom:100%;margin:0px;" />
+
+<img src="D:\Data\Blog\hexo\source\_posts\DesignPatternofProxy\Image4.png" style="zoom:100%;margin:0px;" />
+
+## 方式一: 使用Spring的API接口实现
+
+> UserService
+
+```java
+package com.jungle.demoAOP.service;
+
+/**
+ * @author Jungle
+ */
+public interface UserService {
+    public void add();
+    public void delete();
+    public void update();
+    public void query();
+}
+```
+
+> UserServiceImpl
+
+```java
+package com.jungle.demoAOP.service;
+
+/**
+ * @author Jungle
+ */
+public class UserServiceImpl implements UserService {
+    @Override
+    public void add() {
+        System.out.println("增加用户");
+    }
+
+    @Override
+    public void delete() {
+        System.out.println("删除用户");
+    }
+
+    @Override
+    public void update() {
+        System.out.println("更新数据");
+    }
+
+    @Override
+    public void query() {
+        System.out.println("查询数据");
+    }
+}
+```
+
+
+
+> Log
+
+```java
+package com.jungle.demoAOP.log;
+
+
+import org.springframework.aop.MethodBeforeAdvice;
+
+import java.lang.reflect.Method;
+
+/**
+ * @author Jungle
+ */
+public class Log implements MethodBeforeAdvice {
+
+    /**
+     * @param method executed method of target object
+     * @param objects args
+     * @param o target object
+     * */
+    @Override
+    public void before(Method method, Object[] objects, Object o) throws Throwable {
+        assert o != null;
+        System.out.println(o.getClass().getName() + "的" + method.getName() + "被执行");
+    }
+}
+```
+
+> AfterLog
+
+```java
+package com.jungle.demoAOP.log;
+
+import org.springframework.aop.AfterReturningAdvice;
+
+import java.lang.reflect.Method;
+
+/**
+ * @author Jungle
+ */
+public class AfterLog  implements AfterReturningAdvice {
+
+    /**
+     * @param o returnValue
+     * @param method executed method of target object
+     * @param objects args
+     * @param o1 target object
+     * */
+    @Override
+    public void afterReturning(Object o, Method method, Object[] objects, Object o1) throws Throwable {
+        System.out.println("执行了"+ method.getName() +" 返回结果为: " + o);
+    }
+}
+```
+
+> applicationContext.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <bean id="userService" class="com.jungle.demoAOP.service.UserServiceImpl" />
+    <bean id="log" class="com.jungle.demoAOP.log.Log" />
+    <bean id="afterLog" class="com.jungle.demoAOP.log.AfterLog" />
+
+    <aop:config>
+        <aop:pointcut id="pointcut" expression="execution(* com.jungle.demoAOP.service.UserServiceImpl.*(..))"/>
+        <aop:advisor advice-ref="log" pointcut-ref="pointcut"/>
+        <aop:advisor advice-ref="afterLog" pointcut-ref="pointcut"/>
+    </aop:config>
+        
+</beans>
+```
+
+> MyTest
+>
+> - **注**: 动态代理  `代理` 的是  `接口` 
+
+```java
+import com.jungle.demoAOP.service.UserService;
+import com.jungle.demoAOP.service.UserServiceImpl;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class MyTest {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        // dynamic proxy is for interface
+        UserService userService = context.getBean("userService", UserService.class);
+        userService.add();
+        userService.delete();
+        userService.update();
+        userService.query();
+    }
+}
+```
+
+**output:** 
+
+```java
+com.jungle.demoAOP.service.UserServiceImpl的add被执行
+增加用户
+执行了add 返回结果为: null
+com.jungle.demoAOP.service.UserServiceImpl的delete被执行
+删除用户
+执行了delete 返回结果为: null
+com.jungle.demoAOP.service.UserServiceImpl的update被执行
+更新数据
+执行了update 返回结果为: null
+com.jungle.demoAOP.service.UserServiceImpl的query被执行
+查询数据
+执行了query 返回结果为: null
+
+Process finished with exit code 0
+```
+
+
+
+---
+
+## 方式二: 主要是切面定义
+
+> 自定义类 `DiyPointCut`
+
+```java
+package com.jungle.demoAOP.diy;
+
+/**
+ * @author Jungle
+ */
+public class DiyPointCut {
+
+    public void before() {
+        System.out.println("==============方法执行前=================");
+    }
+
+    public void after() {
+        System.out.println("==============方法执行后=================");
+    }
+
+}
+```
+
+> applicationContext.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <bean id="userService" class="com.jungle.demoAOP.service.UserServiceImpl" />
+    <bean id="log" class="com.jungle.demoAOP.log.Log" />
+    <bean id="afterLog" class="com.jungle.demoAOP.log.AfterLog" />
+
+<!--    <aop:config>-->
+<!--        <aop:pointcut id="pointcut" expression="execution(* com.jungle.demoAOP.service.UserServiceImpl.*(..))"/>-->
+<!--        <aop:advisor advice-ref="log" pointcut-ref="pointcut"/>-->
+<!--        <aop:advisor advice-ref="afterLog" pointcut-ref="pointcut"/>-->
+<!--    </aop:config>-->
+
+    <bean id="diy" class="com.jungle.demoAOP.diy.DiyPointCut"/>
+
+    <aop:config>
+        <aop:aspect ref="diy">
+            <aop:pointcut id="point" expression="execution(* com.jungle.demoAOP.service.UserService.*(..))"/>
+            <aop:before method="before" pointcut-ref="point"/>
+            <aop:after method="after" pointcut-ref="point"/>
+        </aop:aspect>
+    </aop:config>
+</beans>
+```
+
+> MyTest
+
+```java
+import com.jungle.demoAOP.service.UserService;
+import com.jungle.demoAOP.service.UserServiceImpl;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class MyTest {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        // dynamic proxy is for interface
+        UserService userService = context.getBean("userService", UserService.class);
+        userService.add();
+        userService.delete();
+        userService.update();
+        userService.query();
+    }
+}
+```
+
+**output:**
+
+```java
+==============方法执行前=================
+增加用户
+==============方法执行后=================
+==============方法执行前=================
+删除用户
+==============方法执行后=================
+==============方法执行前=================
+更新数据
+==============方法执行后=================
+==============方法执行前=================
+查询数据
+==============方法执行后=================
+
+Process finished with exit code 0
+```
+
+
+
+---
+
+## 方式三: 使用注解实现!
+
+> AnnotationPointCut
+
+```java
+package com.jungle.demoAOP.diy;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+
+/**
+ * @author Jungle
+ */
+@Aspect
+public class AnnotationPointCut {
+
+    @Before("execution(* com.jungle.demoAOP.service.UserService.*(..))")
+    public void before() {
+        System.out.println("==============方法执行前=================");
+    }
+
+    @After("execution(* com.jungle.demoAOP.service.UserService.*(..))")
+    public void after() {
+        System.out.println("==============方法执行后=================");
+    }
+
+    @Around("execution(* com.jungle.demoAOP.service.UserService.*(..))")
+    public void around(ProceedingJoinPoint joinPoint) throws Throwable{
+        System.out.println("环绕前");
+
+        Signature signature = joinPoint.getSignature();
+        Object target = joinPoint.getTarget();
+        System.out.println(signature + "\n" + target);
+
+        // execute method
+        Object proceed = joinPoint.proceed();
+
+        System.out.println("环绕后");
+    }
+
+}
+```
+
+> applicationContext.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <bean id="userService" class="com.jungle.demoAOP.service.UserServiceImpl" />
+    <bean id="log" class="com.jungle.demoAOP.log.Log" />
+    <bean id="afterLog" class="com.jungle.demoAOP.log.AfterLog" />
+
+<!--    aop method 1-->
+<!--    <aop:config>-->
+<!--        <aop:pointcut id="pointcut" expression="execution(* com.jungle.demoAOP.service.UserServiceImpl.*(..))"/>-->
+<!--        <aop:advisor advice-ref="log" pointcut-ref="pointcut"/>-->
+<!--        <aop:advisor advice-ref="afterLog" pointcut-ref="pointcut"/>-->
+<!--    </aop:config>-->
+
+
+    <bean id="diy" class="com.jungle.demoAOP.diy.DiyPointCut"/>
+
+    <!--    aop method 2-->
+<!--    <aop:config>-->
+<!--        <aop:aspect ref="diy">-->
+<!--            <aop:pointcut id="point" expression="execution(* com.jungle.demoAOP.service.UserServiceImpl.*(..))"/>-->
+<!--            <aop:before method="before" pointcut-ref="point"/>-->
+<!--            <aop:after method="after" pointcut-ref="point"/>-->
+<!--        </aop:aspect>-->
+<!--    </aop:config>-->
+
+<!--    aop method 3-->
+    <bean id="annotationPointCut" class="com.jungle.demoAOP.diy.AnnotationPointCut"/>
+<!--    open annotation support-->
+    <aop:aspectj-autoproxy/>
+</beans>
+```
+
+---
+
+
+
+
+
+
+
+
+
+
 
 
 
