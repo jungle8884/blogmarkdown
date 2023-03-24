@@ -138,7 +138,7 @@ private void grow(int minCapacity) {
 
 注: `private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;`
 
-![image-20210813100257978](Arraylist-analyse/image-20210813100257978.png)
+![image-20210813100257978](./Arraylist-analyse/image-20210813100257978-1676050588458-6.png)
 
 
 

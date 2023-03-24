@@ -164,9 +164,9 @@ public class SelectionSort implements ISort{
 - 有类似于 `arr[j] > arr[j+1]` 的是**稳定的**排序 (前后比较)
 - 希尔排序是特殊的分组插入排序, 会进行多次插入排序, 所以是**不稳定的.** 
 
-![排序的策略模式](DesignPatterofStrategy/image-20210909143137073-1631710905135.png)
+![排序的策略模式](./DesignPatterofStrategy/1.png)
 
 ## 未完待续...
 
-![未完待续...](DesignPatterofStrategy/image-20210909143858077-1631710963776.png)
+![未完待续...](./DesignPatterofStrategy/2.png)
 

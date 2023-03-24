@@ -109,7 +109,7 @@ date: 2022-12-04 22:16:46
    
    ```
 
-   ![image-20221204223643160](C:\Users\Jungle\AppData\Roaming\Typora\typora-user-images\image-20221204223643160.png)
+   ![image-20221204223643160](./DevConcludes/image-20221204223643160.png)
 
 2. 设置 mybatis-generator Maven文件
 
@@ -117,7 +117,7 @@ date: 2022-12-04 22:16:46
    >
    > 设置命令: mybatis-generator:generate -e
 
-   ![image-20221204223610677](C:\Users\Jungle\AppData\Roaming\Typora\typora-user-images\image-20221204223610677.png)
+   ![image-20221204223610677](./DevConcludes/image-20221204223610677.png)
 
 3. 在 generator-config.xml  文件里设置需要生成的实体类, 就可以自动生成查询条件类
 
@@ -1025,7 +1025,7 @@ date: 2022-12-04 22:16:46
 
 > 根据实际情况设置!!!
 
-![image-20221204224522878](C:\Users\Jungle\AppData\Roaming\Typora\typora-user-images\image-20221204224522878.png)
+![image-20221204224522878](./DevConcludes/image-20221204224522878.png)
 
 ```java
 package com.jungle.wiki.config;
@@ -1051,9 +1051,52 @@ public class CorsConfig implements WebMvcConfigurer {
 }
 ```
 
+---
+
+## Spring Boot 进行测试
+
+> 1. 在测试类上加入对应注解
+> 2. 在被测试的接口上加上'@Tests'
+
+测试类:
+
+```java
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(classes = OrderProviderApplication.class)
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
+        TransactionalTestExecutionListener.class, DbUnitTestExecutionListener.class})
+@Component
+```
+
+测试接口:
+
+```java
+@Test
+```
+
+实例:
+
+```java
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(classes = OrderProviderApplication.class)
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class,
+        TransactionalTestExecutionListener.class, DbUnitTestExecutionListener.class})
+@Component
+public class ControllerTest extends TestCase {
+
+    @Resource
+    Controller Controller;
+
+    @Test
+    public void testWarehouseQuery() 
+        Controller.testMethod();
+    }
+}
+```
 
 
 
+---
 
 
 

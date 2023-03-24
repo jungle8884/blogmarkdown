@@ -25,13 +25,13 @@ date: 2022-01-23
 >
 >   2)对于一个DAG,可能存在多个拓扑序列;
 >
-> ![image-20220123145926894](C:\Users\Jungle\AppData\Roaming\Typora\typora-user-images\image-20220123145926894.png)
+> ![image-20220123145926894](./TopologicalSorting/image-20220123145926894.png)
 >
 > 来源: https://www.cnblogs.com/dolphin0520/archive/2011/04/16/2017737.html
 
 直观点说, 就是把一幅图**拉平**, 而这个**拉平**的图里, 所有的箭头方向是一致的(即不改变原序列顺序), 如下图所示:
 
-<img src="C:\Users\Jungle\AppData\Roaming\Typora\typora-user-images\image-20220123150222259.png" alt="image-20220123150222259" style="zoom:67%;" />
+<img src="./TopologicalSorting/image-20220123150222259.png" alt="image-20220123150222259" style="zoom:67%;" />
 
 ---
 

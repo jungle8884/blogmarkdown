@@ -96,7 +96,7 @@ class NumArray {
 
 **示例 1：**
 
-<img src="D:\Data\Blog\hexo\source\_posts\Array\304-1" alt="304-1" style="zoom:80%; margin:0px;" />
+<img src="./Array/304-1-1676050554068-2" alt="304-1" style="zoom:80%; margin:0px;" />
 
 ```
 输入: 
@@ -219,7 +219,7 @@ class Solution {
 
 优化思路: 直接记录下有几个 `preSum[j] == preSum[i] - k ` , 直接更新结果,  **避免内层`for`循环**
 
-<img src="D:\Data\Blog\hexo\source\_posts\Array\560-1" alt="560-1" style="zoom:90%;margin:0px;" />
+<img src="./Array/560-1-1676050561477-4" alt="560-1" style="zoom:90%;margin:0px;" />
 
 **将和为k转化为前缀和等于preSum[j]**
 

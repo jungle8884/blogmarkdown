@@ -20,20 +20,20 @@ date: 2022-10-16 16:15:29
 - filter
 - map
 
-![image-20221016161641894](C:\Users\Jungle\AppData\Roaming\Typora\typora-user-images\image-20221016161641894.png)
+![image-20221016161641894](./Java-Utils/1.png)
 
-![image-20221016162634505](C:\Users\Jungle\AppData\Roaming\Typora\typora-user-images\image-20221016162634505.png)
+![image-20221016162634505](./Java-Utils/2.png)
 
 ## Arrays 的使用
 
 - sort
 - Arrays.toString()
 
-![image-20221016163931481](C:\Users\Jungle\AppData\Roaming\Typora\typora-user-images\image-20221016163931481.png)
+![image-20221016163931481](./Java-Utils/3.png)
 
 - binarySearch : 二分搜索的前提是排序好
 
-![image-20221016164147814](C:\Users\Jungle\AppData\Roaming\Typora\typora-user-images\image-20221016164147814.png)
+![image-20221016164147814](./Java-Utils/4.png)
 
 - stream() 流式操作 
 - copyOf : 复制
@@ -41,7 +41,7 @@ date: 2022-10-16 16:15:29
 - fill : 填充
 - setAll : 依次计算
 
-![image-20221016164741973](C:\Users\Jungle\AppData\Roaming\Typora\typora-user-images\image-20221016164741973.png)
+![image-20221016164741973](./Java-Utils/5.png)
 
 > 多维数组的 toString() 和 equals() 
 >
@@ -49,11 +49,11 @@ date: 2022-10-16 16:15:29
 
 - Arrays.toString() 只适用于一维数组
 
-![image-20221016165219689](C:\Users\Jungle\AppData\Roaming\Typora\typora-user-images\image-20221016165219689.png)
+![image-20221016165219689](./Java-Utils/6.png)
 
 - Arrays.deepToString(array) 适用于多维数组 
 
-![image-20221016165418066](C:\Users\Jungle\AppData\Roaming\Typora\typora-user-images\image-20221016165418066.png)
+![image-20221016165418066](./Java-Utils/7.png)
 
 
 
@@ -61,13 +61,13 @@ date: 2022-10-16 16:15:29
 
 > 这是一个坑！
 
-![image-20221016165951499](C:\Users\Jungle\AppData\Roaming\Typora\typora-user-images\image-20221016165951499.png)
+![image-20221016165951499](./Java-Utils/8.png)
 
 > 如何解决这个问题？
 
 把它当作参数，传入`new ArrayList<>(Arrays.asList(array))`
 
-![image-20221016170549181](C:\Users\Jungle\AppData\Roaming\Typora\typora-user-images\image-20221016170549181.png)
+![image-20221016170549181](./Java-Utils/9.png)
 
 
 
@@ -75,7 +75,7 @@ date: 2022-10-16 16:15:29
 >
 > list.sort(Comparator.reverseOrder()); //逆序排序
 
-![image-20221016170241992](C:\Users\Jungle\AppData\Roaming\Typora\typora-user-images\image-20221016170241992.png)
+![image-20221016170241992](./Java-Utils/10.png)
 
 
 
@@ -87,7 +87,7 @@ date: 2022-10-16 16:15:29
 
 > 一个专用于集合的工具类
 
-![image-20221016170741367](C:\Users\Jungle\AppData\Roaming\Typora\typora-user-images\image-20221016170741367.png)
+![image-20221016170741367](./Java-Utils/11.png)
 
 
 

@@ -31,7 +31,7 @@ date: 2021-11-26 17:32:54
 
 **示例 ：**
 
-![img](https://assets.leetcode.com/uploads/2020/09/15/serdeser.jpg)
+![img](./BinaryTree-297-SerializeAndDeserialize/serdeser.jpg)
 
 ```
 输入：root = [1,2,3,null,null,4,5]

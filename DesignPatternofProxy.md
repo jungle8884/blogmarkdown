@@ -446,11 +446,11 @@ public class Client {
 
 > AOP的作用
 
-<img src="D:\Data\Blog\hexo\source\_posts\DesignPatternofProxy\Image2.png" style="zoom:120%;margin:0px;" />
+<img src="./DesignPatternofProxy/Image2-1676051357002-24.png" style="zoom:120%;margin:0px;" />
 
-<img src="D:\Data\Blog\hexo\source\_posts\DesignPatternofProxy\Image3.png" style="zoom:100%;margin:0px;" />
+<img src="./DesignPatternofProxy/Image3-1676051360287-26.png" style="zoom:100%;margin:0px;" />
 
-<img src="D:\Data\Blog\hexo\source\_posts\DesignPatternofProxy\Image4.png" style="zoom:100%;margin:0px;" />
+<img src="./DesignPatternofProxy/Image4-1676051362738-28.png" style="zoom:100%;margin:0px;" />
 
 ## 方式一: 使用Spring的API接口实现
 
