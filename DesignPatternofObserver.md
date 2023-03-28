@@ -200,7 +200,7 @@ public class Observable {
 }
 ```
 
-![image-20210909151133658](DesignPatternofSixPrinciples/image-20210909151133658.png)
+
 
 ---
 
