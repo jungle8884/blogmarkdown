@@ -206,7 +206,7 @@ sudo yum makecache fast
 yum list docker-ce --showduplicates | sort -r
 
 # 安装最新版
-sudo yum install docker-ce 
+sudo yum install -y docker-ce 
 
 sudo systemctl start docker
 sudo systemctl enable docker
@@ -237,7 +237,7 @@ sudo docker run hello-world
 ![image-20231218114230017](./wumei/image-20231218114230017.png)
 
 ```linux
-sudo yum update
+sudo yum -y -update
 docker compose version
 
 sudo curl -SL https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
@@ -246,6 +246,10 @@ sudo curl -SL https://github.com/docker/compose/releases/download/v2.23.3/docker
 # 最后重新命名
 mv docker-compose-linux-x86_64 docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
+
+# 可能需要的工具
+yum -y install lrzsz
+yum install -y unzip zip
 
 # 可先拉取服务中镜像，时间取决于网络情况，可配置docker采用国内镜像源
 docker-compose pull
